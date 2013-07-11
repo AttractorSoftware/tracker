@@ -2,11 +2,7 @@ package net.itattractor;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
-import java.io.FileReader;
-import java.util.*;
+import java.awt.event.*;
 import java.util.List;
 
 public class RecordDialog implements ActionListener {
@@ -19,19 +15,14 @@ public class RecordDialog implements ActionListener {
     private JButton goButton;
     private JButton beginButton;
     private JButton endButton;
-    private JComboBox tasksComboBox;
-    private JComboBox tasksComboBox2;
+    private JComboBox<Object> tasksComboBox;
     private JSpinner frequencySpinner;
     private SpinnerNumberModel spinnerNumberModel;
     private List<String> tasks;
-    int hours[] = {0, 0, 0};
-    long begin_time, end_time;
-    String user = "Beknazar";
-    int selectedTask;
+    private Save save;
 
     RecordDialog() {
         loadData();
-        loadWorkedHours();
         initializeElements();
     }
 
@@ -40,35 +31,15 @@ public class RecordDialog implements ActionListener {
         tasks = taskReader.readTasks();
     }
 
-    private void loadWorkedHours() {
-        try {
-            FileReader fileReader = new FileReader("hours.txt");
-            int a;
-            int i = 0;
-            int j = 0;
-            while ((a = fileReader.read()) != -1) {
-                if ((char) a == '\n') {
-                    i++;
-                    j = 0;
-                } else {
-                    hours[i] = hours[i] * j + a - 48;
-                    j = 10;
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Owibka! Net takogo faila.");
-        }
-    }
-
     public void initializeElements() {
+        save = new Save();
         descTextArea = new JTextArea(10, 20);
         descTextArea.setLineWrap(true);
         descTextArea.setWrapStyleWord(true);
         frequencyLabel = new JLabel("Укажите период записи действий:");
-        currentTaskLabel = new JLabel("Ваш текущий таск:");
+        currentTaskLabel = new JLabel("Ваш текущий таск: ");
         chooseTaskLabel = new JLabel("Выберите таск:");
-        tasksComboBox = new JComboBox(tasks.toArray());
-        tasksComboBox2 = new JComboBox(tasks.toArray());
+        tasksComboBox = new JComboBox<Object>(tasks.toArray());
         goButton = new JButton("Go!");
         goButton.addActionListener(this);
         beginButton = new JButton("Begin");
@@ -80,21 +51,33 @@ public class RecordDialog implements ActionListener {
         startFrame = new JFrame("Choose your task");
         startFrame.setLayout(new FlowLayout());
         startFrame.setSize(200, 200);
-        startFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         startFrame.add(chooseTaskLabel);
-        startFrame.add(tasksComboBox2);
+        startFrame.add(tasksComboBox);
         startFrame.add(beginButton);
+        startFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         trackerFrame = new JFrame("Tracker");
         trackerFrame.setLayout(new FlowLayout());
         trackerFrame.setSize(300, 400);
-        trackerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         trackerFrame.add(currentTaskLabel);
-        trackerFrame.add(tasksComboBox);
         trackerFrame.add(descTextArea);
         trackerFrame.add(frequencyLabel);
         trackerFrame.add(frequencySpinner);
         trackerFrame.add(goButton);
         trackerFrame.add(endButton);
+        trackerFrame.addWindowListener(
+                new WindowAdapter() {
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        save.saveDescription(descTextArea.getText());
+                        save.saveEnd();
+                        descTextArea.setText("");
+                        frequencySpinner.setValue(1);
+                        startFrame.setVisible(true);
+                    }
+
+                }
+        );
         startFrame.setVisible(true);
     }
 
@@ -111,45 +94,20 @@ public class RecordDialog implements ActionListener {
 
     public void actionPerformed(ActionEvent ae) {
         if (ae.getActionCommand().equals("Begin")) {
-            begin_time = new Date().getTime();
-            selectedTask = tasksComboBox2.getSelectedIndex();
+            save.saveStart(tasksComboBox.getSelectedItem().toString());
+            currentTaskLabel.setText("Ваш текущий таск: " + tasksComboBox.getSelectedItem());
             startFrame.setVisible(false);
-            tasksComboBox.setSelectedIndex(selectedTask);
-            tasksComboBox.setEnabled(false);
             trackerFrame.setVisible(true);
         }
         if (ae.getActionCommand().equals("Go!")) {
-            new Save(tasksComboBox.getSelectedItem().toString(), user, descTextArea.getText());
+            save.saveDescription(descTextArea.getText());
             descTextArea.setText("");
             Pause();
         }
         if (ae.getActionCommand().equals("End")) {
-            end_time = new Date().getTime();
-            hours[tasksComboBox.getSelectedIndex()] += end_time - begin_time;
-            try {
-                int hour, min, sec;
-                FileWriter fileWriter = new FileWriter("/home/esdp/Hours.log");
-                for (int i = 0; i < 3; i++) {
-                    hour = hours[i] / 3600000;
-                    min = (hours[i] - hour * 3600000) / 60000;
-                    sec = (hours[i] - hour * 3600000 - min * 60000) / 1000;
-                    String for_hour = hour + "", for_min = min + "", for_sec = sec + "";
-                    if (hour < 10) {
-                        for_hour = "0" + for_hour;
-                    }
-                    if (min < 10) {
-                        for_min = "0" + for_min;
-                    }
-                    if (sec < 10) {
-                        for_sec = "0" + for_sec;
-                    }
-
-                    fileWriter.write(for_hour + ":" + for_min + ":" + for_sec + "\n");
-                }
-                fileWriter.close();
-            } catch (IOException e) {
-
-            }
+            save.saveEnd();
+            descTextArea.setText("");
+            frequencySpinner.setValue(1);
             trackerFrame.setVisible(false);
             startFrame.setVisible(true);
         }
