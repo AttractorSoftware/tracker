@@ -5,10 +5,15 @@ import java.io.IOException;
 import java.util.Date;
 
 public class Save {
+    private String homeDirectory;
+    public Save()
+    {
+        homeDirectory = System.getProperty("user.home");
+    }
     public void saveStart(String task)
     {
         try {
-            FileWriter fileWriter = new FileWriter("/home/esdp/tracker.xml", true);
+            FileWriter fileWriter = new FileWriter(homeDirectory + "/tracker.xml", true);
             fileWriter.write("<Task name=\"" + task + "\">\n   <DateStart value=\"" + new Date() + "\" />\n");
             fileWriter.close();
         } catch (IOException e) {
@@ -19,7 +24,7 @@ public class Save {
     public void saveDescription(String description)
     {
         try {
-            FileWriter fileWriter = new FileWriter("/home/esdp/tracker.xml", true);
+            FileWriter fileWriter = new FileWriter(homeDirectory + "/tracker.xml", true);
             fileWriter.write("   <RecordQuery>\n");
             fileWriter.write("      <DateTime value=\"" + new Date() + "\" />\n      <Description>" + description + "</Description>\n");
             fileWriter.write("   </RecordQuery>\n");
@@ -32,7 +37,7 @@ public class Save {
     public void saveEnd()
     {
         try {
-            FileWriter fileWriter = new FileWriter("/home/esdp/tracker.xml", true);
+            FileWriter fileWriter = new FileWriter(homeDirectory + "/tracker.xml", true);
             fileWriter.write("   <DateEnd value=\"" + new Date() + "\" />\n");
             fileWriter.write("</Task>\n\n");
             fileWriter.close();
