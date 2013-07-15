@@ -92,19 +92,19 @@ public class RecordDialog implements ActionListener {
         }
     }
 
-    public void actionPerformed(ActionEvent ae) {
-        if (ae.getActionCommand().equals("Begin")) {
+    public void actionPerformed(ActionEvent event) {
+        if (event.getActionCommand().equals("Begin")) {
             save.saveStart(tasksComboBox.getSelectedItem().toString());
             currentTaskLabel.setText("Ваш текущий таск: " + tasksComboBox.getSelectedItem());
             startFrame.setVisible(false);
             trackerFrame.setVisible(true);
         }
-        if (ae.getActionCommand().equals("Go!")) {
+        if (event.getActionCommand().equals("Go!")) {
             save.saveDescription(descTextArea.getText());
             descTextArea.setText("");
             Pause();
         }
-        if (ae.getActionCommand().equals("End")) {
+        if (event.getActionCommand().equals("End")) {
             save.saveEnd();
             descTextArea.setText("");
             frequencySpinner.setValue(1);
