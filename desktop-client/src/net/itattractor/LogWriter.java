@@ -4,9 +4,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
-public class Save {
+public class LogWriter {
     private String homeDirectory;
-    public Save()
+    public LogWriter()
     {
         homeDirectory = System.getProperty("user.home");
     }

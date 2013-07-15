@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class RecordDialog implements ActionListener {
+public class DialogRecorder implements ActionListener {
     private JFrame trackerFrame;
     private JFrame startFrame;
     private JTextArea descTextArea;
@@ -19,9 +19,9 @@ public class RecordDialog implements ActionListener {
     private JSpinner frequencySpinner;
     private SpinnerNumberModel spinnerNumberModel;
     private List<String> tasks;
-    private Save save;
+    private LogWriter save;
 
-    RecordDialog() {
+    DialogRecorder() {
         loadData();
         initializeElements();
     }
@@ -32,7 +32,7 @@ public class RecordDialog implements ActionListener {
     }
 
     public void initializeElements() {
-        save = new Save();
+        save = new LogWriter();
         descTextArea = new JTextArea(10, 20);
         descTextArea.setLineWrap(true);
         descTextArea.setWrapStyleWord(true);
@@ -81,7 +81,7 @@ public class RecordDialog implements ActionListener {
         startFrame.setVisible(true);
     }
 
-    public void Pause() {
+    public void pause() {
         try {
             trackerFrame.setVisible(false);
             Thread.sleep(1000 * (Integer) frequencySpinner.getValue());
@@ -101,8 +101,7 @@ public class RecordDialog implements ActionListener {
         }
         if (event.getActionCommand().equals("Go!")) {
             save.saveDescription(descTextArea.getText());
-            descTextArea.setText("");
-            Pause();
+            pause();
         }
         if (event.getActionCommand().equals("End")) {
             save.saveEnd();

@@ -9,7 +9,7 @@ public class Main {
     {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new RecordDialog();
+                new DialogRecorder();
             }
         });
     	new Thread(new ScreenShot()).start();
