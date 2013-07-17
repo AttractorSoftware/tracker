@@ -21,7 +21,16 @@ public class DialogRecorder implements ActionListener {
     private List<String> tasks;
     private LogWriter save;
 
-    DialogRecorder() {
+    private String url ;
+    private String username ;
+    private String password;
+
+    DialogRecorder(String url, String username, String password) {
+
+        this.url = url;
+        this.username = username;
+        this.password = password;
+
         loadData();
         initializeElements();
     }
