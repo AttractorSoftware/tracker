@@ -10,11 +10,11 @@ public class LogWriter {
     {
         homeDirectory = System.getProperty("user.home");
     }
-    public void saveStart(String task)
+    public void saveStart(int id, String task)
     {
         try {
             FileWriter fileWriter = new FileWriter(homeDirectory + "/tracker.xml", true);
-            fileWriter.write("<Task name=\"" + task + "\">\n   <DateStart value=\"" + new Date() + "\" />\n");
+            fileWriter.write("<Task id=\"" + id + "\" name=\"" + task + "\">\n   <DateStart value=\"" + new Date() + "\" />\n");
             fileWriter.close();
         } catch (IOException e) {
             System.out.println("Fail dostupen tolko dlya chteniya");

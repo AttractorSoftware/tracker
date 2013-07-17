@@ -11,30 +11,18 @@ public class Authentication {
         int responseCode = 0;
 
         try {
-
             URL oUrl = new URL(url);
             HttpURLConnection oConnect = (HttpURLConnection) oUrl.openConnection();
-
             oConnect.setRequestMethod("GET");
             oConnect.setDoInput(true);
-
             byte[] byEncodedPassword = (username + ":" + password).getBytes();
-
-
             BASE64Encoder byEncoder = new BASE64Encoder();
-
-            oConnect.setRequestProperty("Authorization",
-                    "Basic " + byEncoder.encode(byEncodedPassword));
-
+            oConnect.setRequestProperty("Authorization", "Basic " + byEncoder.encode(byEncodedPassword));
             responseCode = oConnect.getResponseCode();
-
             oConnect.disconnect();
-
         } catch (Exception e) {
-
             return responseCode;
         } finally {
-
             return responseCode;
         }
     }

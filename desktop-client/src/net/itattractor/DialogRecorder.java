@@ -3,6 +3,7 @@ package net.itattractor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.List;
 
 public class DialogRecorder implements ActionListener {
@@ -18,37 +19,40 @@ public class DialogRecorder implements ActionListener {
     private JComboBox<Object> tasksComboBox;
     private JSpinner frequencySpinner;
     private SpinnerNumberModel spinnerNumberModel;
-    private List<String> tasks;
-    private LogWriter save;
-
-    private String url ;
-    private String username ;
-    private String password;
+    private List<String> tasksInFile;
+    private LogWriter logWriter;
+    private String[] taskList;
+    private int[] taskID;
 
     DialogRecorder(String url, String username, String password) {
-
-        this.url = url;
-        this.username = username;
-        this.password = password;
-
+        new Downloader(url, username, password);
         loadData();
         initializeElements();
     }
 
     public void loadData() {
-        TaskReader taskReader = new TaskReader("tasks.txt");
-        tasks = taskReader.readTasks();
+        TaskReader taskReader = new TaskReader("query.csv");
+        tasksInFile = taskReader.readTasks();
+        taskList = new String[tasksInFile.size() - 1];
+        taskID = new int[tasksInFile.size() - 1];
+        for (int i = 1; i < tasksInFile.size(); i++)
+        {
+            taskID[i - 1] = Integer.parseInt(tasksInFile.get(i).substring(0, tasksInFile.get(i).indexOf(',')));
+            taskList[i - 1] = tasksInFile.get(i).substring(tasksInFile.get(i).indexOf(',') + 1);
+        }
+        File file = new File("query.csv");
+        file.delete();
     }
 
     public void initializeElements() {
-        save = new LogWriter();
+        logWriter = new LogWriter();
         descTextArea = new JTextArea(10, 20);
         descTextArea.setLineWrap(true);
         descTextArea.setWrapStyleWord(true);
         frequencyLabel = new JLabel("Укажите период записи действий:");
         currentTaskLabel = new JLabel("Ваш текущий таск: ");
         chooseTaskLabel = new JLabel("Выберите таск:");
-        tasksComboBox = new JComboBox<Object>(tasks.toArray());
+        tasksComboBox = new JComboBox<Object>(taskList);
         goButton = new JButton("Go!");
         goButton.addActionListener(this);
         beginButton = new JButton("Begin");
@@ -78,8 +82,8 @@ public class DialogRecorder implements ActionListener {
 
                     @Override
                     public void windowClosing(WindowEvent e) {
-                        save.saveDescription(descTextArea.getText());
-                        save.saveEnd();
+                        logWriter.saveDescription(descTextArea.getText());
+                        logWriter.saveEnd();
                         descTextArea.setText("");
                         frequencySpinner.setValue(1);
                         startFrame.setVisible(true);
@@ -103,17 +107,17 @@ public class DialogRecorder implements ActionListener {
 
     public void actionPerformed(ActionEvent event) {
         if (event.getActionCommand().equals("Begin")) {
-            save.saveStart(tasksComboBox.getSelectedItem().toString());
+            logWriter.saveStart(taskID[tasksComboBox.getSelectedIndex()], taskList[tasksComboBox.getSelectedIndex()]);
             currentTaskLabel.setText("Ваш текущий таск: " + tasksComboBox.getSelectedItem());
             startFrame.setVisible(false);
             trackerFrame.setVisible(true);
         }
         if (event.getActionCommand().equals("Go!")) {
-            save.saveDescription(descTextArea.getText());
+            logWriter.saveDescription(descTextArea.getText());
             pause();
         }
         if (event.getActionCommand().equals("End")) {
-            save.saveEnd();
+            logWriter.saveEnd();
             descTextArea.setText("");
             frequencySpinner.setValue(1);
             trackerFrame.setVisible(false);

@@ -49,21 +49,21 @@ public class Login extends JFrame implements ActionListener {
         urlLabel = new JLabel("URL");
         add(urlLabel);
 
-        urlField = new JTextField("http://localhost:8000/mytrac/login");
+        urlField = new JTextField("http://tracker.esdp.it-attractor.net/");
         urlField.setPreferredSize(new Dimension(280, 25));
         add(urlField);
 
         usernameLabel = new JLabel("User Name:");
         add(usernameLabel);
 
-        usernameField = new JTextField();
+        usernameField = new JTextField("beknazar");
         usernameField.setPreferredSize(new Dimension(200, 25));
         add(usernameField);
 
         passwordLabel = new JLabel("Password:");
         add(passwordLabel);
 
-        passwordField = new JTextField();
+        passwordField = new JTextField("beknazar31");
         passwordField.setPreferredSize(new Dimension(200, 25));
         add(passwordField);
 
