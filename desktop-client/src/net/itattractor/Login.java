@@ -56,14 +56,14 @@ public class Login extends JFrame implements ActionListener {
         usernameLabel = new JLabel("User Name:");
         add(usernameLabel);
 
-        usernameField = new JTextField("beknazar");
+        usernameField = new JTextField();
         usernameField.setPreferredSize(new Dimension(200, 25));
         add(usernameField);
 
         passwordLabel = new JLabel("Password:");
         add(passwordLabel);
 
-        passwordField = new JTextField("beknazar31");
+        passwordField = new JTextField();
         passwordField.setPreferredSize(new Dimension(200, 25));
         add(passwordField);
 

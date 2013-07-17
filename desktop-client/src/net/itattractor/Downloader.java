@@ -22,7 +22,7 @@ public class Downloader {
         {
             query = "/query?owner=";
         }
-        this.url = url + query + username + "&status=accepted&status=assigned&&status=inProgress&status=reopened&milestone=%D0%98%D1%82%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D1%8F+2&format=csv&col=id&col=summary&order=id";
+        this.url = url + query + username + "&status=accepted&status=assigned&&status=inProgress&status=reopened&format=csv&col=id&col=summary&order=id";
         this.username = username;
         this.password = password;
         localFileName="query.csv";
