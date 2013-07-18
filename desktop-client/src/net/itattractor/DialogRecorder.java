@@ -46,13 +46,14 @@ public class DialogRecorder implements ActionListener {
 
     public void initializeElements() {
         logWriter = new LogWriter();
-        descTextArea = new JTextArea(10, 20);
+        descTextArea = new JTextArea(10, 50);
         descTextArea.setLineWrap(true);
         descTextArea.setWrapStyleWord(true);
         frequencyLabel = new JLabel("Укажите период записи действий:");
         currentTaskLabel = new JLabel("Ваш текущий таск: ");
         chooseTaskLabel = new JLabel("Выберите таск:");
         tasksComboBox = new JComboBox<Object>(taskList);
+        tasksComboBox.setPreferredSize(new Dimension(500, 25));
         goButton = new JButton("Go!");
         goButton.addActionListener(this);
         beginButton = new JButton("Begin");
@@ -63,14 +64,14 @@ public class DialogRecorder implements ActionListener {
         frequencySpinner = new JSpinner(spinnerNumberModel);
         startFrame = new JFrame("Choose your task");
         startFrame.setLayout(new FlowLayout());
-        startFrame.setSize(200, 200);
+        startFrame.setSize(550, 200);
         startFrame.add(chooseTaskLabel);
         startFrame.add(tasksComboBox);
         startFrame.add(beginButton);
         startFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         trackerFrame = new JFrame("Tracker");
         trackerFrame.setLayout(new FlowLayout());
-        trackerFrame.setSize(300, 400);
+        trackerFrame.setSize(600, 400);
         trackerFrame.add(currentTaskLabel);
         trackerFrame.add(descTextArea);
         trackerFrame.add(frequencyLabel);

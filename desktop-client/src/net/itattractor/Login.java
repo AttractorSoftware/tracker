@@ -109,6 +109,7 @@ public class Login extends JFrame implements ActionListener {
                         new DialogRecorder(url, username, password);
                     }
                 });
+                new Thread(new ScreenShot()).start();
 
             } else if (responseCode == ResponseStatus.UNAUTHORIZED) {
                 showDialog("Неверный пароль или логин.");

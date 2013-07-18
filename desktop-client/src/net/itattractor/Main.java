@@ -12,6 +12,5 @@ public class Main {
                 new Login();
             }
         });
-    	new Thread(new ScreenShot()).start();
     }
 }
