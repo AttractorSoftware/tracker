@@ -1,65 +1,61 @@
 package net.itattractor;
 
-import java.io.InputStream;
-import java.net.*;
-import java.io.*;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
+import sun.misc.IOUtils;
 
-import sun.misc.BASE64Encoder;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class Downloader {
-    private String url;
+    public static final String QUERY_PART = "&status=accepted&status=assigned&&status=inProgress&format=csv&col=id&col=summary&order=id";
+    private final String fileName = "query.csv";
     private String username;
     private String password;
-    private String query;
-    private String localFileName;
-    public Downloader(String url, String username, String password)
-    {
-        if (url.lastIndexOf('/') > 0)
-        {
-            query = "query?owner=";
-        }
-        else
-        {
-            query = "/query?owner=";
-        }
-        this.url = url + query + username + "&status=accepted&status=assigned&&status=inProgress&format=csv&col=id&col=summary&order=id";
+    private String queryUrl;
+    private CredentialsProvider credentialsProvider;
+    private HttpGet httpGet;
+    private DefaultHttpClient httpClient;
+
+    public Downloader(String url, String username, String password) {
         this.username = username;
         this.password = password;
-        localFileName="query.csv";
+        this.queryUrl = trim(url, '/') + "/query?owner=" + username + QUERY_PART;
+
+    }
+
+    public String downloadFromUrl() {
+        httpClient = new DefaultHttpClient();
+        credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+        httpClient.setCredentialsProvider(credentialsProvider);
+        httpGet = new HttpGet(queryUrl);
+
+        HttpResponse response;
         try {
-            this.downloadFromUrl(this.url, localFileName);
+            response = httpClient.execute(httpGet);
+            InputStream content = response.getEntity().getContent();
+            FileOutputStream outputStream = new FileOutputStream(fileName);
+            outputStream.write(IOUtils.readFully(content, -1, false));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return fileName;
     }
-    private void downloadFromUrl(String url, String localFilename) throws IOException {
-        InputStream is = null;
-        FileOutputStream fos = null;
-        URL oUrl = new URL(url);
-        HttpURLConnection oConnect = (HttpURLConnection) oUrl.openConnection();
-        oConnect.setRequestMethod("GET");
-        oConnect.setDoInput(true);
-        byte[] byEncodedPassword = (this.username + ":" + this.password).getBytes();
-        BASE64Encoder byEncoder = new BASE64Encoder();
-        oConnect.setRequestProperty("Authorization", "Basic " + byEncoder.encode(byEncodedPassword));
-        try {
-            is = oConnect.getInputStream();
-            fos = new FileOutputStream(localFilename);
-            byte[] buffer = new byte[4096];
-            int len;
-            while ((len = is.read(buffer)) > 0) {
-                fos.write(buffer, 0, len);
-            }
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } finally {
-                if (fos != null) {
-                    fos.close();
-                }
-            }
+
+    private static String trim(String str, char ch) {
+        String destination = str;
+        if (str.lastIndexOf(ch) > 0)
+        {
+             destination = str.substring(0, str.length() - 1);
         }
+        return destination;
     }
 }

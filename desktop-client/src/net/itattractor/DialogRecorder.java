@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class DialogRecorder implements ActionListener {
+    private final Downloader downloader;
     private JFrame trackerFrame;
     private JFrame startFrame;
     private JTextArea descTextArea;
@@ -38,13 +39,13 @@ public class DialogRecorder implements ActionListener {
         this.url = url;
         this.username = username;
         this.password = password;
-        new Downloader(url, username, password);
+        downloader = new Downloader(url, username, password);
         loadData();
         initializeElements();
     }
 
     public void loadData() {
-        TaskReader taskReader = new TaskReader("query.csv");
+        TaskReader taskReader = new TaskReader(downloader.downloadFromUrl());
         tasksInFile = taskReader.readTasks();
         taskList = new String[tasksInFile.size() - 1];
         taskID = new int[tasksInFile.size() - 1];
