@@ -49,7 +49,7 @@ public class Login extends JFrame implements ActionListener {
         urlLabel = new JLabel("URL");
         add(urlLabel);
 
-        urlField = new JTextField("http://tracker.esdp.it-attractor.net/");
+        urlField = new JTextField("");
         urlField.setPreferredSize(new Dimension(280, 25));
         add(urlField);
 
