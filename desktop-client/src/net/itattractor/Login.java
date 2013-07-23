@@ -4,14 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
-/**
- * Created with IntelliJ IDEA.
- * User: esdp
- * Date: 7/16/13
- * Time: 4:35 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Login extends JFrame implements ActionListener {
 
     private JLabel loginLabel;
@@ -94,12 +88,17 @@ public class Login extends JFrame implements ActionListener {
         username = usernameField.getText().trim();
         password = passwordField.getText().trim();
 
-        if (url.equals("") || username.equals("") || passwordField.getText().trim().equals("")) {
+        if (url.equals("") || username.equals("") || password.equals("")) {
             showDialog("Wrong username or password. Try again!");
         } else {
 
-            authentication = new Authentication();
-            int responseCode = authentication.auth(url, username, password);
+            authentication = new Authentication(url, username, password);
+            int responseCode = 0;
+            try {
+                responseCode = authentication.authenticate();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
 
             if (responseCode == ResponseStatus.OK) {
                 this.setVisible(false);
@@ -113,10 +112,8 @@ public class Login extends JFrame implements ActionListener {
 
             } else if (responseCode == ResponseStatus.UNAUTHORIZED) {
                 showDialog("Неверный пароль или логин.");
-                return;
             } else {
                 showDialog("Неверный url.");
-                return;
             }
         }
     }

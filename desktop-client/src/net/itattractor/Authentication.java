@@ -1,29 +1,35 @@
 package net.itattractor;
 
-import sun.misc.BASE64Encoder;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
 
 public class Authentication {
+    private DefaultHttpClient httpClient;
+    private CredentialsProvider credentialsProvider;
+    private HttpGet httpGet;
 
-    public int auth(String url, String username, String password){
-        int responseCode = 0;
+    public Authentication(String url, String username, String password) {
+        httpClient = new DefaultHttpClient();
+        credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+        httpClient.setCredentialsProvider(credentialsProvider);
+        httpGet = new HttpGet(url);
+    }
 
-        try {
-            URL oUrl = new URL(url);
-            HttpURLConnection oConnect = (HttpURLConnection) oUrl.openConnection();
-            oConnect.setRequestMethod("GET");
-            oConnect.setDoInput(true);
-            byte[] byEncodedPassword = (username + ":" + password).getBytes();
-            BASE64Encoder byEncoder = new BASE64Encoder();
-            oConnect.setRequestProperty("Authorization", "Basic " + byEncoder.encode(byEncodedPassword));
-            responseCode = oConnect.getResponseCode();
-            oConnect.disconnect();
-        } catch (Exception e) {
-            return responseCode;
-        } finally {
-            return responseCode;
-        }
+    public int authenticate() throws IOException {
+        int statusCode;
+        HttpResponse response = httpClient.execute(httpGet);
+        statusCode = response.getStatusLine().getStatusCode();
+        httpGet.releaseConnection();
+        httpClient.getConnectionManager().shutdown();
+
+        return statusCode;
     }
 }
