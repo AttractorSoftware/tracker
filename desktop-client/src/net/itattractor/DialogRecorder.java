@@ -35,7 +35,7 @@ public class DialogRecorder implements ActionListener {
 
     private CommentSender commentSender;
 
-    DialogRecorder(String url, String username, String password) {
+    public DialogRecorder(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;

@@ -17,13 +17,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: vit
- * Date: 7/23/13
- * Time: 2:55 PM
- * To change this template use File | Settings | File Templates.
- */
 public class CommentSender {
     private static String view_time = "";
 
