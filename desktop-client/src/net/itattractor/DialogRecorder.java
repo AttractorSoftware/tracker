@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class DialogRecorder implements ActionListener {
@@ -28,18 +27,14 @@ public class DialogRecorder implements ActionListener {
     private LogWriter logWriter;
     private String[] taskList;
     private int[] taskID;
-    private String url;
-    private String username;
-    private String password;
     private String lastComment = "";
 
     private CommentSender commentSender;
+    private final ConnectionProvider provider;
 
-    public DialogRecorder(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
-        downloader = new Downloader(url, username, password);
+    public DialogRecorder(ConnectionProvider provider) {
+        this.provider = provider;
+        downloader = new Downloader(provider);
         loadData();
         initializeElements();
     }
@@ -59,7 +54,7 @@ public class DialogRecorder implements ActionListener {
     }
 
     public void initializeElements() {
-        commentSender = new CommentSender();
+        commentSender = new CommentSender(provider);
         logWriter = new LogWriter();
         descTextArea = new JTextArea(10, 50);
         descTextArea.setLineWrap(true);
@@ -133,11 +128,7 @@ public class DialogRecorder implements ActionListener {
             if (!lastComment.equals(descTextArea.getText()))
             {
                 logWriter.saveDescription(descTextArea.getText());
-                try {
-                    commentSender.paramSetter(url, username, password, taskID[tasksComboBox.getSelectedIndex()], descTextArea.getText());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                commentSender.sendComment(taskID[tasksComboBox.getSelectedIndex()], descTextArea.getText());
                 System.out.println(taskID[tasksComboBox.getSelectedIndex()]);
             }
             pause();

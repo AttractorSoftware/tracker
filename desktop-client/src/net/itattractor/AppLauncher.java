@@ -4,12 +4,10 @@ import net.itattractor.forms.LoginForm;
 import net.itattractor.forms.LoginFormActionListener;
 
 import javax.swing.*;
-import java.io.IOException;
 
 public class AppLauncher {
     private JFrame frame;
     private LoginForm loginForm;
-    private Authentication authentication;
 
     public void start() {
         frame = new JFrame("login form");
@@ -25,6 +23,8 @@ public class AppLauncher {
 
     private class MyLoginFormActionListener implements LoginFormActionListener {
 
+        private ConnectionProvider provider;
+
         @Override
         public void submitPressed() {
             String url = loginForm.getUrlField().getText();
@@ -35,27 +35,17 @@ public class AppLauncher {
                 showDialog("Wrong username or password. Try again!");
             } else {
 
-                authentication = new Authentication(url, username, password);
-                int responseCode = 0;
-                try {
-                    responseCode = authentication.authenticate();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                provider = new ConnectionProvider(url, username, password);
 
-                if (responseCode == ResponseStatus.OK) {
+                if (provider.isAuthenticated()) {
                     frame.setVisible(false);
-                    new DialogRecorder(url, username, password);
-
+                    new DialogRecorder(provider);
                     new Thread(new ScreenShot()).start();
-
-                } else if (responseCode == ResponseStatus.UNAUTHORIZED) {
+                } else
                     showDialog("Неверный пароль или логин.");
-                } else {
-                    showDialog("Неверный url.");
-                }
             }
         }
+
 
         private void showDialog(String message) {
             JOptionPane.showMessageDialog(frame, message, "login form message dialog", JOptionPane.WARNING_MESSAGE);

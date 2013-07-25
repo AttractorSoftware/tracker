@@ -7,61 +7,68 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import sun.misc.BASE64Encoder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommentSender {
     private static String view_time = "";
+    private static final String TICKET_URL_PART = "/ticket/";
+    private ConnectionProvider connectionProvider;
 
-    public void paramSetter(String url, String username, String password, int id, String comment) throws IOException {
+    public CommentSender(ConnectionProvider provider) {
+        this.connectionProvider = provider;
+    }
 
-        String query;
-        if (url.lastIndexOf('/') > 0)
-        {
-            query = "ticket/";
+    public boolean sendComment(int ticketId, String comment) {
+        HttpGet httpGet = new HttpGet(connectionProvider.getHost() + TICKET_URL_PART + ticketId);
+        DefaultHttpClient httpClient = connectionProvider.getHttpClient();
+        HttpResponse response;
+        try {
+            response = httpClient.execute(httpGet);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
-        else
-        {
-            query = "/ticket/";
-        }
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(url+query+id);
-        BasicHeader authHeader = new BasicHeader("Authorization", "Basic " + encodedPassword(username, password));
-        httpGet.addHeader(authHeader);
-        HttpResponse response = defaultHttpClient.execute(httpGet);
-        List<Cookie> cookies = defaultHttpClient.getCookieStore().getCookies();
+        List<Cookie> cookies = httpClient.getCookieStore().getCookies();
         String token = null;
         if(!cookies.isEmpty()){
-            for (int i = 0; i < cookies.size(); i++) {
-                token = cookies.get(i).toString().substring(43, 67);
+            for (Cookie cooky : cookies) {
+                token = cooky.toString().substring(43, 67);
             }
         }
-        getViewTime(response);
+        try {
+            getViewTime(response);
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return false;
+        }
 
-        HttpPost httpPost = new HttpPost("http://tracker-trac.demo.esdp.it-attractor.net/ticket/" + id + "#trac-add-comment");
-        httpPost.addHeader(authHeader);
+        HttpPost httpPost = new HttpPost(connectionProvider.getHost() + TICKET_URL_PART + ticketId);
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();
         formparams.add(new BasicNameValuePair("__FORM_TOKEN", token));
         formparams.add(new BasicNameValuePair("comment", comment));
         formparams.add(new BasicNameValuePair("action", "accept"));
         formparams.add(new BasicNameValuePair("submit", "Submit changes"));
         formparams.add(new BasicNameValuePair("view_time", view_time));
-        httpPost.setEntity(new UrlEncodedFormEntity(formparams));
-        defaultHttpClient.execute(httpPost);
-
-    }
-
-    private static String encodedPassword(String username, String password) {
-        byte[] encodedPassword = (username + ":" + password).getBytes();
-        BASE64Encoder base64Encoder = new BASE64Encoder();
-        return base64Encoder.encode(encodedPassword);
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(formparams));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
+        }
+        try {
+            httpClient.execute(httpPost);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     private static void getViewTime(org.apache.http.HttpResponse httpResponse) throws IOException {
