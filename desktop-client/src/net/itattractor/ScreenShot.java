@@ -14,7 +14,7 @@ public class ScreenShot extends Thread{
     {
         homeDirectory = System.getProperty("user.home");
     }
-    final int timeInMilisec=1000*5;
+    private final int timeInMilisec = 5000;
     public void screenShot(){
         Robot robot = null;
         try {

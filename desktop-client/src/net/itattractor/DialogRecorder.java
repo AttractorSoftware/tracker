@@ -129,7 +129,6 @@ public class DialogRecorder implements ActionListener {
             {
                 logWriter.saveDescription(descTextArea.getText());
                 commentSender.sendComment(taskID[tasksComboBox.getSelectedIndex()], descTextArea.getText());
-                System.out.println(taskID[tasksComboBox.getSelectedIndex()]);
             }
             pause();
             lastComment = descTextArea.getText();

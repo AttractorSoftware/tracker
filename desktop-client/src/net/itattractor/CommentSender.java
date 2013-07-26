@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommentSender {
-    private static String view_time = "";
     private static final String TICKET_URL_PART = "/ticket/";
     private ConnectionProvider connectionProvider;
 
@@ -35,29 +34,25 @@ public class CommentSender {
             e.printStackTrace();
             return false;
         }
-        List<Cookie> cookies = httpClient.getCookieStore().getCookies();
-        String token = null;
-        if(!cookies.isEmpty()){
-            for (Cookie cooky : cookies) {
-                token = cooky.toString().substring(43, 67);
-            }
-        }
+        String view_time;
         try {
-            getViewTime(response);
+            view_time = getViewTime(response);
+            httpGet.releaseConnection();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
             return false;
         }
+        List<Cookie> cookies = httpClient.getCookieStore().getCookies();
 
         HttpPost httpPost = new HttpPost(connectionProvider.getHost() + TICKET_URL_PART + ticketId);
-        List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-        formparams.add(new BasicNameValuePair("__FORM_TOKEN", token));
-        formparams.add(new BasicNameValuePair("comment", comment));
-        formparams.add(new BasicNameValuePair("action", "accept"));
-        formparams.add(new BasicNameValuePair("submit", "Submit changes"));
-        formparams.add(new BasicNameValuePair("view_time", view_time));
+        List<NameValuePair> formParameters = new ArrayList<NameValuePair>();
+        formParameters.add(new BasicNameValuePair("__FORM_TOKEN", getToken(cookies)));
+        formParameters.add(new BasicNameValuePair("comment", comment));
+        formParameters.add(new BasicNameValuePair("action", "accept"));
+        formParameters.add(new BasicNameValuePair("submit", "Submit changes"));
+        formParameters.add(new BasicNameValuePair("view_time", view_time));
         try {
-            httpPost.setEntity(new UrlEncodedFormEntity(formparams));
+            httpPost.setEntity(new UrlEncodedFormEntity(formParameters));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return false;
@@ -71,16 +66,29 @@ public class CommentSender {
         return true;
     }
 
-    private static void getViewTime(org.apache.http.HttpResponse httpResponse) throws IOException {
+    private static String getViewTime(HttpResponse httpResponse) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpResponse. getEntity().getContent()));
         String line1;
         String subLine = "<input type=\"hidden\" name=\"view_time\" value=\"";
         while ((line1 = bufferedReader.readLine()) != null) {
             if (line1.indexOf(subLine) > 0)
             {
-                view_time = line1.substring(line1.indexOf(subLine) + subLine.length(), line1.indexOf(subLine) + subLine.length() + 16);
+                return line1.substring(line1.indexOf(subLine) + subLine.length(), line1.indexOf(subLine) + subLine.length() + 16);
             }
         }
+        return null;
+    }
+
+    public static String getToken(List<Cookie> cookies)
+    {
+        for (Cookie cookie : cookies)
+        {
+            if (cookie.getName().equals("trac_form_token"))
+            {
+                return cookie.getValue();
+            }
+        }
+        return null;
     }
 
 }

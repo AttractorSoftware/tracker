@@ -13,7 +13,7 @@ public class AppLauncher {
         frame = new JFrame("login form");
 
         loginForm = new LoginForm();
-        loginForm.setActionListener(new MyLoginFormActionListener());
+        loginForm.setActionListener(new LoginFormActionListenerImpl());
         frame.add(loginForm.getContentPanel());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(320, 240);
@@ -21,7 +21,7 @@ public class AppLauncher {
         frame.setVisible(true);
     }
 
-    private class MyLoginFormActionListener implements LoginFormActionListener {
+    private class LoginFormActionListenerImpl implements LoginFormActionListener {
 
         private ConnectionProvider provider;
 
@@ -34,7 +34,6 @@ public class AppLauncher {
             if (url.equals("") || username.equals("") || password.equals("")) {
                 showDialog("Wrong username or password. Try again!");
             } else {
-
                 provider = new ConnectionProvider(url, username, password);
 
                 if (provider.isAuthenticated()) {
