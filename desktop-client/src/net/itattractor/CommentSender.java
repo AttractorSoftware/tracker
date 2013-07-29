@@ -52,7 +52,7 @@ public class CommentSender {
         formParameters.add(new BasicNameValuePair("submit", "Submit changes"));
         formParameters.add(new BasicNameValuePair("view_time", view_time));
         try {
-            httpPost.setEntity(new UrlEncodedFormEntity(formParameters));
+            httpPost.setEntity(new UrlEncodedFormEntity(formParameters, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return false;
