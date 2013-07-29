@@ -19,6 +19,7 @@ public class Downloader {
     public Downloader(ConnectionProvider provider) {
         this.queryUrl = provider.getHost() + "/query?owner=" + provider.getUsername() + QUERY_PART;
         this.connectionProvider = provider;
+        downloadFromUrl();
     }
 
     public String downloadFromUrl() {
@@ -35,6 +36,10 @@ public class Downloader {
             e.printStackTrace();
         }
 
+        return fileName;
+    }
+
+    public String getFileName() {
         return fileName;
     }
 }

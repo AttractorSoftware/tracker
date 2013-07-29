@@ -9,15 +9,14 @@ import java.lang.*;
 import java.util.Date;
 
 public class ScreenShot extends Thread {
+    private final ScreenshotSender screenshotSender;
     private String homeDirectory;
-    private ScreenshotSender screenshotSender;
+    private final int timeInMilisec = 10000;
 
     public ScreenShot(ConnectionProvider connectionProvider) {
         homeDirectory = System.getProperty("user.home");
         screenshotSender = new ScreenshotSender(connectionProvider);
     }
-
-    private final int timeInMilisec = 10000;
 
     public void screenShot() {
         Robot robot = null;

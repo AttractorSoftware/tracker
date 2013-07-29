@@ -40,7 +40,7 @@ public class DialogRecorder implements ActionListener {
     }
 
     public void loadData() {
-        TaskReader taskReader = new TaskReader(downloader.downloadFromUrl());
+        TaskReader taskReader = new TaskReader(new Downloader(provider));
         tasksInFile = taskReader.readTasks();
         taskList = new String[tasksInFile.size() - 1];
         taskID = new int[tasksInFile.size() - 1];
