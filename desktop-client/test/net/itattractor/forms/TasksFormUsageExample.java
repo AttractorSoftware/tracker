@@ -1,6 +1,7 @@
 package net.itattractor.forms;
 
 import net.itattractor.ConnectionProvider;
+import net.itattractor.forms.tasks.TasksForm;
 
 import javax.swing.*;
 

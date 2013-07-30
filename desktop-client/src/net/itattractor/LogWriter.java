@@ -5,16 +5,20 @@ import java.io.IOException;
 import java.util.Date;
 
 public class LogWriter {
+    private Ticket currentTicket;
     private String homeDirectory;
-    public LogWriter()
-    {
+
+    public LogWriter(Ticket ticket) {
+        this.currentTicket = ticket;
         homeDirectory = System.getProperty("user.home");
+        saveStart();
     }
-    public void saveStart(int id, String task)
+
+    private void saveStart()
     {
         try {
             FileWriter fileWriter = new FileWriter(homeDirectory + "/tracker.xml", true);
-            fileWriter.write("<Task id=\"" + id + "\" name=\"" + task + "\">\n   <DateStart value=\"" + new Date() + "\" />\n");
+            fileWriter.write("<Task id=\"" + currentTicket.getTicketId() + "\" name=\"" + currentTicket.getTicketSummary() + "\">\n   <DateStart value=\"" + new Date() + "\" />\n");
             fileWriter.close();
         } catch (IOException e) {
             System.out.println("Fail dostupen tolko dlya chteniya");
@@ -34,7 +38,7 @@ public class LogWriter {
         }
     }
 
-    public void saveEnd()
+    public void close()
     {
         try {
             FileWriter fileWriter = new FileWriter(homeDirectory + "/tracker.xml", true);

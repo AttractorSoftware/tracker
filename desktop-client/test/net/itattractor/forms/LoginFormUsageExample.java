@@ -1,5 +1,7 @@
 package net.itattractor.forms;
 
+import net.itattractor.forms.login.LoginForm;
+
 import javax.swing.*;
 
 public class LoginFormUsageExample {

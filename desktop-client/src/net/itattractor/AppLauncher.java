@@ -1,8 +1,15 @@
 package net.itattractor;
 
-import net.itattractor.forms.*;
+import net.itattractor.forms.login.LoginForm;
+import net.itattractor.forms.login.LoginFormActionListener;
+import net.itattractor.forms.record.RecordForm;
+import net.itattractor.forms.record.RecordFormActionListener;
+import net.itattractor.forms.tasks.TasksForm;
+import net.itattractor.forms.tasks.TasksFormActionListener;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class AppLauncher {
     private JFrame loginFrame;
@@ -10,6 +17,10 @@ public class AppLauncher {
     private JFrame recordFrame;
     private JFrame tasksFrame;
     private RecordForm recordForm;
+    private ConnectionProvider provider;
+    private LogWriter logWriter;
+
+
 
     public void start() {
         loginFrame = new JFrame("login form");
@@ -24,9 +35,6 @@ public class AppLauncher {
     }
 
     private class LoginFormActionListenerImpl implements LoginFormActionListener {
-
-        private ConnectionProvider provider;
-
         @Override
         public void submitPressed() {
             String url = loginForm.getUrlField().getText();
@@ -49,7 +57,6 @@ public class AppLauncher {
                     tasksFrame.setSize(500, 200);
                     tasksFrame.setVisible(true);
                     new Thread(new ScreenShot(provider)).start();
-
                 } else
                     showDialog("Неверный пароль или логин.");
             }
@@ -67,32 +74,45 @@ public class AppLauncher {
     }
 
     private class TasksFormActionListenerImpl implements TasksFormActionListener {
+
         @Override
-        public void startPressed(String ticketId, String ticketSummary) {
+        public void startPressed(Ticket ticket) {
             tasksFrame.setVisible(false);
             recordFrame = new JFrame("record form");
-            recordForm = new RecordForm(ticketId, ticketSummary);
+            recordForm = new RecordForm(ticket);
             recordForm.setActionListener(new RecordFormActionListenerImpl());
 
+            logWriter = new LogWriter(ticket);
             recordFrame.add(recordForm.getContentPanel());
-            recordFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            recordFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             recordFrame.setSize(500, 300);
             recordFrame.setVisible(true);
+            recordFrame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    logWriter.close();
+                    recordFrame.setVisible(false);
+                    tasksFrame.setVisible(true);
+                }
+            });
         }
     }
 
     private class RecordFormActionListenerImpl implements RecordFormActionListener {
-        private String lastComment;
-        private LogWriter logWriter;
+        private String lastComment = "";
         private CommentSender commentSender;
 
+        private RecordFormActionListenerImpl() {
+            this.commentSender = new CommentSender(provider);
+        }
+
         @Override
-        public void okPressed() {
+        public void okPressed(Ticket currentTicket) {
             JTextArea descriptionTextArea = recordForm.getDescriptionTextArea();
             if (!lastComment.equals(descriptionTextArea.getText()))
             {
                 logWriter.saveDescription(descriptionTextArea.getText());
-                commentSender.sendComment(taskID[recordForm.getTasksComboBox().getSelectedIndex()], descriptionTextArea.getText());
+                commentSender.sendComment(currentTicket.getTicketId(), descriptionTextArea.getText());
             }
             pause();
             lastComment = descriptionTextArea.getText();
@@ -111,7 +131,9 @@ public class AppLauncher {
 
         @Override
         public void switchPressed() {
-            //To change body of implemented methods use File | Settings | File Templates.
+            logWriter.close();
+            recordFrame.setVisible(false);
+            tasksFrame.setVisible(true);
         }
     }
 }

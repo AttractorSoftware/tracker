@@ -1,9 +1,10 @@
-package net.itattractor.forms;
+package net.itattractor.forms.tasks;
 
 import net.itattractor.ConnectionProvider;
 import net.itattractor.Downloader;
 import net.itattractor.TaskReader;
 import net.itattractor.Ticket;
+import net.itattractor.forms.tasks.TasksFormActionListener;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

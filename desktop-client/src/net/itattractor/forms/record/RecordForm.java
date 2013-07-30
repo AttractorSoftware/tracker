@@ -1,34 +1,32 @@
-package net.itattractor.forms;
+package net.itattractor.forms.record;
 
-import com.sun.org.apache.xerces.internal.xs.datatypes.XSDouble;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
+import net.itattractor.Ticket;
+import net.itattractor.forms.record.RecordFormActionListener;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class RecordForm {
-    private String ticketId;
-    private String ticketSummary;
+    private Ticket currentTicket;
     private JPanel contentPanel;
     private JLabel currentTaskLabel;
-    private JLabel taskViewerLabel;
     private JTextArea descriptionTextArea;
     private JSpinner periodTimeSpinner;
     private JButton okButton;
     private JButton switchTaskButton;
+    private JTextPane currentTaskPane;
     private RecordFormActionListener actionListener;
-    private JComboBox tasksComboBox;
 
-    public RecordForm(String ticketId, String ticketSummary) {
-        this.ticketId = ticketId;
-        this.ticketSummary = ticketSummary;
+    public RecordForm(final Ticket currentTicket) {
+        this.currentTicket = currentTicket;
 
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(actionListener != null) {
-                    actionListener.okPressed();
+                    actionListener.okPressed(currentTicket);
                 }
             }
         });
@@ -54,15 +52,13 @@ public class RecordForm {
         return descriptionTextArea;
     }
 
-    public JComboBox getTasksComboBox() {
-        return tasksComboBox;
-    }
-
     public JSpinner getPeriodTimeSpinner() {
         return periodTimeSpinner;
     }
 
     private void createUIComponents() {
-        taskViewerLabel = new JLabel("#" + ticketId + ": " + ticketSummary);
+        currentTaskPane = new JTextPane();
+        currentTaskPane.setText(currentTicket.toString());
+        periodTimeSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 60, 1));
     }
 }

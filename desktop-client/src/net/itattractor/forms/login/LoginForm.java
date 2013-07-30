@@ -1,4 +1,4 @@
-package net.itattractor.forms;
+package net.itattractor.forms.login;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 public class LoginForm {
     private JPanel contentPanel;
 
-    private JFormattedTextField urlField;
+    private JTextField urlField;
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton submitButton;
@@ -41,7 +41,7 @@ public class LoginForm {
         this.actionListener = actionListener;
     }
 
-    public JFormattedTextField getUrlField() {
+    public JTextField getUrlField() {
         return urlField;
     }
 
@@ -51,5 +51,11 @@ public class LoginForm {
 
     public JPasswordField getPasswordField() {
         return passwordField;
+    }
+
+    private void createUIComponents() {
+        urlField = new JTextField("http://tracker-trac.demo.esdp.it-attractor.net/");
+        usernameField = new JTextField("beknazar");
+        passwordField = new JPasswordField("beknazar31");
     }
 }

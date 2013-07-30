@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="net.itattractor.forms.RecordForm">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="net.itattractor.forms.record.RecordForm">
   <grid id="27dc6" binding="contentPanel" default-binding="true" layout-manager="FormLayout">
     <rowspec value="center:max(d;4px):noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
@@ -37,16 +37,8 @@
           <forms/>
         </constraints>
         <properties>
+          <name value="currentTaskLabel"/>
           <text value="current task"/>
-        </properties>
-      </component>
-      <component id="654b3" class="javax.swing.JLabel" binding="taskViewerLabel" custom-create="true">
-        <constraints>
-          <grid row="2" column="4" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <forms/>
-        </constraints>
-        <properties>
-          <text value=""/>
         </properties>
       </component>
       <component id="5c3a6" class="javax.swing.JTextArea" binding="descriptionTextArea">
@@ -67,7 +59,7 @@
           <text value="remind me again in"/>
         </properties>
       </component>
-      <component id="209d0" class="javax.swing.JSpinner" binding="periodTimeSpinner">
+      <component id="209d0" class="javax.swing.JSpinner" binding="periodTimeSpinner" custom-create="true">
         <constraints>
           <grid row="8" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false"/>
@@ -115,6 +107,19 @@
         </constraints>
         <properties>
           <text value="minutes"/>
+        </properties>
+      </component>
+      <component id="25756" class="javax.swing.JTextPane" binding="currentTaskPane" custom-create="true">
+        <constraints>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+          <forms defaultalign-horz="false" defaultalign-vert="false"/>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <enabled value="true"/>
+          <foreground color="-6710887"/>
         </properties>
       </component>
     </children>
