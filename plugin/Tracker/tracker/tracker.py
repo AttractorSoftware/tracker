@@ -2,18 +2,26 @@ import os
 import shutil
 from twisted.python.hashlib import sha1
 import errno
+from genshi import Markup
 
 from trac.config import IntOption
 from trac.core import *
 from trac.web import IRequestHandler, RequestDone
-from trac.web.chrome import (INavigationContributor  )
+from trac.web.chrome import INavigationContributor
 
 
 class TrackerModule(Component):
-    implements(IRequestHandler,INavigationContributor)
+    implements(IRequestHandler, INavigationContributor)
 
     max_size = IntOption('screenshot', 'max_size', 262144,
                          """Maximum allowed screenshot size (in bytes)""")
+
+    def get_active_navigation_item(self, req):
+        return 'tracker'
+
+    def get_navigation_items(self, req):
+        yield 'mainnav', 'tracker', Markup('<a href="%s">Tracker</a>' % (
+            self.env.href.tracker()))
 
     def match_request(self, req):
         return req.path_info == '/tracker'
@@ -23,8 +31,7 @@ class TrackerModule(Component):
         if req.method == 'POST':
             self._do_save(req)
         else:
-            raise RequestDone
-
+            print 'GET'
         req.redirect(req.href.wiki())
 
     def _do_save(self, req):

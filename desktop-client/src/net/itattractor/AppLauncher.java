@@ -39,7 +39,7 @@ public class AppLauncher {
                 if (provider.isAuthenticated()) {
                     frame.setVisible(false);
                     new DialogRecorder(provider);
-                    new Thread(new ScreenShot()).start();
+                    new Thread(new ScreenShot(provider)).start();
                 } else
                     showDialog("Неверный пароль или логин.");
             }
