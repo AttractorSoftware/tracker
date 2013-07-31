@@ -31,7 +31,6 @@ public class CommentSender {
         HttpResponse response;
         try {
             response = httpClient.execute(httpGet);
-            EntityUtils.consume(response.getEntity());
         } catch (IOException e) {
             e.printStackTrace();
             return false;

@@ -1,8 +1,6 @@
 package net.itattractor.forms.record;
 
-import com.jgoodies.forms.factories.DefaultComponentFactory;
 import net.itattractor.Ticket;
-import net.itattractor.forms.record.RecordFormActionListener;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
