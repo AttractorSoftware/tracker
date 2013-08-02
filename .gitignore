@@ -2,5 +2,6 @@
 *.*~
 out
 .idea
+!research/ticket31/CucumberWebExample/.idea
 screen
 desktop-client/target

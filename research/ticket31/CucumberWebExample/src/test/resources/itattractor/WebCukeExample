@@ -1,0 +1,6 @@
+Feature: Trac should be tested by the cucumber
+  Scenario: Open A Trac Via Cucumber
+    Given Opened WebDriver "FirefoxDriver"
+    When I visit page "http://tracker-trac.demo.esdp.it-attractor.net" login "zakir.lamiev" pass "11235813ewq"
+    Then I see title of web page "zakon"
+    And I see content description on page "Задачи"
