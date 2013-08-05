@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 public class TasksForm {
     private JPanel contentPanel;
     private JComboBox tasksComboBox;
+
     private JButton startButton;
     private TasksFormActionListener actionListener;
     private String[] taskList;

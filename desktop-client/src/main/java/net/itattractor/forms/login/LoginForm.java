@@ -7,11 +7,12 @@ import java.awt.event.ActionListener;
 public class LoginForm {
     private JPanel contentPanel;
 
-    private JTextField urlField;
     private JTextField usernameField;
     private JPasswordField passwordField;
+
     private JButton submitButton;
     private JButton cancelButton;
+    private JTextField urlField;
 
     private LoginFormActionListener actionListener;
 
@@ -54,8 +55,7 @@ public class LoginForm {
     }
 
     private void createUIComponents() {
-        urlField = new JTextField("http://tracker-trac.demo.esdp.it-attractor.net/");
-        usernameField = new JTextField("beknazar");
-        passwordField = new JPasswordField("beknazar31");
+        usernameField = new JTextField("");
+        passwordField = new JPasswordField("");
     }
 }
