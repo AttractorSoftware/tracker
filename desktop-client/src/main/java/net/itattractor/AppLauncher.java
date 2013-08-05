@@ -13,13 +13,14 @@ import java.awt.event.WindowEvent;
 
 public class AppLauncher {
     private JFrame loginFrame;
+
     private LoginForm loginForm;
     private JFrame recordFrame;
     private JFrame tasksFrame;
     private RecordForm recordForm;
     private ConnectionProvider provider;
     private LogWriter logWriter;
-
+    private TasksForm tasksForm;
 
 
     public void start() {
@@ -34,7 +35,19 @@ public class AppLauncher {
         loginFrame.setVisible(true);
     }
 
-    private class LoginFormActionListenerImpl implements LoginFormActionListener {
+    public JFrame getLoginFrame() {
+        return loginFrame;
+    }
+
+    public JFrame getTasksFrame() {
+        return tasksFrame;
+    }
+
+    public JFrame getRecordFrame() {
+        return recordFrame;
+    }
+
+    public class LoginFormActionListenerImpl implements LoginFormActionListener {
         @Override
         public void submitPressed() {
             String url = loginForm.getUrlField().getText();
@@ -49,7 +62,7 @@ public class AppLauncher {
                 if (provider.isAuthenticated()) {
                     loginFrame.setVisible(false);
                     tasksFrame = new JFrame("tasks form");
-                    TasksForm tasksForm = new TasksForm(provider);
+                    tasksForm = new TasksForm(provider);
                     tasksForm.setActionListener(new TasksFormActionListenerImpl());
 
                     tasksFrame.add(tasksForm.getContentPanel());
