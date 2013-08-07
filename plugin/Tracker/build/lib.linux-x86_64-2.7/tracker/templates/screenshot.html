@@ -1,0 +1,51 @@
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+        >
+
+<xi:include href="layout.html"/>
+
+<head>
+    <title py:choose="mode">
+        <py:when test="'new'"></py:when>
+        <py:otherwise>
+            <i18n:msg params="filename"> Screenshot</i18n:msg>
+        </py:otherwise>
+    </title>
+</head>
+<body>
+<div py:choose="mode" id="content" class="screenshot">
+    <h1 i18n:msg="">Add Screenshot</h1>
+
+    <form id="screenshot" method="post" enctype="multipart/form-data" action="">
+        <div class="field">
+            <label>
+                File
+                <py:if test="max_size >= 0">
+                    <i18n:msg params="value">(size limit ${pretty_size(max_size)})</i18n:msg>
+                </py:if>
+                :
+                <input type="file" name="screenshot"/>
+            </label>
+        </div>
+        <fieldset>
+            <legend>Screenshot Info</legend>
+            <div class="field">
+                <label>Description of the file(optional):
+                    <input type="text" name="description" size="60" value="$screenshot.description"/>
+                </label>
+            </div>
+        </fieldset>
+        <div class="buttons">
+            <input type="submit" value="${_('Add screenshot')}"/>
+            <input type="submit" name="cancel" value="${_('Cancel')}"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>

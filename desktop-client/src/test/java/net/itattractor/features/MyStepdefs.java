@@ -4,9 +4,10 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import org.junit.Assert;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.Select;
 import org.uispec4j.Window;
 
 import java.util.List;
@@ -69,11 +70,7 @@ public class MyStepdefs {
         webDriver = new FirefoxDriver();
         String newUrl = "http://" + username + ":" + password + "@" + url;
         webDriver.navigate().to(newUrl);
-        List<WebElement> change = webDriver.findElements(By.className("change"));
-        if (change.size() > 0){
-            String lastElement = change.get(change.size() - 3).getText();
-            lastComment = lastElement.substring(lastElement.lastIndexOf('\n') + 1, lastElement.length()).trim();
-        }
-        Assert.assertEquals(sentComment, lastComment);
+        List<WebElement> change = webDriver. findElements(By.cssSelector(".comment p"));
+        Assert.assertEquals(sentComment, (change.get(change.size()-1)).getText());
     }
 }
