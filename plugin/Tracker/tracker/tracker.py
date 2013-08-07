@@ -3,11 +3,14 @@ import shutil
 from twisted.python.hashlib import sha1
 import errno
 from genshi import Markup
+import re
 
 from trac.config import IntOption
 from trac.core import *
-from trac.web import IRequestHandler, RequestDone
+from trac.web import IRequestHandler
 from trac.web.chrome import INavigationContributor
+from genshi.builder import tag
+from trac.web.chrome import ITemplateProvider, add_stylesheet
 
 
 class TrackerModule(Component):
@@ -66,3 +69,78 @@ class TrackerModule(Component):
     def _get_hashed_filename(self, filename):
         hash = sha1(filename.encode('utf-8')).hexdigest()
         return hash
+
+
+class TrackerUserListModule(Component):
+    implements(INavigationContributor, ITemplateProvider, IRequestHandler)
+
+    def get_active_navigation_item(self, req):
+        return 'tracker'
+
+    def get_navigation_items(self, req):
+        yield ('mainnav', 'tracker',
+               tag.a('Tracker', href=req.href.users()))
+
+    def match_request(self, req):
+        return re.match(r'/users$', req.path_info)
+
+    def process_request(self, req):
+        data = {}
+        add_stylesheet(req, 'trac/css/tracker.css')
+        return 'user_list.html', data, None
+
+    def get_templates_dirs(self):
+        from pkg_resources import resource_filename
+
+        print([resource_filename(__name__, 'templates')])
+        return [resource_filename(__name__, 'templates')]
+
+    def get_htdocs_dirs(self):
+        """Return a list of directories with static resources (such as style
+        sheets, images, etc.)
+
+        Each item in the list must be a `(prefix, abspath)` tuple. The
+        `prefix` part defines the path in the URL that requests to these
+        resources are prefixed with.
+
+        The `abspath` is the absolute path to the directory containing the
+        resources on the local file system.
+        """
+        from pkg_resources import resource_filename
+
+        return [('trac', resource_filename(__name__, 'htdocs'))]
+
+
+class ScreenShotsViewModule(Component):
+    implements(ITemplateProvider, IRequestHandler)
+
+    def match_request(self, req):
+        return re.match(r'/users/worklog$', req.path_info)
+
+    def process_request(self, req):
+        data = {}
+        add_stylesheet(req, 'trac/css/tracker.css')
+        return 'user_worklog_view.html', data, None
+
+    def get_templates_dirs(self):
+        from pkg_resources import resource_filename
+
+        print([resource_filename(__name__, 'templates')])
+        return [resource_filename(__name__, 'templates')]
+
+    def get_htdocs_dirs(self):
+        """Return a list of directories with static resources (such as style
+        sheets, images, etc.)
+
+        Each item in the list must be a `(prefix, abspath)` tuple. The
+        `prefix` part defines the path in the URL that requests to these
+        resources are prefixed with.
+
+        The `abspath` is the absolute path to the directory containing the
+        resources on the local file system.
+        """
+        from pkg_resources import resource_filename
+
+        return [('trac', resource_filename(__name__, 'htdocs'))]
+
+

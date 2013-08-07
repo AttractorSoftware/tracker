@@ -1,0 +1,9 @@
+div.tracker h1 {
+        color: darkslategrey;
+}
+
+div.tracker li {
+    color: darkslategray;
+    font-family: Arial;
+    font-size: 20px;
+}
