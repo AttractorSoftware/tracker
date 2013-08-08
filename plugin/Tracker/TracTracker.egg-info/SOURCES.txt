@@ -1,9 +1,0 @@
-setup.py
-TracTracker.egg-info/PKG-INFO
-TracTracker.egg-info/SOURCES.txt
-TracTracker.egg-info/dependency_links.txt
-TracTracker.egg-info/entry_points.txt
-TracTracker.egg-info/top_level.txt
-tracker/TracCommenter.py
-tracker/__init__.py
-tracker/tracker.py
