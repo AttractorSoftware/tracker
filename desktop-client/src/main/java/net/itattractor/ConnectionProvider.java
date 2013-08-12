@@ -10,7 +10,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class ConnectionProvider {
     private String username;
@@ -44,7 +46,7 @@ public class ConnectionProvider {
         BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
         httpClient.setCredentialsProvider(credentialsProvider);
-        HttpGet httpGet = new HttpGet(host);
+        HttpGet httpGet = new HttpGet(host + "/login/");
 
         StatusLine statusLine;
         try {
@@ -56,5 +58,18 @@ public class ConnectionProvider {
             return false;
         }
         return statusLine.getStatusCode() == 200;
+    }
+
+    private static void logger(HttpResponse httpResponse) throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+        StringBuffer stringBuffer = new StringBuffer();
+        String line;
+
+        while ((line = bufferedReader.readLine()) != null) {
+            stringBuffer.append("\n" + line);
+        }
+
+        System.out.println(stringBuffer);
     }
 }

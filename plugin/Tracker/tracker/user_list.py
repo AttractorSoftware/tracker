@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import re
 from genshi.builder import tag
 from trac.core import Component, implements
@@ -19,7 +21,7 @@ class TrackerUserListModule(Component):
         return re.match(r'/users$', req.path_info)
 
     def process_request(self, req):
-        data = {}
+        data = self.users_list()
         add_stylesheet(req, 'trac/css/tracker.css')
         return 'user_list.html', data, None
 
@@ -33,3 +35,20 @@ class TrackerUserListModule(Component):
         from pkg_resources import resource_filename
 
         return [('trac', resource_filename(__name__, 'htdocs'))]
+
+    def users_list(self):
+
+        data = {
+            'users': self.users()
+        }
+
+        return data
+
+    def users(self):
+        users = []
+        for row in self.env.db_query("""
+                SELECT distinct author
+                FROM tracker_screenshots order by author
+                """):
+            users.append(row)
+        return users

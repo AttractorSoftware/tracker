@@ -1,4 +1,9 @@
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from setuptools import setup
+import sys
 
 PACKAGE = 'TracTracker'
 VERSION = '1.0'
@@ -12,6 +17,6 @@ setup(name=PACKAGE,
           'TracTracker.user_list = tracker.user_list',
           'TracTracker.worklog = tracker.worklog'
       ]},
-      package_data={'tracker': ['templates/*.html']},
+      package_data={'tracker': ['templates/*.html', 'htdocs/css/*.css',]},
       install_requires=['trac', 'twisted', ],
 )

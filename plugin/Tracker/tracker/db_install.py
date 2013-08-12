@@ -1,4 +1,6 @@
 from trac.core import *
+from trac.db import *
+
 from trac.env import IEnvironmentSetupParticipant
 
 last_db_version = 1

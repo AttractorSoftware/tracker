@@ -18,6 +18,7 @@ public class Downloader {
 
     public Downloader(ConnectionProvider provider) {
         this.queryUrl = provider.getHost() + "/query?owner=" + provider.getUsername() + QUERY_PART;
+        System.out.println(this.queryUrl);
         this.connectionProvider = provider;
         downloadFromUrl();
     }

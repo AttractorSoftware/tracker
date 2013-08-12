@@ -18,6 +18,7 @@ import java.util.List;
 public class ScreenshotSender {
 
     private static final String TRACKER_URL_PART = "/tracker";
+    private static final String LOGIN_URL_PART = "/login/";
     private ConnectionProvider connectionProvider;
 
     public ScreenshotSender(ConnectionProvider connectionProvider){
@@ -25,12 +26,13 @@ public class ScreenshotSender {
     }
 
     public boolean sendScreenshot(File file) throws UnsupportedEncodingException {
-        HttpGet httpGet = new HttpGet(connectionProvider.getHost() + "/report/");
+        HttpGet httpGet = new HttpGet(connectionProvider.getHost() + LOGIN_URL_PART);
         DefaultHttpClient httpClient = connectionProvider.getHttpClient();
         HttpResponse response;
 
         try{
             response = httpClient.execute(httpGet);
+            logger(response);
             EntityUtils.consume(response.getEntity());
         }
         catch(IOException e){
@@ -47,6 +49,7 @@ public class ScreenshotSender {
         entity.addPart("screenshot", body);
         entity.addPart("__FORM_TOKEN", new StringBody(getToken(cookieList)));
         entity.addPart("username", new StringBody(connectionProvider.getUsername()));
+        entity.addPart("action", new StringBody("addScreenshot"));
         httpPost.setEntity(entity);
 
         try{

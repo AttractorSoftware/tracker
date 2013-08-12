@@ -79,7 +79,7 @@ class TrackerUploaderAndCommentAdderModule(Component):
     def match_request(self, req):
         return req.path_info == '/tracker'
 
-    def _addComment(self, req):
+    def _add_comment(self, req):
         timeNow = datetime.now(utc)
         with self.env.db_transaction as db:
             if (db("""INSERT INTO ticket_change (ticket, time, author, field, newvalue)
@@ -97,14 +97,15 @@ class TrackerUploaderAndCommentAdderModule(Component):
 
         if req.method == 'POST':
             if req.args['action'] == 'addComment':
-                self._addComment(req)
-            else:
+                self._add_comment(req)
+            elif req.args['action'] == 'addScreenshot':
                 self._do_save(req)
         else:
             print 'GET'
         req.redirect(req.href.wiki())
 
     def _do_save(self, req):
+
         upload = req.args['screenshot']
         username = req.args['username']
 
