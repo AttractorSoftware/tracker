@@ -9,3 +9,4 @@ desktop-client/target
 desktop-client/query.csv
 plugin/Tracker/TracTracker.egg-info/
 plugin/Tracker/build/
+*.pyc

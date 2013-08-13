@@ -1,9 +1,10 @@
 <!DOCTYPE html
-    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+        PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:xi="http://www.w3.org/2001/XInclude"
-        >
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+
 <xi:include href="layout.html"/>
 <head>
     <title>Tracker</title>
@@ -13,7 +14,7 @@
 <div id="ctxtnav" class="nav"></div>
 
 <div id="content" class="tracker">
-    <h1>UsersName:</h1>
+    <h1>Username: <em>${username}</em></h1>
 
     <p>
     <table border="3px" width="99%">
@@ -47,7 +48,8 @@
                 <b>09:00-10:00</b>
             </td>
             <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
+                <b><img src="${href.files('/test.jpg')}"/></b>
+                <img src="${chrome.htdocs_location}trac_logo_mini.png" height="30" width="107" alt="Trac Powered"/>
             </td>
             <td align="center" valign="top" width="10%">
                 <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
@@ -90,6 +92,13 @@
         </tr>
     </table>
     </p>
+
+    <div>
+        <py:for each="screenshot in screenshots">
+            <img src="${href.files(screenshot.path)}"/>
+        </py:for>
+    </div>
+
 </div>
 </body>
 </html>
