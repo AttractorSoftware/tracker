@@ -47,7 +47,7 @@ class WorkLogViewModule(Component):
 
 
 class ScreenshotModule(Component):
-    implements(IRequestHandler, IResourceManager)
+    implements(IRequestHandler)
 
     def match_request(self, req):
         return re.match(r'/screenshot/.*$', req.path_info)
