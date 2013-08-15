@@ -2,9 +2,9 @@
         PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
       xmlns:py="http://genshi.edgewall.org/"
-      xmlns:xi="http://www.w3.org/2001/XInclude">
-
+        >
 <xi:include href="layout.html"/>
 <head>
     <title>Tracker</title>
@@ -14,7 +14,9 @@
 <div id="ctxtnav" class="nav"></div>
 
 <div id="content" class="tracker">
-    <h1>Username: <em>${username}</em></h1>
+    <h1>User name:
+        <py> ${username}</py>
+    </h1>
 
     <p>
     <table border="3px" width="99%">
@@ -47,58 +49,17 @@
             <td align="center" width="10%">
                 <b>09:00-10:00</b>
             </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.files('/test.jpg')}"/></b>
-                <img src="${chrome.htdocs_location}trac_logo_mini.png" height="30" width="107" alt="Trac Powered"/>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
+
+            <py:for each="screen_shot in screenshots">
+                <td align="center" valign="top" width="10%">
+                    <img alt="${screen_shot.filename}" width="150" height="110"
+                         src="${href.screenshot('/', id=screen_shot.id)}"/>
+                </td>
+            </py:for>
         </tr>
-        <tr>
-            <td align="center" width="10%">
-                <b>10:00-11:00</b>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
-            <td align="center" valign="top" width="10%">
-                <b><img src="${href.chrome('/tracker/images/tracker.jpg')}"/></b>
-            </td>
-        </tr>
+
     </table>
     </p>
-
-    <div>
-        <py:for each="screenshot in screenshots">
-            <img src="${href.files(screenshot.path)}"/>
-        </py:for>
-    </div>
-
 </div>
 </body>
 </html>
