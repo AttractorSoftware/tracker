@@ -85,6 +85,5 @@ public class ScreenshotSender {
             stringBuffer.append("\n" + line);
         }
 
-        System.out.println(stringBuffer);
     }
 }

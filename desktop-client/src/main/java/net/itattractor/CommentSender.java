@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommentSender {
-    private static final String TICKET_URL_PART = "/login/";
+    private static final String LOGIN_URL_PART = "/login/";
+    private static final String TRACKER_URL_PART = "/tracker";
     private ConnectionProvider connectionProvider;
 
     public CommentSender(ConnectionProvider provider) {
@@ -22,7 +23,7 @@ public class CommentSender {
     }
 
     public boolean sendComment(int ticketId, String comment) {
-        HttpGet httpGet = new HttpGet(connectionProvider.getHost() + TICKET_URL_PART);
+        HttpGet httpGet = new HttpGet(connectionProvider.getHost() + LOGIN_URL_PART);
         DefaultHttpClient httpClient = connectionProvider.getHttpClient();
 
         try {
@@ -36,7 +37,7 @@ public class CommentSender {
 
         List<Cookie> cookies = httpClient.getCookieStore().getCookies();
 
-        HttpPost httpPost = new HttpPost(connectionProvider.getHost() + "/tracker");
+        HttpPost httpPost = new HttpPost(connectionProvider.getHost() + TRACKER_URL_PART);
         List<NameValuePair> formParameters = new ArrayList<NameValuePair>();
         formParameters.add(new BasicNameValuePair("__FORM_TOKEN", getToken(cookies)));
         formParameters.add(new BasicNameValuePair("comment", comment));

@@ -14,8 +14,9 @@ setup(name=PACKAGE,
           'TracTracker.db_install = tracker.db_install',
           'TracTracker.comment = tracker.comment',
           'TracTracker.user_list = tracker.user_list',
-          'TracTracker.worklog = tracker.worklog'
+          'TracTracker.worklog = tracker.worklog',
+          'TracTracker.active_tickets = tracker.active_tickets',
       ]},
-      package_data={'tracker': ['templates/*.html', 'htdocs/css/*.css',]},
-      install_requires=['trac', 'twisted', ],
+      package_data={'tracker': ['templates/*.html','templates/*.xml', 'htdocs/css/*.css',]},
+      install_requires=['trac']
 )

@@ -1,23 +1,22 @@
 package net.itattractor;
 
 import net.itattractor.utils.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.List;
 
 public class ConnectionProvider {
     private String username;
     private String password;
     private String host;
+    private static final String loginUrlPart = "/login/";
 
     public ConnectionProvider(String host, String username, String password) {
         this.username = username;
@@ -46,30 +45,22 @@ public class ConnectionProvider {
         BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
         httpClient.setCredentialsProvider(credentialsProvider);
-        HttpGet httpGet = new HttpGet(host + "/login/");
+        HttpGet httpGet = new HttpGet(host + loginUrlPart);
 
-        StatusLine statusLine;
+        boolean isAuthorized = false;
         try {
-            HttpResponse response = httpClient.execute(httpGet);
-            statusLine = response.getStatusLine();
+            httpClient.execute(httpGet);
+            List<Cookie> cookies = httpClient.getCookieStore().getCookies();
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("trac_auth")){
+                    isAuthorized = true;
+                }
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
-        return statusLine.getStatusCode() == 200;
-    }
-
-    private static void logger(HttpResponse httpResponse) throws IOException {
-
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-        StringBuffer stringBuffer = new StringBuffer();
-        String line;
-
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuffer.append("\n" + line);
-        }
-
-        System.out.println(stringBuffer);
+        return isAuthorized;
     }
 }
