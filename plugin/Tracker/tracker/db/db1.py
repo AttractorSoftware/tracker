@@ -6,7 +6,7 @@ tables = [
         Column('filename'),
         Column('author'),
         Column('path'),
-        Column('time')
+        Column('time', type='integer')
     ]
 ]
 

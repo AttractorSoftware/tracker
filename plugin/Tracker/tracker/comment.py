@@ -8,7 +8,7 @@ import shutil
 from genshi import Markup
 from trac.config import IntOption
 from trac.core import *
-from trac.util.datefmt import utc
+from trac.util.datefmt import utc, to_timestamp
 from trac.web import IRequestHandler
 from trac.web.auth import BasicAuthentication
 from trac.web.chrome import INavigationContributor
@@ -33,7 +33,7 @@ class Screenshot(object):
         filename, targetfile, screenshot_hashed_name = self._create_unique_screenshot(screenshots_dir, filename, extension)
         file_dir = "screenshots" + "/" + author + "/" + screenshot_hashed_name
 
-        time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        time = to_timestamp(datetime.now(utc))
 
         with targetfile:
             with self.env.db_transaction as db:
