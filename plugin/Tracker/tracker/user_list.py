@@ -21,19 +21,20 @@ class TrackerUserListModule(Component):
         return re.match(r'/users$', req.path_info)
 
     def process_request(self, req):
-        data = self.users_list()
+
+        data = {
+            'users': self.users(),
+            'client': {'download_href': 'jar-tracker/tracker.jar'}
+        }
         add_stylesheet(req, 'trac/css/tracker.css')
         return 'user_list.html', data, None
 
     def get_templates_dirs(self):
         from pkg_resources import resource_filename
-
-        print([resource_filename(__name__, 'templates')])
         return [resource_filename(__name__, 'templates')]
 
     def get_htdocs_dirs(self):
         from pkg_resources import resource_filename
-
         return [('trac', resource_filename(__name__, 'htdocs'))]
 
     def users_list(self):

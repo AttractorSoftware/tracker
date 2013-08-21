@@ -25,7 +25,7 @@ h2 {
     margin: 0 1em 1em;
 }
 
-#tracker-filter{
+#tracker-filter {
     font-size: 10px;
 }
 
@@ -34,11 +34,18 @@ h2 {
     vertical-align: middle;
 }
 
-#tracker-filter .buttons{
+#tracker-filter .buttons {
     float: right;
 }
 
 .tracker h2 em {
     color: #b00;
     font-style: normal;
+}
+
+.tracker-client-download > p {
+    float: right;
+    margin-left: 2em;
+    font-size: 90%;
+    color: #666;
 }

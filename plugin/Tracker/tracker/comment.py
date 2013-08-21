@@ -3,13 +3,14 @@
 from datetime import datetime
 import errno
 import os
+import re
 import shutil
 
 from genshi import Markup
 from trac.config import IntOption
 from trac.core import *
 from trac.util.datefmt import utc, to_timestamp
-from trac.web import IRequestHandler
+from trac.web import IRequestHandler, RequestDone
 from trac.web.auth import BasicAuthentication
 from trac.web.chrome import INavigationContributor
 from trac.util.datefmt import to_utimestamp
@@ -30,14 +31,16 @@ class Screenshot(object):
             os.makedirs(screenshots_dir)
 
         filename, extension = os.path.splitext(filename)
-        filename, targetfile, screenshot_hashed_name = self._create_unique_screenshot(screenshots_dir, filename, extension)
+        filename, targetfile, screenshot_hashed_name = self._create_unique_screenshot(screenshots_dir, filename,
+                                                                                      extension)
         file_dir = "screenshots" + "/" + author + "/" + screenshot_hashed_name
 
         time = to_timestamp(datetime.now(utc))
 
         with targetfile:
             with self.env.db_transaction as db:
-                db("INSERT INTO tracker_screenshots(filename, author, path, time) VALUES(%s, %s, %s, %s)", (filename, author, file_dir, time))
+                db("INSERT INTO tracker_screenshots(filename, author, path, time) VALUES(%s, %s, %s, %s)",
+                   (filename, author, file_dir, time))
                 shutil.copyfileobj(fileobject, targetfile)
 
     def _create_unique_screenshot(self, dir, filename, extension):
@@ -80,7 +83,15 @@ class TrackerUploaderAndCommentAdderModule(Component):
             self.env.href.tracker()))
 
     def match_request(self, req):
-        return req.path_info == '/tracker'
+        match = re.match(r'/(jar-)?tracker/?.*?$',
+                         req.path_info)
+
+        if match:
+            req.args['format'] = ''
+            args = match.groups()
+            if args[0]:
+                req.args['format'] = args[0][:-1]
+            return True
 
     def _add_comment(self, req):
         timeNow = datetime.now(utc)
@@ -106,7 +117,9 @@ class TrackerUploaderAndCommentAdderModule(Component):
             elif req.args['action'] == 'auth':
                 self._tracker_auth(req)
         else:
-            print 'GET'
+            if req.args['format'] == 'jar':
+                self._download_client_file(req)
+
         req.redirect(req.href.wiki())
 
     def _do_save(self, req):
@@ -124,11 +137,11 @@ class TrackerUploaderAndCommentAdderModule(Component):
         screenshot = Screenshot(self.env)
         screenshot.insert(upload.filename, upload.file, username)
 
-    def _tracker_auth(self,req):
+    def _tracker_auth(self, req):
         username = req.args['username']
         password = req.args['password']
-        auth = BasicAuthentication(os.path.join(os.path.normpath(self.env.path),"pass",".htpasswd"),"")
-        if auth.test(username,password):
+        auth = BasicAuthentication(os.path.join(os.path.normpath(self.env.path), "pass", ".htpasswd"), "")
+        if auth.test(username, password):
             abuffer = 'Success'
             req.send_header('Content-Type', 'text/plain')
             req.send_header('Content-length', str(len(abuffer)))
@@ -140,3 +153,14 @@ class TrackerUploaderAndCommentAdderModule(Component):
             req.send_header('Content-length', str(len(abuffer)))
             req.end_headers()
             req.write(abuffer)
+
+    def _download_client_file(self, req):
+        from pkg_resources import resource_filename
+
+        filename = 'tracker.jar'
+        path_to_file = resource_filename(__name__, 'client') + "/" + filename
+
+        if os.path.exists(path_to_file):
+            req.send_file(path_to_file, 'application/java-archive; charset=utf-8')
+            raise RequestDone()
+

@@ -11,11 +11,12 @@ class ActiveTickets(Component):
         if match:
             username = match.groups()
             req.args['username'] = username[0]
-            trac_auth = req.incookie.get('trac_auth')
-            if trac_auth:
-                return True
-            else:
-                raise TracError('Unauthorized')
+            # trac_auth = req.incookie.get('trac_auth')
+            # if trac_auth:
+            #     return True
+            # else:
+            #     raise TracError('Unauthorized')
+            return True
 
     def process_request(self, req):
         username = req.args.get('username')
@@ -27,7 +28,7 @@ class ActiveTickets(Component):
 
     def _get_active_tickets(self, username):
         tickets = []
-        query = "SELECT id, summary FROM ticket WHERE status = 'accepted' AND owner = '" + username + "'"
+        query = "SELECT id, summary FROM ticket WHERE status = 'inProgress' AND owner = '" + username + "'"
         for id, summary in self.env.db_query(query):
             ticket = {
                 'id': id,

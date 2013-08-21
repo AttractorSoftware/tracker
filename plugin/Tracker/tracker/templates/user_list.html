@@ -1,6 +1,6 @@
 <!DOCTYPE html
-    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+        PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude"
@@ -9,18 +9,19 @@
 <head>
     <title>Tracker</title>
 </head>
-
 <body>
-<div id="ctxtnav" class="nav"></div>
-
 <div id="content" class="tracker">
     <h1>Users:</h1>
-
     <ul id="nav">
         <py:for each="user in users">
             <li><a href="${href.users('/', user=user)}">${user}</a></li>
         </py:for>
     </ul>
+</div>
+<div class="tracker-client-download">
+    <p py:if="client.download_href">
+        <xi:include href="download-client.html" py:with="download_href = client.download_href"/>
+    </p>
 </div>
 </body>
 </html>
