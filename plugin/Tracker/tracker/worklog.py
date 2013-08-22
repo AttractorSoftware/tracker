@@ -1,5 +1,4 @@
 from datetime import timedelta, datetime
-from numpy import empty
 import re
 import os.path
 
@@ -13,7 +12,8 @@ class WorkLogViewModule(Component):
     implements(ITemplateProvider, IRequestHandler)
 
     def match_request(self, req):
-        return re.match(r'/users/.*$', req.path_info)
+        # return re.match(r'/users/(\?user=).*$', req.path_info)
+        return re.match(r'/(raw-|zip-)?users/\?user=[a-zA-Z0-9]+?$', req.path_info)
 
     def process_request(self, req):
         username = req.args.get('user')

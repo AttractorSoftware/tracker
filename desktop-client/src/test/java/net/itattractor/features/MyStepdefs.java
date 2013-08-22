@@ -20,7 +20,6 @@ public class MyStepdefs {
     private String sentComment;
 
     WebDriver webDriver;
-    private String lastComment;
 
     @Given("^I run application$")
     public void I_run_application() throws Throwable {
@@ -65,11 +64,25 @@ public class MyStepdefs {
         recordWindow.getButton("ok").click();
     }
 
-    @And("^I go to track \"([^\"]*)\" and username \"([^\"]*)\" and password \"([^\"]*)\"$")
-    public void I_go_to_track_and_username_and_password(String url, String username, String password) throws Throwable {
+
+    @And("^login to trac in url \"([^\"]*)\" and username \"([^\"]*)\" and password \"([^\"]*)\"$")
+    public void login_to_trac_in_url_and_username_and_password(String url, String username, String password) throws Throwable {
         webDriver = new FirefoxDriver();
-        String newUrl = "http://" + username + ":" + password + "@" + url;
-        webDriver.navigate().to(newUrl);
+        webDriver.navigate().to("http://"+username+":"+password+"@"+url);
+    }
+//
+//    @And("^I go to track \"([^\"]*)\" and username \"([^\"]*)\" and password \"([^\"]*)\"$")
+//    public void I_go_to_track_and_username_and_password(String url, String username, String password) throws Throwable {
+//        webDriver = new FirefoxDriver();
+//        String newUrl = "http://" + username + ":" + password + "@" + url;
+//        webDriver.navigate().to(newUrl);
+//        List<WebElement> change = webDriver. findElements(By.cssSelector(".comment p"));
+//        Assert.assertEquals(sentComment, (change.get(change.size()-1)).getText());
+//    }
+
+    @And("^I go to track \"([^\"]*)\"$")
+    public void I_go_to_track(String url) throws Throwable {
+        webDriver.navigate().to(url);
         List<WebElement> change = webDriver. findElements(By.cssSelector(".comment p"));
         Assert.assertEquals(sentComment, (change.get(change.size()-1)).getText());
     }
