@@ -10,7 +10,7 @@ class TrackerAuthorizationModule(Component):
     implements(IRequestHandler)
 
     def match_request(self, req):
-        return re.match(r'/authenticate/.*$', req.path_info)
+        return re.match(r'/authenticate.*$', req.path_info)
 
     def process_request(self, req):
 
