@@ -16,6 +16,7 @@ setup(name=PACKAGE,
           'TracTracker.user_list = tracker.user_list',
           'TracTracker.worklog = tracker.worklog',
           'TracTracker.active_tickets = tracker.active_tickets',
+          'TracTracker.authorization = tracker.authorization'
       ]},
       package_data={'tracker': ['templates/*.html','templates/*.xml', 'htdocs/css/*.css', 'client/*.jar']},
       install_requires=['trac']
