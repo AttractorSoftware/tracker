@@ -42,7 +42,7 @@ public class ConnectionProvider {
         return host;
     }
 
-    public boolean isAuthenticated() throws IOException {
+    public boolean isAuthenticated() {
         HttpGet httpGet = new HttpGet(this.getHost() + loginUrlPart);
         DefaultHttpClient httpClient = this.getHttpClient();
 
@@ -59,12 +59,7 @@ public class ConnectionProvider {
             HttpGet authenticate = new HttpGet(this.getHost() + authenticateUrlPart);
             HttpResponse response = httpClient.execute(authenticate);
             StringBuffer bufferString = this.logger(response);
-            if ("Success".equals(bufferString.toString().trim())){
-                return true;
-            }
-            else{
-                return false;
-            }
+            return "Success".equals(bufferString.toString().trim());
 
         } catch (IOException e) {
             e.printStackTrace();

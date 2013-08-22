@@ -10,6 +10,7 @@ import net.itattractor.forms.tasks.TasksFormActionListener;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 public class AppLauncher {
     private JFrame loginFrame;
@@ -49,7 +50,7 @@ public class AppLauncher {
 
     public class LoginFormActionListenerImpl implements LoginFormActionListener {
         @Override
-        public void submitPressed() {
+        public void submitPressed() throws IOException {
             String url = loginForm.getUrlField().getText();
             String username = loginForm.getUsernameField().getText();
             String password = new String(loginForm.getPasswordField().getPassword());
