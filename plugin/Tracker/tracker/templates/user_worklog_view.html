@@ -9,7 +9,7 @@
 <head>
     <title>Tracker</title>
     <script type="text/javascript">
-        jQuery(document).ready(function($){
+        jQuery(document).ready(function ($) {
             $("#tracker-date").datepicker();
         });
     </script>
@@ -19,11 +19,8 @@
 
 <div id="content" class="tracker">
 
-    <h1>Tracker</h1>
-
     <form id="tracker-filter" method="get" action="">
         <div i18n:msg="">
-            <input type="hidden" name="user"  value="${username if username else None}"/>
             <label>
                 Select date
                 <input type="text" id="tracker-date" size="10" name="date" value="${format_date(fromdate)}"/>
@@ -37,7 +34,6 @@
 
     <h2>${_("Username")}: <em>${username if username else None}</em></h2>
 
-    <p>
     <table border="3px" width="99%">
         <tr>
             <td align="center" valign="top" width="10%">
@@ -68,17 +64,18 @@
             <td align="center" width="10%">
                 <b>09:00-10:00</b>
             </td>
-
-            <py:for each="screen_shot in screenshots">
-                <td align="center" valign="top" width="10%">
-                    <img alt="${screen_shot.filename}" width="150" height="110"
-                         src="${href.screenshot('/', id=screen_shot.id)}"/>
+            <py:for each="screenshot in screenshots">
+                <td align="center" width="10%">
+                    <div class="tracker-image">
+                        <a href="${href.users(screenshot.author, screenshot.id)}" title="${screenshot.filename}">
+                            <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}"
+                                 style="width: 200px; height: 100px"/>
+                        </a>
+                    </div>
                 </td>
             </py:for>
         </tr>
-
     </table>
-    </p>
 </div>
 </body>
 </html>

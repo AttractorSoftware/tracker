@@ -76,7 +76,7 @@ class TrackerUploaderAndCommentAdderModule(Component):
                          """Maximum allowed screenshot size (in bytes)""")
 
     def get_active_navigation_item(self, req):
-        return 'tracker'
+        return 'tracker/tickets/'
 
     def get_navigation_items(self, req):
         yield 'mainnav', 'tracker', Markup('<a href="%s">Tracker</a>' % (
