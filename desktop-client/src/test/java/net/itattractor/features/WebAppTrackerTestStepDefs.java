@@ -68,16 +68,49 @@ public class WebAppTrackerTestStepDefs {
         user.click();
 
     }
+//
+//    @And("^should see screenshot work flow by date \"([^\"]*)\"$")
+//    public void should_see_screenshot_work_flow_by_date(String date) throws Throwable {
+//        WebElement trackerDate = webDriver.findElement(By.cssSelector("#tracker-date"));
+//        trackerDate.clear();
+//        trackerDate.sendKeys(date);
+//
+//        WebElement trackerCalendarUpdateButton = webDriver.findElement(By.cssSelector("input[name=update]"));
+//        trackerCalendarUpdateButton.click();
+//
+//        WebElement image = webDriver.findElement(By.cssSelector(".tracker-image img"));
+//        Assert.assertTrue(image.isDisplayed());
+//        webDriver.quit();
+//    }
 
-    @And("^should see screenshot work flow by date \"([^\"]*)\"$")
-    public void should_see_screenshot_work_flow_by_date(String date) throws Throwable {
+    @Given("^First user from user list on tracker main page is chosen$")
+    public void First_user_from_user_list_on_tracker_main_page_is_chosen() throws Throwable {
+        I_m_on_main_page_of_tracker();
+        click_on_Tracker_menu_link();
+        should_see_list_of_users_and_choose_first();
+    }
+
+    @When("^click on that user$")
+    public void click_on_that_user() throws Throwable {
+
+    }
+
+    @And("^choose date in \"([^\"]*)\" calendar$")
+    public void choose_date_in_calendar(String date) throws Throwable {
         WebElement trackerDate = webDriver.findElement(By.cssSelector("#tracker-date"));
         trackerDate.clear();
         trackerDate.sendKeys(date);
+    }
 
+    @And("^push update button$")
+    public void push_update_button() throws Throwable {
         WebElement trackerCalendarUpdateButton = webDriver.findElement(By.cssSelector("input[name=update]"));
         trackerCalendarUpdateButton.click();
 
+    }
+
+    @Then("^should see screensots$")
+    public void should_see_screensots() throws Throwable {
         WebElement image = webDriver.findElement(By.cssSelector(".tracker-image img"));
         Assert.assertTrue(image.isDisplayed());
         webDriver.quit();

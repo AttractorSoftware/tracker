@@ -12,5 +12,12 @@ Feature: In order to check work flow user should
     Given I'm on main page of trac
     When click on Tracker menu link
     Then should see list of users and choose first
-    And should see screenshot work flow by date "08/19/13"
+#    And should see screenshot work flow by date "08/19/13"
+
+    Scenario: User check screenshots work flow
+      Given First user from user list on tracker main page is chosen
+      When click on that user
+      And choose date in "08/19/13" calendar
+      And push update button
+      Then should see screensots
 
