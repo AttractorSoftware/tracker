@@ -24,6 +24,8 @@ public class AppLauncher {
 
 
     public void start() {
+        Config.init();
+
         loginFrame = new JFrame("login form");
 
         loginForm = new LoginForm();
@@ -132,9 +134,10 @@ public class AppLauncher {
         }
 
         private void pause() {
+            int timer = Integer.parseInt(Config.getValue("remindAgain"));
             try {
                 recordFrame.setVisible(false);
-                Thread.sleep(1000 * (Integer) recordForm.getPeriodTimeSpinner().getValue());
+                Thread.sleep(timer * (Integer) recordForm.getPeriodTimeSpinner().getValue());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } finally {

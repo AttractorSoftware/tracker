@@ -21,7 +21,7 @@ public class LogWriter {
             fileWriter.write("<Task id=\"" + currentTicket.getTicketId() + "\" name=\"" + currentTicket.getTicketSummary() + "\">\n   <DateStart value=\"" + new Date() + "\" />\n");
             fileWriter.close();
         } catch (IOException e) {
-            System.out.println("Fail dostupen tolko dlya chteniya");
+            e.printStackTrace();
         }
     }
 
@@ -34,7 +34,7 @@ public class LogWriter {
             fileWriter.write("   </RecordQuery>\n");
             fileWriter.close();
         } catch (IOException e) {
-            System.out.println("Fail dostupen tolko dlya chteniya");
+            e.printStackTrace();
         }
     }
 
@@ -46,7 +46,7 @@ public class LogWriter {
             fileWriter.write("</Task>\n\n");
             fileWriter.close();
         } catch (IOException e) {
-            System.out.println("Fail dostupen tolko dlya chteniya");
+            e.printStackTrace();
         }
     }
 }

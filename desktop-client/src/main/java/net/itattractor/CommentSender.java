@@ -63,7 +63,7 @@ public class CommentSender {
     {
         for (Cookie cookie : cookies)
         {
-            if (cookie.getName().equals("trac_form_token"))
+            if (cookie.getName().equals(Config.getValue("tracFormToken")))
             {
                 return cookie.getValue();
             }

