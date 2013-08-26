@@ -10,13 +10,14 @@ import java.awt.event.ActionListener;
 
 public class TasksForm {
     private JPanel contentPanel;
-    private JComboBox tasksComboBox;
+    private JComboBox<Object> tasksComboBox;
 
     private JButton startButton;
+    private JButton refreshButton;
     private TasksFormActionListener actionListener;
     private ConnectionProvider connectionProvider;
 
-    public TasksForm(ConnectionProvider connectionProvider) {
+    public TasksForm(final ConnectionProvider connectionProvider) {
         this.connectionProvider = connectionProvider;
 
         startButton.addActionListener(new ActionListener() {
@@ -25,6 +26,17 @@ public class TasksForm {
                 if(actionListener != null){
                     Ticket currentTicket = new Ticket(tasksComboBox.getSelectedItem().toString());
                     actionListener.startPressed(currentTicket);
+                }
+            }
+        });
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tasksComboBox.removeAllItems();
+                TaskReader taskReader = new TaskReader(connectionProvider);
+                Ticket[] tiket = taskReader.getTickets();
+                for (Ticket aTiket : tiket) {
+                    tasksComboBox.addItem(aTiket);
                 }
             }
         });
