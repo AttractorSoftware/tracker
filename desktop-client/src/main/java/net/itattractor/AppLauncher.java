@@ -134,7 +134,7 @@ public class AppLauncher {
         }
 
         private void pause() {
-            int timer = Integer.parseInt(Config.getValue("remindAgain"));
+            int timer = Integer.parseInt(Config.getValue("remindAgainInMinutes"));
             try {
                 recordFrame.setVisible(false);
                 Thread.sleep(timer * (Integer) recordForm.getPeriodTimeSpinner().getValue());
