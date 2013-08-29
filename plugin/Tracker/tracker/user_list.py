@@ -71,7 +71,7 @@ class TrackerUserListModule(Component):
 
     def get_templates_dirs(self):
         from pkg_resources import resource_filename
-
+        print 'beknazarBek', resource_filename(__name__, 'templates')
         return [resource_filename(__name__, 'templates')]
 
     def get_htdocs_dirs(self):
