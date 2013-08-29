@@ -8,7 +8,9 @@ public class ConfigTest {
     @Test
     public void testGetConfig() throws Exception {
         Config.init();
-        String remindAgain = Config.getValue("remindAgain");
+        String remindAgain = Config.getValue("remindAgainInSeconds");
         Assert.assertEquals("1000", remindAgain);
+        int remindAgainInSeconds = Integer.parseInt(Config.getValue("remindAgainInSeconds"));
+        Assert.assertEquals(1000, remindAgainInSeconds);
     }
 }

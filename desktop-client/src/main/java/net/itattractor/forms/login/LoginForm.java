@@ -53,9 +53,4 @@ public class LoginForm {
     public JPasswordField getPasswordField() {
         return passwordField;
     }
-
-    private void createUIComponents() {
-        usernameField = new JTextField("");
-        passwordField = new JPasswordField("");
-    }
 }
