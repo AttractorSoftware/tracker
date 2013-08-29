@@ -39,10 +39,6 @@ public class TaskReader {
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 document = builder.parse(content);
             }
-            /*
-             ветвление else можно сделать при выполнении тикета об обработках исключений.
-             после выполнения тикета, удалить комментарий!
-            */
         }
         catch (Exception e) {
             e.printStackTrace();

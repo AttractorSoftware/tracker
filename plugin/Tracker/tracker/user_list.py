@@ -155,7 +155,7 @@ class TrackerUserListModule(Component):
 
                 context.req.data['users'] = api.get_users(context)
                 context.req.data['template'] = 'user_list.html'
-                context.req.data['client'] = {'download_href': 'jar-tracker/tracker.jar'}
+                context.req.data['client'] = {'download_href': 'jar-tracker/tracker-1.0-SNAPSHOT-dist.zip'}
                 return 'screenshots', None
             else:
                 return 'screenshots', None
