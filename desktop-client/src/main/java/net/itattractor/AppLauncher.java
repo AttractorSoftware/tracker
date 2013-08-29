@@ -73,7 +73,7 @@ public class AppLauncher {
                     tasksFrame.setVisible(true);
                     new Thread(new ScreenShot(provider)).start();
                 } else
-                    showDialog("Неверный пароль или логин.");
+                    showDialog("Wrong username or password. Try again!");
             }
         }
 
