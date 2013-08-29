@@ -8,6 +8,44 @@
 <xi:include href="layout.html"/>
 <head>
     <title>Tracker</title>
+    <style type="text/css">
+        #mask {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 9000;
+            background-color: #000;
+            display: none;
+            font-family: Georgia;
+        }
+
+        #boxes .window {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 840px;
+            height: 500px;
+            display: none;
+            z-index: 9999;
+            padding: 20px;
+            text-align: center;
+            font-size: 25px;
+        }
+
+        #boxes #dialog {
+            padding: 4px;
+        }
+
+        .close {
+            float: right;
+            margin-top: 0px;
+            margin: 0px;
+            position: relative;
+            left: -27px;
+        }
+    </style>
     <script type="text/javascript">
         jQuery(document).ready(function () {
             $("#tracker-date").datepicker();
@@ -38,6 +76,31 @@
                         });
                     }
                 });
+            });
+
+            $('a[name=modal]').click(function (e) {
+                e.preventDefault();
+                var id = $(this).attr('href');
+                var maskHeight = $(document).height();
+                var maskWidth = $(document).width();
+
+                $('#mask').css({'width': maskWidth, 'height': maskHeight});
+                $('#mask').fadeIn(1000);
+                $('#mask').fadeTo("slow", 0.8);
+
+                var winH = $(window).height();
+                var winW = $(window).width();
+                $(id).css('top', winH / 2 - $(id).height() / 2);
+                $(id).css('left', winW / 2 - $(id).width() / 2);
+                $(id).fadeIn(1000);
+            });
+            $('.window .close').click(function (e) {
+                e.preventDefault();
+                $('#mask, .window').hide();
+            });
+            $('#mask').click(function () {
+                $(this).hide();
+                $('.window').hide();
             });
         });
 
@@ -98,10 +161,17 @@
             <py:for each="screenshot in screenshots">
                 <td align="center" width="10%">
                     <div class="tracker-image">
-                        <a href="${href.users(screenshot.author, screenshot.id)}" title="${screenshot.filename}">
-                            <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}"
-                                 style="width: 200px; height: 100px"/>
+                        <a name="modal" href="#dialog_${screenshot.id}" title="${screenshot.filename}">
+                            <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}" style="width: 200px; height: 100px"/>
                         </a>
+
+                        <div id="boxes">
+                            <div style="margin: 0 auto;" id="dialog_${screenshot.id}" class="window">
+                                <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}" style="width:90%; height: 90%;" />
+                                <span><a href="#" class="close">X</a></span>
+                            </div>
+                            <div id="mask"></div>
+                        </div>
                     </div>
                 </td>
             </py:for>
