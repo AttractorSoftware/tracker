@@ -9,16 +9,47 @@
 <head>
     <title>Tracker</title>
     <script type="text/javascript">
-        jQuery(document).ready(function ($) {
+        jQuery(document).ready(function () {
             $("#tracker-date").datepicker();
+            var datepickerNextOrPrev = $("#ui-datepicker-div");
+
+            $("#tracker-date").focus(function () {
+                datepickerNextOrPrev.trigger("click");
+            });
+
+            datepickerNextOrPrev.click(function () {
+                var thisMonthValue = $("#ui-datepicker-div .ui-datepicker-month").text();
+                var thisYearValue = $("#ui-datepicker-div .ui-datepicker-year").text();
+                var thereUrlScreenshot = $("#thereUrlScreenshot").val();
+                $.ajax({
+                    type: "GET",
+                    url: thereUrlScreenshot,
+                    data: {"thisMonth": thisMonthValue, "thisYear": thisYearValue},
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (index) {
+                            ;
+                            $.each($("#ui-datepicker-div .ui-state-default"), function (key) {
+                                if (++key == index) {
+                                    $(this).css({'border': '2px solid #66FF66'});
+                                }
+                            });
+
+                        });
+                    }
+                });
+            });
         });
+
     </script>
 </head>
 
 <body>
 
 <div id="content" class="tracker">
-
+    <py>
+        <input value="${href.thereScreenshot()}" id="thereUrlScreenshot" type="hidden" />
+    </py>
     <form id="tracker-filter" method="get" action="">
         <div i18n:msg="">
             <label>
