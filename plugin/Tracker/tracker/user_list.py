@@ -17,7 +17,6 @@ from trac.mimeview import Context, Mimeview
 
 from tracker.api import ITrackerScreenshotsRenderer, TrackerApi
 
-
 class TrackerUserListModule(Component):
     implements(INavigationContributor, ITemplateProvider, IRequestHandler)
 
