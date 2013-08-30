@@ -157,7 +157,7 @@ class TrackerUploaderAndCommentAdderModule(Component):
     def _download_client_file(self, req):
         from pkg_resources import resource_filename
 
-        filename = 'tracker.jar'
+        filename = 'tracker-1.0-SNAPSHOT-dist.zip'
         path_to_file = resource_filename(__name__, 'client') + "/" + filename
 
         if os.path.exists(path_to_file):
