@@ -25,14 +25,5 @@
             <directory>conf</directory>
             <outputDirectory>conf</outputDirectory>
         </fileSet>
-        <fileSet>
-            <directory>${basedir}</directory>
-            <outputDirectory>/</outputDirectory>
-            <includes>
-                <include>README*</include>
-                <include>LICENSE*</include>
-                <include>NOTICE*</include>
-            </includes>
-        </fileSet>
     </fileSets>
 </assembly>
