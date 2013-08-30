@@ -1,8 +1,7 @@
 package net.itattractor;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
@@ -12,12 +11,7 @@ public class Config {
     }
 
     public static void init() {
-        FileInputStream inputStream = null;
-        try {
-            inputStream = new FileInputStream("conf/tracker.properties");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        InputStream inputStream = Config.class.getClassLoader().getResourceAsStream("tracker.properties");
         properties = new Properties();
         try {
             properties.load(inputStream);
