@@ -21,6 +21,8 @@ from tracker.api import ITrackerScreenshotsRenderer, TrackerApi
 class TrackerUserListModule(Component):
     implements(INavigationContributor, ITemplateProvider, IRequestHandler)
 
+    test = 'beknazarBek'
+
     renderers = ExtensionPoint(ITrackerScreenshotsRenderer)
 
     default_format = Option('screenshots', 'default_format', 'html',
@@ -71,7 +73,7 @@ class TrackerUserListModule(Component):
 
     def get_templates_dirs(self):
         from pkg_resources import resource_filename
-        print 'beknazarBek', resource_filename(__name__, 'templates')
+        self.test = resource_filename(__name__, 'templates')
         return [resource_filename(__name__, 'templates')]
 
     def get_htdocs_dirs(self):
@@ -156,6 +158,7 @@ class TrackerUserListModule(Component):
                 context.req.data['users'] = api.get_users(context)
                 context.req.data['template'] = 'user_list.html'
                 context.req.data['client'] = {'download_href': 'jar-tracker/tracker-1.0-SNAPSHOT-dist.zip'}
+                context.req.data['test'] = {'download_test': self.test}
                 return 'screenshots', None
             else:
                 return 'screenshots', None
