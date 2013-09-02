@@ -1,0 +1,42 @@
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:i18n="http://genshi.edgewall.org/i18n">
+<xi:include href="admin.html"/>
+<head>
+    <title>Tracker Admin</title>
+</head>
+
+<body>
+<h2>Manage Tracker</h2>
+
+<form class="addnew" id="tracker_settings" method="post" action="">
+    <fieldset>
+        <legend>Add Time Interval:</legend>
+        <div class="field">
+            <label>Time Interval(min):
+                <select id="action" name="time_interval">
+                    <py:for each="interval in sorted(intervals)">
+                        <py:choose>
+                            <py:when test="time_interval == interval">
+                                <option selected="selected">$interval</option>
+                            </py:when>
+                            <py:otherwise>
+                                <option>$interval</option>
+                            </py:otherwise>
+                        </py:choose>
+                    </py:for>
+                </select>
+            </label>
+        </div>
+        <div class="buttons">
+            <input type="submit" name="add_time_interval" value="${'Submit'}"/>
+        </div>
+    </fieldset>
+</form>
+</body>
+
+</html>
