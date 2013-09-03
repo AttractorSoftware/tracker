@@ -101,6 +101,7 @@ public class AppLauncher {
             recordForm.setActionListener(new RecordFormActionListenerImpl());
 
             logWriter = new LogWriter(ticket);
+            logWriter.saveStart();
             recordFrame.add(recordForm.getContentPanel());
             recordFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             recordFrame.setSize(500, 300);
