@@ -18,11 +18,13 @@ public class CommentSender {
     private static final String TRACKER_URL_PART = "/tracker";
     private ConnectionProvider connectionProvider;
 
-    public CommentSender(ConnectionProvider provider) {
-        this.connectionProvider = provider;
+    public CommentSender() {
     }
 
-    public boolean sendComment(int ticketId, String comment) {
+    public boolean sendComment(int ticketId, String comment) throws Exception {
+
+        connectionProvider = ConnectionProvider.getInstance();
+
         HttpGet httpGet = new HttpGet(connectionProvider.getHost() + LOGIN_URL_PART);
         DefaultHttpClient httpClient = connectionProvider.getHttpClient();
 
@@ -59,12 +61,9 @@ public class CommentSender {
         return true;
     }
 
-    public static String getToken(List<Cookie> cookies)
-    {
-        for (Cookie cookie : cookies)
-        {
-            if (cookie.getName().equals(Config.getValue("tracFormToken")))
-            {
+    public static String getToken(List<Cookie> cookies) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(Config.getValue("tracFormToken"))) {
                 return cookie.getValue();
             }
         }

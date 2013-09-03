@@ -5,9 +5,10 @@ import org.junit.Test;
 
 public class CommentSenderTest {
     @Test
-    public void testSendComment() {
+    public void testSendComment() throws Exception {
         Config.init();
-        CommentSender commentSender = new CommentSender(new ConnectionProvider("http://tracker-trac.demo.esdp.it-attractor.net/", "demo", "123"));
+        ConnectionProvider.createInstance("http://tracker-trac.demo.esdp.it-attractor.net/", "demo", "123");
+        CommentSender commentSender = new CommentSender();
         Assert.assertTrue(commentSender.sendComment(4, "test7 test2 test2"));
     }
 }

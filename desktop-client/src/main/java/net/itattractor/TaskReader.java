@@ -19,8 +19,8 @@ public class TaskReader {
     private static final String activeTicketsUrl = "/tracker/tickets/";
     private Document document;
 
-    public TaskReader(ConnectionProvider connectionProvider) {
-        this.connectionProvider = connectionProvider;
+    public TaskReader() throws Exception {
+        connectionProvider = ConnectionProvider.getInstance();
         document = null;
         login = new HttpGet(connectionProvider.getHost() + loginUrlPart);
         httpGet = new HttpGet(connectionProvider.getHost() + activeTicketsUrl + connectionProvider.getUsername());

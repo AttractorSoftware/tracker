@@ -6,7 +6,7 @@ import org.junit.Test;
 public class ConnectionProviderTest {
     @Test
     public void testIsAuthenticated() throws Exception {
-        ConnectionProvider connectionProvider = new ConnectionProvider("http://tracker-trac.demo.esdp.it-attractor.net/", "demo", "123");
-        Assert.assertTrue(connectionProvider.isAuthenticated());
+        ConnectionProvider.createInstance("http://tracker-trac.demo.esdp.it-attractor.net/", "demo", "123");
+        Assert.assertTrue(ConnectionProvider.getInstance().isAuthenticated());
     }
 }

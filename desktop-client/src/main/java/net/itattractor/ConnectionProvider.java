@@ -1,6 +1,5 @@
 package net.itattractor;
 
-import net.itattractor.utils.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -14,32 +13,41 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ConnectionProvider {
+
     private String username;
     private String password;
     private String host;
     private static final String loginUrlPart = "/login/";
     private static final String authenticateUrlPart = "/authenticate/";
 
-    public ConnectionProvider(String host, String username, String password) {
+    private static ConnectionProvider instance;
+
+    private ConnectionProvider(String host, String username, String password) {
+        this.host = host;
         this.username = username;
         this.password = password;
-        this.host = StringUtils.trim(host, "/");
     }
 
-    public DefaultHttpClient getHttpClient() {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
-        httpClient.setCredentialsProvider(credentialsProvider);
-        return httpClient;
+    public static void createInstance(String host, String username, String password) {
+        if (instance == null) {
+            instance = new ConnectionProvider(host, username, password);
+        }
+    }
+
+    public static ConnectionProvider getInstance() throws Exception {
+
+        if (instance == null) {
+            throw new Exception("You must create instance!");
+        }
+        return instance;
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public String getHost() {
-        return host;
+        return this.host;
     }
 
     public boolean isAuthenticated() {
@@ -56,7 +64,9 @@ public class ConnectionProvider {
         httpGet.releaseConnection();
 
         try {
+
             HttpGet authenticate = new HttpGet(this.getHost() + authenticateUrlPart);
+
             HttpResponse response = httpClient.execute(authenticate);
             StringBuffer bufferString = this.logger(response);
             return "Success".equals(bufferString.toString().trim());
@@ -65,6 +75,14 @@ public class ConnectionProvider {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public DefaultHttpClient getHttpClient() {
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+        httpClient.setCredentialsProvider(credentialsProvider);
+        return httpClient;
     }
 
     private StringBuffer logger(HttpResponse httpResponse) throws IOException {
@@ -79,4 +97,5 @@ public class ConnectionProvider {
         return stringBuffer;
 
     }
+
 }

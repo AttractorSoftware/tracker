@@ -14,7 +14,7 @@ public class ScreenShot extends Thread {
 
     public ScreenShot(ConnectionProvider connectionProvider) {
         homeDirectory = System.getProperty("user.home");
-        screenshotSender = new ScreenshotSender(connectionProvider);
+        screenshotSender = new ScreenshotSender();
     }
 
     public void screenShot() {
@@ -31,6 +31,8 @@ public class ScreenShot extends Thread {
             screenshotSender.sendScreenshot(screenshot);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 

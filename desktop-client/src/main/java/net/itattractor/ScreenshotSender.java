@@ -21,11 +21,12 @@ public class ScreenshotSender {
     private static final String LOGIN_URL_PART = "/login/";
     private ConnectionProvider connectionProvider;
 
-    public ScreenshotSender(ConnectionProvider connectionProvider){
-        this.connectionProvider = connectionProvider;
+    public ScreenshotSender(){
     }
 
-    public boolean sendScreenshot(File file) throws UnsupportedEncodingException {
+    public boolean sendScreenshot(File file) throws Exception {
+
+        connectionProvider = ConnectionProvider.getInstance();
         HttpGet httpGet = new HttpGet(connectionProvider.getHost() + LOGIN_URL_PART);
         DefaultHttpClient httpClient = connectionProvider.getHttpClient();
         HttpResponse response;

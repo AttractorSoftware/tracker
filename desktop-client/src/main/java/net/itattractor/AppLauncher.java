@@ -51,7 +51,7 @@ public class AppLauncher {
 
     public class LoginFormActionListenerImpl implements LoginFormActionListener {
         @Override
-        public void submitPressed() {
+        public void submitPressed() throws Exception {
             String url = loginForm.getUrlField().getText();
             String username = loginForm.getUsernameField().getText();
             String password = new String(loginForm.getPasswordField().getPassword());
@@ -59,12 +59,15 @@ public class AppLauncher {
             if (url.equals("") || username.equals("") || password.equals("")) {
                 showDialog("Wrong username or password. Try again!");
             } else {
-                provider = new ConnectionProvider(url, username, password);
+
+                ConnectionProvider.createInstance(url, username, password);
+
+                provider = ConnectionProvider.getInstance();
 
                 if (provider.isAuthenticated()) {
                     loginFrame.setVisible(false);
                     tasksFrame = new JFrame("tasks form");
-                    tasksForm = new TasksForm(provider);
+                    tasksForm = new TasksForm();
                     tasksForm.setActionListener(new TasksFormActionListenerImpl());
 
                     tasksFrame.add(tasksForm.getContentPanel());
@@ -118,11 +121,11 @@ public class AppLauncher {
         private CommentSender commentSender;
 
         private RecordFormActionListenerImpl() {
-            this.commentSender = new CommentSender(provider);
+            this.commentSender = new CommentSender();
         }
 
         @Override
-        public void okPressed(Ticket currentTicket) {
+        public void okPressed(Ticket currentTicket) throws Exception {
             JTextArea descriptionTextArea = recordForm.getDescriptionTextArea();
             if (!lastComment.equals(descriptionTextArea.getText()))
             {

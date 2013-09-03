@@ -24,7 +24,11 @@ public class RecordForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(actionListener != null) {
-                    actionListener.okPressed(currentTicket);
+                    try {
+                        actionListener.okPressed(currentTicket);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
                 }
             }
         });

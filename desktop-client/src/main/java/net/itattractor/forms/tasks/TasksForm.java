@@ -17,8 +17,9 @@ public class TasksForm {
     private TasksFormActionListener actionListener;
     private ConnectionProvider connectionProvider;
 
-    public TasksForm(final ConnectionProvider connectionProvider) {
-        this.connectionProvider = connectionProvider;
+    public TasksForm() throws Exception {
+
+        connectionProvider = ConnectionProvider.getInstance();
 
         startButton.addActionListener(new ActionListener() {
             @Override
@@ -33,7 +34,12 @@ public class TasksForm {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tasksComboBox.removeAllItems();
-                TaskReader taskReader = new TaskReader(connectionProvider);
+                TaskReader taskReader = null;
+                try {
+                    taskReader = new TaskReader();
+                } catch (Exception e1) {
+                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
                 Ticket[] tiket = taskReader.getTickets();
                 for (Ticket aTiket : tiket) {
                     tasksComboBox.addItem(aTiket);
@@ -50,8 +56,8 @@ public class TasksForm {
         this.actionListener = actionListener;
     }
 
-    private void createUIComponents() {
-        TaskReader taskReader = new TaskReader(connectionProvider);
+    private void createUIComponents() throws Exception {
+        TaskReader taskReader = new TaskReader();
         tasksComboBox = new JComboBox<Object>(taskReader.getTickets());
     }
 }
