@@ -22,3 +22,14 @@ Feature: In order to check work flow user should
       And push update button
       Then should see screensots
 
+    Scenario: Check authenticate module
+      Given I open browser
+      When I send "tracker-trac.demo.esdp.it-attractor.net/authenticate" and my username "demo" and password "123"
+      Then I should see the next status "Success"
+
+    Scenario: Are there any screenshots of the user by date
+      Given Open tracker's users page
+      When I find user by username "demo" click on that user
+      And choose date in "09/02/13" calendar
+      And push update button
+      Then should see screensots
