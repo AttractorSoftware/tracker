@@ -3,6 +3,8 @@ package net.itattractor.features;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+import cucumber.runtime.PendingException;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -86,4 +88,19 @@ public class MyStepdefs {
         List<WebElement> change = webDriver. findElements(By.cssSelector(".comment p"));
         Assert.assertEquals(sentComment, (change.get(change.size()-1)).getText());
     }
+    /*
+    @Given("^I launch application with url \"([^\"]*)\", username \"([^\"]*)\" and password \"([^\"]*)\"$")
+    public void I_launch_application_with_url_username_and_password(String url, String username, String password) throws Throwable {
+        I_run_application();
+        I_input_url_and_username_and_password(url, username, password);
+        I_click_submit_button();
+        I_should_see_tasks_form();
+
+    }
+
+    @Then("^I check if ticket doesn't exist in combobox$")
+    public void I_check_if_ticket_doesn_t_exist_in_combobox() throws Throwable {
+        tasksWindow.getComboBox().contains()
+    }
+    */
 }

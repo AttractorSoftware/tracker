@@ -19,7 +19,7 @@ public class Ticket {
     }
 
     private String parserTicketSummary(String ticketDefinition) {
-        return ticketDefinition.substring(ticketDefinition.indexOf(':') + 1, ticketDefinition.length());
+        return ticketDefinition.substring(ticketDefinition.indexOf(':') + 2);
     }
 
     public String getTicketSummary() {
