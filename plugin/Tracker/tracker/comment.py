@@ -11,7 +11,6 @@ from trac.config import IntOption
 from trac.core import *
 from trac.util.datefmt import utc, to_timestamp
 from trac.web import IRequestHandler, RequestDone
-from trac.web.auth import BasicAuthentication
 from trac.web.chrome import INavigationContributor
 from trac.util.datefmt import to_utimestamp
 from trac.util.compat import sha1
@@ -114,8 +113,6 @@ class TrackerUploaderAndCommentAdderModule(Component):
                 self._add_comment(req)
             elif req.args['action'] == 'addScreenshot':
                 self._do_save(req)
-            elif req.args['action'] == 'auth':
-                self._tracker_auth(req)
         else:
             if req.args['format'] == 'jar':
                 self._download_client_file(req)
@@ -136,23 +133,6 @@ class TrackerUploaderAndCommentAdderModule(Component):
 
         screenshot = Screenshot(self.env)
         screenshot.insert(upload.filename, upload.file, username)
-
-    def _tracker_auth(self, req):
-        username = req.args['username']
-        password = req.args['password']
-        auth = BasicAuthentication(os.path.join(os.path.normpath(self.env.path), "pass", ".htpasswd"), "")
-        if auth.test(username, password):
-            abuffer = 'Success'
-            req.send_header('Content-Type', 'text/plain')
-            req.send_header('Content-length', str(len(abuffer)))
-            req.end_headers()
-            req.write(abuffer)
-        else:
-            abuffer = 'Failed'
-            req.send_header('Content-Type', 'text/plain')
-            req.send_header('Content-length', str(len(abuffer)))
-            req.end_headers()
-            req.write(abuffer)
 
     def _download_client_file(self, req):
         from pkg_resources import resource_filename

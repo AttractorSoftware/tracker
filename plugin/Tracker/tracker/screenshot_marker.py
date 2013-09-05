@@ -16,6 +16,7 @@ class TrackerScreenshotMarkerModule(Component):
         if req.method == "GET":
             thisMonth = req.args.get("thisMonth")
             thisYear  = req.args.get("thisYear")
+            user_name  = req.args.get("userName")
             days = calendar.monthrange(int(thisYear), int(self._get_correct_month_name(thisMonth)))
             startDay, lastDay = days
             data = {}
@@ -23,7 +24,7 @@ class TrackerScreenshotMarkerModule(Component):
                 date = trim(str(day) + "/" + self._get_correct_month_name(thisMonth) + "/" + str(thisYear))
                 if day == 0:
                     continue
-                if self.at_this_date_there_are_screenshots(date):
+                if self.at_this_date_there_are_screenshots(date, user_name):
                     data[day] = day
             jsondata = json.dumps(data)
             req.send_header('Content-Type', 'application/json')
@@ -61,9 +62,9 @@ class TrackerScreenshotMarkerModule(Component):
 
         return month
 
-    def at_this_date_there_are_screenshots(self, date):
+    def at_this_date_there_are_screenshots(self, date, user_name):
 
-        if self.env.db_query("SELECT strftime('%d/%m/%Y', datetime(time, 'unixepoch')) AS countScreenshots FROM tracker_screenshots WHERE countScreenshots = \""+date+"\""):
+        if self.env.db_query("SELECT strftime('%d/%m/%Y', datetime(time, 'unixepoch')) AS countScreenshots FROM tracker_screenshots WHERE countScreenshots = \""+date+"\" AND author = \""+user_name+"\""):
             return True
         else:
             return False

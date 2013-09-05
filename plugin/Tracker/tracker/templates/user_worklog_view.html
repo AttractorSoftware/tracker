@@ -59,10 +59,11 @@
                 var thisMonthValue = $("#ui-datepicker-div .ui-datepicker-month").text();
                 var thisYearValue = $("#ui-datepicker-div .ui-datepicker-year").text();
                 var thereUrlScreenshot = $("#thereUrlScreenshot").val();
+                var userName = $("#userName").val();
                 $.ajax({
                     type: "GET",
                     url: thereUrlScreenshot,
-                    data: {"thisMonth": thisMonthValue, "thisYear": thisYearValue},
+                    data: {"thisMonth": thisMonthValue, "thisYear": thisYearValue, 'userName':userName},
                     dataType: "json",
                     success: function (data) {
                         $.each(data, function (index) {
@@ -112,6 +113,7 @@
 <div id="content" class="tracker">
     <py>
         <input value="${href.thereScreenshot()}" id="thereUrlScreenshot" type="hidden" />
+        <input value="${username}" id="userName" type="hidden" />
     </py>
     <form id="tracker-filter" method="get" action="">
         <div i18n:msg="">
@@ -135,47 +137,45 @@
 
                 <p style="text-align: left"><b>Hours</b></p>
             </td>
+            <py:for each="interval in range(0, show_columns)">
             <td align="center" width="10%">
-                <b>0-10</b>
+                <b>:${interval * time_interval} TO :${interval * time_interval + time_interval}</b>
             </td>
-            <td align="center" width="10%">
-                <b>10-20</b>
-            </td>
-            <td align="center" width="10%">
-                <b>20-30</b>
-            </td>
-            <td align="center" width="10%">
-                <b>30-40</b>
-            </td>
-            <td align="center" width="10%">
-                <b>40-50</b>
-            </td>
-            <td align="center" width="10%">
-                <b>50-60</b>
-            </td>
-        </tr>
-        <tr>
-            <td align="center" width="10%">
-                <b>09:00-10:00</b>
-            </td>
-            <py:for each="screenshot in screenshots">
-                <td align="center" width="10%">
-                    <div class="tracker-image">
-                        <a name="modal" href="#dialog_${screenshot.id}" title="${screenshot.filename}">
-                            <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}" style="width: 200px; height: 100px"/>
-                        </a>
-
-                        <div id="boxes">
-                            <div style="margin: 0 auto;" id="dialog_${screenshot.id}" class="window">
-                                <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}" style="width:90%; height: 90%;" />
-                                <span><a href="#" class="close">X</a></span>
-                            </div>
-                            <div id="mask"></div>
-                        </div>
-                    </div>
-                </td>
             </py:for>
         </tr>
+        <py:for each="hourse in template_hourse">
+
+            <tr>
+                <td align="center" width="10%">
+                        <b>${hourse}:00-${hourse + time_separate}:00</b>
+                </td>
+                <!--<py:for each="minute in template_minute">-->
+
+                        <py:for each="screenshot in allScreenshots">
+
+                            <py:if test="screenshot.hourse==hourse">
+                                <td align="center" width="10%">
+                                    <div class="tracker-image">
+                                        <a name="modal" href="#dialog_${screenshot.id}" title="${screenshot.filename}">
+                                            <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}" style="width: 140px; height: 80px"/>
+                                        </a>
+
+                                        <div id="boxes">
+                                            <div style="margin: 0 auto;" id="dialog_${screenshot.id}" class="window">
+                                                <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}" style="width:90%; height: 90%;" />
+                                                <span><a href="#" class="close">X</a></span>
+                                            </div>
+                                            <div id="mask"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </py:if>
+                        </py:for>
+
+                <!--</py:for>-->
+            </tr>
+        </py:for>
+
     </table>
 </div>
 </body>

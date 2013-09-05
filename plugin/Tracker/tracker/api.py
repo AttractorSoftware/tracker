@@ -27,7 +27,7 @@ class TrackerApi(object):
                    %(where)s
                    %(between)s """ % sql_values)
 
-        print 'sql -> ', sql
+        #print 'sql -> ', sql
 
         context.cursor.execute(sql, values)
 
@@ -55,6 +55,8 @@ class TrackerApi(object):
 
     def get_screenshot_by_time(self):
         pass
+
+
 
     def _add_item(self):
         pass

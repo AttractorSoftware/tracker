@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
+import datetime
 import re
 import os.path
 import os
@@ -14,6 +14,8 @@ from genshi.builder import tag
 from trac.core import ExtensionPoint
 from trac.web.chrome import INavigationContributor
 from trac.mimeview import Context, Mimeview
+from numpy import *
+
 
 from tracker.api import ITrackerScreenshotsRenderer, TrackerApi
 
@@ -66,6 +68,7 @@ class TrackerUserListModule(Component):
         template, content_type = self._do_actions(context, actions)
 
         add_stylesheet(req, 'trac/css/tracker.css')
+
         return req.data['template'], req.data, None
 
     def get_templates_dirs(self):
@@ -87,23 +90,37 @@ class TrackerUserListModule(Component):
             return ['view']
 
     def _do_actions(self, context, actions):
+        """
+
+        :param context:
+        :param actions:
+        :return:
+        """
         api = TrackerApi()
+
+        time_interval = self.env.config.getint('tracker', 'time_interval', 10)
+        time_separate = 1
+        show_columns = 6
+        screenshotsWithHourse = []
+        screenshotsWithMinutes = []
+        template_hourse = []
+        m = 0
 
         for action in actions:
             if action == 'view':
-                date = datetime.now(context.req.tz)
+                date = datetime.datetime.now(context.req.tz)
                 if 'date' in context.req.args:
                     date_from_calendar = context.req.args['date'].strip()
                     if date_from_calendar:
                         precisedate = user_time(context.req, parse_date, date_from_calendar)
                         date = precisedate.astimezone(context.req.tz)
-                to_date = to_datetime(datetime(date.year, date.month, date.day,
+                to_date = to_datetime(datetime.datetime(date.year, date.month, date.day,
                                                23, 59, 59, 999999), context.req.tz)
                 to_date_timestamp = to_timestamp(to_date)
 
                 full_date = {
                     'from_date': to_date_timestamp - 86400,
-                    'to_date': to_date_timestamp
+                    'to_date'  : to_date_timestamp
                 }
 
                 context.req.data['fromdate'] = to_date
@@ -111,8 +128,47 @@ class TrackerUserListModule(Component):
 
                 screenshot_id = int(context.req.args.get('id') or 0)
                 screenshots = api.get_screenshots(context, context.req.args.get('username'), full_date)
+
                 context.req.data['id'] = screenshot_id
-                context.req.data['screenshots'] = screenshots
+
+
+                for hourse in range(0, 24):
+                    for screenshot in screenshots:
+                        screenshot["hourse"] = datetime.datetime.fromtimestamp(screenshot["time"]).strftime('%H')
+                        if (int(screenshot["hourse"]) == hourse):
+                            min_hourse = hourse
+                            max_hourse = hourse
+                            screenshotsWithHourse.append({hourse:screenshot})
+
+
+
+                for minute in range(m, 59):
+                    for screenshotsAll in screenshotsWithHourse:
+                        for index in screenshotsAll:
+                            screenshotMinute = datetime.datetime.fromtimestamp(float(screenshotsAll[index]["time"])).strftime('%M')
+                            if int(screenshotMinute) == minute:
+                                screenshotHourse = datetime.datetime.fromtimestamp(screenshotsAll[index]["time"]).strftime('%H')
+                                template_hourse.append(int(screenshotHourse))
+
+                                if screenshotHourse > max_hourse:
+                                    max_hourse = screenshotHourse
+                                else:
+                                    min_hourse = screenshotHourse
+
+                                screenshotsAll[index]['hourse'] = int(screenshotHourse)
+                                screenshotsWithMinutes.append(screenshotsAll[index])
+
+                                if minute % time_interval != 0:
+                                    m += time_interval - (time_interval * (minute % time_interval))
+                                else:
+                                    m += time_interval
+
+                context.req.data['allScreenshots'] = screenshotsWithMinutes
+                context.req.data['template_hourse'] = range(int(min_hourse), int(max_hourse)+time_separate)
+
+                context.req.data['time_interval'] = time_interval
+                context.req.data['time_separate'] = time_separate
+                context.req.data['show_columns']  = show_columns
                 context.req.data['author'] = context.req.args.get('username')
                 context.req.data['template'] = 'user_worklog_view.html'
 
@@ -157,3 +213,8 @@ class TrackerUserListModule(Component):
                 return 'screenshots', None
             else:
                 return 'screenshots', None
+    # def _get_screenshosts_per_day(self, args_with_hourse_sourse_index):
+    #     pass
+
+    def _get_screenshosts_per_by_hours(self, args_with_hourse_sourse_index):
+        pass
