@@ -1,9 +1,6 @@
-import base64
 import re
-from genshi.builder import tag
 from trac.core import Component, implements
 from trac.web import IRequestHandler
-from trac.web.chrome import add_stylesheet
 
 
 class TrackerAuthorizationModule(Component):

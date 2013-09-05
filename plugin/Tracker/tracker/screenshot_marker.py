@@ -1,6 +1,5 @@
 import calendar
 import json
-from mako.filters import trim
 import re
 from trac.core import *
 from trac.web import IRequestHandler
@@ -15,13 +14,15 @@ class TrackerScreenshotMarkerModule(Component):
     def process_request(self, req):
         if req.method == "GET":
             thisMonth = req.args.get("thisMonth")
-            thisYear  = req.args.get("thisYear")
-            user_name  = req.args.get("userName")
+            thisYear = req.args.get("thisYear")
+            user_name = req.args.get("userName")
             days = calendar.monthrange(int(thisYear), int(self._get_correct_month_name(thisMonth)))
             startDay, lastDay = days
             data = {}
             for day in range(startDay, lastDay):
-                date = trim(str(day) + "/" + self._get_correct_month_name(thisMonth) + "/" + str(thisYear))
+                date = str(day) + "/" + self._get_correct_month_name(thisMonth) + "/" + str(thisYear)
+                date = date.strip()
+
                 if day == 0:
                     continue
                 if self.at_this_date_there_are_screenshots(date, user_name):
@@ -64,7 +65,8 @@ class TrackerScreenshotMarkerModule(Component):
 
     def at_this_date_there_are_screenshots(self, date, user_name):
 
-        if self.env.db_query("SELECT strftime('%d/%m/%Y', datetime(time, 'unixepoch')) AS countScreenshots FROM tracker_screenshots WHERE countScreenshots = \""+date+"\" AND author = \""+user_name+"\""):
+        if self.env.db_query(
+                                                "SELECT strftime('%d/%m/%Y', datetime(time, 'unixepoch')) AS countScreenshots FROM tracker_screenshots WHERE countScreenshots = \"" + date + "\" AND author = \"" + user_name + "\""):
             return True
         else:
             return False

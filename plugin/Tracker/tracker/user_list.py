@@ -14,7 +14,6 @@ from genshi.builder import tag
 from trac.core import ExtensionPoint
 from trac.web.chrome import INavigationContributor
 from trac.mimeview import Context, Mimeview
-from numpy import *
 
 from tracker.api import ITrackerScreenshotsRenderer, TrackerApi
 
