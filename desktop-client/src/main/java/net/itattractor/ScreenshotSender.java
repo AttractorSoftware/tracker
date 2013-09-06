@@ -64,7 +64,7 @@ public class ScreenshotSender {
         return true;
     }
 
-    public String getToken(List<Cookie> cookies)
+    private String getToken(List<Cookie> cookies)
     {
         for (Cookie cookie : cookies)
         {

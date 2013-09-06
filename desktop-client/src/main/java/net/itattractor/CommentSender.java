@@ -61,7 +61,7 @@ public class CommentSender {
         return true;
     }
 
-    public static String getToken(List<Cookie> cookies) {
+    private static String getToken(List<Cookie> cookies) {
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(Config.getValue("tracFormToken"))) {
                 return cookie.getValue();

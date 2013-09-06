@@ -50,7 +50,7 @@ public class LogWriter {
         if (doc != null && !file.exists()) {
             Element tasks = doc.createElement("Tasks");
             doc.appendChild(tasks);
-            doXML();
+            doXML(file, doc);
         }
     }
 
@@ -64,7 +64,7 @@ public class LogWriter {
             dateStart.setAttribute("value", new Date().toString());
             task.appendChild(dateStart);
             tasks.appendChild(task);
-            doXML();
+            doXML(file, doc);
         }
     }
 
@@ -81,7 +81,7 @@ public class LogWriter {
             recordQuery.appendChild(dateTime);
             recordQuery.appendChild(description);
             task.appendChild(recordQuery);
-            doXML();
+            doXML(file, doc);
         }
     }
 
@@ -92,17 +92,17 @@ public class LogWriter {
             Element dateEnd = doc.createElement("DateEnd");
             dateEnd.setAttribute("value", new Date().toString());
             task.appendChild(dateEnd);
-            doXML();
+            doXML(file, doc);
         }
     }
 
-    public void doXML() {
+    public void doXML(File filename, Document document) {
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
 
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(file);
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(filename);
             transformer.transform(source, result);
         } catch (TransformerException tfe) {
             tfe.printStackTrace();
