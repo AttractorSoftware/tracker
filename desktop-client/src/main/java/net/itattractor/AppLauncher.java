@@ -199,7 +199,7 @@ public class AppLauncher {
         }
 
         private void pause() {
-            int remindAgainIn = Integer.parseInt(Config.getValue("remindAgainInSeconds"));
+            int remindAgainIn = Integer.parseInt(Config.getValue("remindAgainInMinutes"));
             recordFrame.setVisible(false);
             timer = new Timer();
             timer.schedule(new TimerTask() {
