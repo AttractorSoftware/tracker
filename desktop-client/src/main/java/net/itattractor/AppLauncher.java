@@ -8,10 +8,13 @@ import net.itattractor.forms.tasks.TasksForm;
 import net.itattractor.forms.tasks.TasksFormActionListener;
 
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import java.util.Timer;
 
 public class AppLauncher {
+    private JFrame currentFrame;
     private JFrame loginFrame;
 
     private LoginForm loginForm;
@@ -21,7 +24,53 @@ public class AppLauncher {
     private ConnectionProvider provider;
     private LogWriter logWriter;
     private TasksForm tasksForm;
+    private final TrayIcon trayIcon;
+    private final SystemTray tray;
+    private Timer timer;
 
+    public AppLauncher() {
+        timer = null;
+        PopupMenu popup = new PopupMenu();
+        Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
+        trayIcon = new TrayIcon(image);
+        tray = SystemTray.getSystemTray();
+
+        MenuItem openItem = new MenuItem("Open");
+        MenuItem exitItem = new MenuItem("Exit");
+        popup.add(openItem);
+        popup.add(exitItem);
+        trayIcon.setPopupMenu(popup);
+        try {
+            tray.add(trayIcon);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+
+        trayIcon.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (timer != null) {
+                    timer.cancel();
+                }
+                currentFrame.setVisible(true);
+            }
+        });
+
+        openItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (timer != null) {
+                    timer.cancel();
+                }
+                currentFrame.setVisible(true);
+            }
+        });
+
+        exitItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                tray.remove(trayIcon);
+                System.exit(0);
+            }
+        });
+    }
 
     public void start() {
         Config.init();
@@ -35,6 +84,13 @@ public class AppLauncher {
         loginFrame.setSize(320, 240);
         loginFrame.setLocationRelativeTo(null);
         loginFrame.setVisible(true);
+        currentFrame = loginFrame;
+        loginFrame.addWindowStateListener(new WindowStateListener() {
+            @Override
+            public void windowStateChanged(WindowEvent e) {
+                loginFrame.isVisible();
+            }
+        });
     }
 
     public JFrame getLoginFrame() {
@@ -74,6 +130,7 @@ public class AppLauncher {
                     tasksFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                     tasksFrame.setSize(500, 200);
                     tasksFrame.setVisible(true);
+                    currentFrame = tasksFrame;
                     new Thread(new ScreenShot(provider)).start();
                 } else
                     showDialog("Wrong username or password. Try again!");
@@ -106,12 +163,16 @@ public class AppLauncher {
             recordFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             recordFrame.setSize(500, 300);
             recordFrame.setVisible(true);
+
+            currentFrame = recordFrame;
+
             recordFrame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     logWriter.close();
                     recordFrame.setVisible(false);
                     tasksFrame.setVisible(true);
+                    currentFrame = tasksFrame;
                 }
             });
         }
@@ -138,15 +199,15 @@ public class AppLauncher {
         }
 
         private void pause() {
-            int timer = Integer.parseInt(Config.getValue("remindAgainInSeconds"));
-            try {
-                recordFrame.setVisible(false);
-                Thread.sleep(timer * (Integer) recordForm.getPeriodTimeSpinner().getValue());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-                recordFrame.setVisible(true);
-            }
+            int remindAgainIn = Integer.parseInt(Config.getValue("remindAgainInSeconds"));
+            recordFrame.setVisible(false);
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    recordFrame.setVisible(true);
+                }
+            }, remindAgainIn * (Integer) recordForm.getPeriodTimeSpinner().getValue());
         }
 
         @Override
@@ -154,6 +215,7 @@ public class AppLauncher {
             logWriter.close();
             recordFrame.setVisible(false);
             tasksFrame.setVisible(true);
+            currentFrame = tasksFrame;
         }
     }
 }
