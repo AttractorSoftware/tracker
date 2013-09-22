@@ -49,3 +49,38 @@ h2 {
     font-size: 90%;
     color: #666;
 }
+
+.user-screenshots {
+    width: 98%;
+    margin: 15px 1% 20px 1%;
+}
+
+table.user-screenshots thead th {
+    font-size: 11px;
+    vertical-align: bottom;
+    white-space: nowrap;
+    text-align: left;
+    background: #f7f7f7;
+
+    background: #f7f7f7;
+    border-bottom: 1px solid #d7d7d7;
+    margin: 2em 0 .5em;
+    padding: .4em;
+    box-shadow: 1px 1px .5em 0 #ccc;
+    border-radius: .1em;
+}
+
+table.user-screenshots thead th:first-child {
+    width: 80px;
+    text-align: center;
+}
+
+table.user-screenshots tbody tr {
+    background-color: #fcfcfc;
+}
+
+table.user-screenshots tbody td {
+    border: 1px dotted #ddd;
+    padding: .3em .5em;
+    vertical-align: top;
+}

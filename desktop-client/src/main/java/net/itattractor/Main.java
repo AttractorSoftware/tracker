@@ -5,5 +5,8 @@ public class Main {
     {
         AppLauncher appLauncher = new AppLauncher();
         appLauncher.start();
+        Handler a = new Handler();
+
+        Thread.setDefaultUncaughtExceptionHandler(new Handler());
     }
 }

@@ -73,7 +73,9 @@
           </grid>
           <forms defaultalign-horz="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <text value=""/>
+        </properties>
       </component>
       <grid id="c4e24" layout-manager="FormLayout">
         <rowspec value="center:d:grow"/>
