@@ -10,6 +10,7 @@ public class ErrorForm {
     private JButton okButton;
     private JTextArea errorMessage;
     private JTextArea mailText;
+    private JScrollPane scrollPane;
 
 
     public ErrorForm() {
