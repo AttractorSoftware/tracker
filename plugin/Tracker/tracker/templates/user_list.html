@@ -13,9 +13,17 @@
 <div id="content" class="tracker">
     <h1>Users:</h1>
     <ul id="nav">
-        <py:for each="user in users">
+        <py:choose test="users">
+            <py:when test = 'None'>
+            <p>No users found</p>
+            </py:when>
+        <py:otherwise>
+            <py:for each="user in users">
             <li><a href="users/${user.author}">${user.author}</a></li>
         </py:for>
+
+        </py:otherwise>
+        </py:choose>
     </ul>
 </div>
 <div class="tracker-client-download">
