@@ -29,9 +29,9 @@ public class ConnectionProvider {
     }
 
     public static void createInstance(String host, String username, String password) {
-        if (instance == null) {
+
             instance = new ConnectionProvider(host, username, password);
-        }
+
     }
 
     public static ConnectionProvider getInstance() throws Exception {
