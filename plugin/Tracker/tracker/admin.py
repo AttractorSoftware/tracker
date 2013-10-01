@@ -10,7 +10,7 @@ class TrackerAdminPlugin(Component):
 
     min_screenshot_interval_time = 5
     max_screenshot_interval_time = 30
-    default_screenshot_interval_time = 10
+    default_screenshot_interval_time = 1
     minutes_in_hour = 60
 
     def get_permission_actions(self):

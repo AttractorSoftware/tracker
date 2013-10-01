@@ -37,7 +37,6 @@ class TrackerUserListModule(Component):
                tag.a('Tracker', href=req.href.users()))
 
     def match_request(self, req):
-
         match = re.match(r'/users(?:/(\D+))?(?:/(\d+))?$', req.path_info)
         if match:
             username, s_id = match.groups()
@@ -76,7 +75,6 @@ class TrackerUserListModule(Component):
 
     def get_htdocs_dirs(self):
         from pkg_resources import resource_filename
-
         return [('trac', resource_filename(__name__, 'htdocs'))]
 
     def _get_actions(self, context):
@@ -89,6 +87,7 @@ class TrackerUserListModule(Component):
             return ['view']
 
     def _do_actions(self, context, actions):
+
 
         api = TrackerApi()
 
