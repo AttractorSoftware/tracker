@@ -2,11 +2,15 @@ from trac.db import Table, Column, Index, DatabaseManager
 
 tables = [
     Table('tracker_screenshots', key='id')[
-        Column('id', type='integer', auto_increment=True),
+        Column('id', type='int', auto_increment=True),
+        Column('interval', type='int'),
+        Column('task_id', type='int'),
+        Column('mouse_event_count', type='int'),
+        Column('keyboard_event_count', type='int'),
         Column('filename'),
         Column('author'),
         Column('path'),
-        Column('time', type='integer')
+        Column('time', type='int')
     ]
 ]
 
