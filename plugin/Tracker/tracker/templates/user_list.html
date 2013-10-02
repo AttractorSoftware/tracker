@@ -19,11 +19,12 @@
             </py:when>
         <py:otherwise>
             <py:for each="user in users">
-                <li><a href="users/${user.author}">${user.author}</a>
+                <li>
+                    <h1>${user.author}</h1>
+                    <a href="users/${user.author}">Ежедневный отчет</a>
                     <a href="user_report">Отчет за период</a>
                 </li>
             </py:for>
-
         </py:otherwise>
         </py:choose>
     </ul>

@@ -24,6 +24,6 @@ setup(name=PACKAGE,
           'TracTracker.admin = tracker.admin'
       ]},
       package_data={
-      'tracker': ['templates/*.html', 'templates/*.xml', 'htdocs/css/*.css', 'client/*.zip', 'htdocs/js/*.js']},
+      'tracker': ['templates/*.html', 'templates/*.xml', 'htdocs/css/*.css', 'htdocs/img/*.png', 'client/*.zip', 'htdocs/js/*.js']},
       install_requires=['trac'],
 )
