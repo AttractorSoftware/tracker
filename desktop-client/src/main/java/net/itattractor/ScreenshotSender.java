@@ -20,9 +20,7 @@ public class ScreenshotSender {
     private static final String TRACKER_URL_PART = "/tracker";
     private static final String LOGIN_URL_PART = "/login/";
     private ConnectionProvider connectionProvider;
-
-    public ScreenshotSender(){
-    }
+    private Ticket currentTicket;
 
     public boolean sendScreenshot(File file) throws Exception {
 
@@ -45,14 +43,16 @@ public class ScreenshotSender {
 
         HttpPost httpPost = new HttpPost(connectionProvider.getHost() + TRACKER_URL_PART);
         ContentBody body = new FileBody(file, Config.getValue("sendingScreenshotExtension"));
-
         MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
         entity.addPart("screenshot", body);
         entity.addPart("__FORM_TOKEN", new StringBody(getToken(cookieList)));
         entity.addPart("username", new StringBody(connectionProvider.getUsername()));
         entity.addPart("action", new StringBody("addScreenshot"));
+        entity.addPart("ticket_id", new StringBody(String.valueOf(currentTicket.getTicketId())));
+        entity.addPart("interval", new StringBody(Config.getValue("screenshotPeriod")));
+        entity.addPart("mouse_event_count", new StringBody(Integer.toString(EventCounter.mouseCounter)));
+        entity.addPart("keyboard_event_count", new StringBody(Integer.toString(EventCounter.keyCounter)));
         httpPost.setEntity(entity);
-
         try{
             httpClient.execute(httpPost);
         }
@@ -86,5 +86,9 @@ public class ScreenshotSender {
             stringBuffer.append("\n" + line);
         }
 
+    }
+
+    public void setTicket(Ticket ticket) {
+        this.currentTicket = ticket;
     }
 }

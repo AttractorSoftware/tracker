@@ -16,16 +16,15 @@ public class TasksForm {
     private JButton refreshButton;
     private TasksFormActionListener actionListener;
     private ConnectionProvider connectionProvider;
-
     public TasksForm() throws Exception {
 
         connectionProvider = ConnectionProvider.getInstance();
-
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(actionListener != null){
                     Ticket currentTicket = new Ticket(tasksComboBox.getSelectedItem().toString());
+
                     actionListener.startPressed(currentTicket);
                 }
             }

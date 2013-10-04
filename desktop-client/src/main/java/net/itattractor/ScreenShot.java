@@ -11,6 +11,7 @@ import java.util.Date;
 public class ScreenShot extends Thread {
     private final ScreenshotSender screenshotSender;
     private String homeDirectory;
+    private Ticket currentTicket;
 
     public ScreenShot(ConnectionProvider connectionProvider) {
         homeDirectory = System.getProperty("user.home");
@@ -18,6 +19,7 @@ public class ScreenShot extends Thread {
     }
 
     public void screenShot() {
+        screenshotSender.setTicket(currentTicket);
         Robot robot = null;
         try {
             robot = new Robot();
@@ -29,6 +31,8 @@ public class ScreenShot extends Thread {
             File screenshot = new File(homeDirectory + Config.getValue("screenshotDirectory") + new Date().toString() + "." + Config.getValue("screenshotExtension"));
             ImageIO.write(screenShot, Config.getValue("screenshotExtension"), screenshot);
             screenshotSender.sendScreenshot(screenshot);
+            EventCounter.keyCounter=0;
+            EventCounter.mouseCounter=0;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -48,5 +52,8 @@ public class ScreenShot extends Thread {
                 e.printStackTrace();
             }
         }
+    }
+    public void setCurrentTicket(Ticket currentTicket) {
+        this.currentTicket = currentTicket;
     }
 }

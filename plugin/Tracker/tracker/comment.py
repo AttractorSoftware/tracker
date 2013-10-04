@@ -39,8 +39,9 @@ class Screenshot(object):
 
         with targetfile:
             with self.env.db_transaction as db:
-                db("INSERT INTO tracker_screenshots(filename, author, path, time, mouse_event_count, keyboard_event_count, ticket_id, interval) VALUES(%s, %s, %s, %s, %s, %s, %s, %s )",
-                   (filename, author, file_dir, time, mouse_event_count, keyboard_event_count, ticket_id, interval))
+                db(
+                    "INSERT INTO tracker_screenshots(filename, author, path, time, mouse_event_count, keyboard_event_count, ticket_id, interval) VALUES(%s, %s, %s, %s, %s, %s, %s, %s )",
+                    (filename, author, file_dir, time, mouse_event_count, keyboard_event_count, ticket_id, interval))
                 shutil.copyfileobj(fileobject, targetfile)
 
     def _create_unique_screenshot(self, dir, filename, extension):
@@ -138,14 +139,10 @@ class TrackerUploaderAndCommentAdderModule(Component):
             upload.filename,
             upload.file,
             username,
-            10,
-            10,
-            5,
-            10
-            #upload.mouse_event_count,
-            #upload.keyboard_event_count,
-            #upload.ticket_id,
-            #upload.interval
+            req.args['mouse_event_count'],
+            req.args['keyboard_event_count'],
+            req.args['ticket_id'],
+            req.args['interval']
         )
 
     def _download_client_file(self, req):

@@ -34,7 +34,6 @@ public class AppLauncher {
         Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
         trayIcon = new TrayIcon(image);
         tray = SystemTray.getSystemTray();
-
         MenuItem openItem = new MenuItem("Open");
         MenuItem exitItem = new MenuItem("Exit");
         popup.add(openItem);
@@ -125,13 +124,11 @@ public class AppLauncher {
                     tasksFrame = new JFrame("tasks form");
                     tasksForm = new TasksForm();
                     tasksForm.setActionListener(new TasksFormActionListenerImpl());
-
                     tasksFrame.add(tasksForm.getContentPanel());
                     tasksFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                     tasksFrame.setSize(500, 200);
                     tasksFrame.setVisible(true);
                     currentFrame = tasksFrame;
-                    new Thread(new ScreenShot(provider)).start();
                 } else
                     showDialog("Wrong username or password. Try again!");
             }
@@ -163,9 +160,12 @@ public class AppLauncher {
             recordFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             recordFrame.setSize(500, 300);
             recordFrame.setVisible(true);
+            EventCounter.ActivateEvent();
+            ScreenShot screenShot = new ScreenShot(provider);
+            screenShot.setCurrentTicket(ticket);
+            new Thread(screenShot).start();
 
             currentFrame = recordFrame;
-
             recordFrame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
@@ -215,7 +215,6 @@ public class AppLauncher {
             logWriter.close();
             recordFrame.setVisible(false);
             tasksFrame.setVisible(true);
-            currentFrame = tasksFrame;
-        }
+            currentFrame = tasksFrame;        }
     }
 }
