@@ -20,7 +20,7 @@ class Screenshot(object):
     def __init__(self, env):
         self.env = env
 
-    def insert(self, filename, fileobject, author, mouse_event_count = 0, keyboard_event_count = 0, task_id = 0, interval = 10):
+    def insert(self, filename, fileobject, author, mouse_event_count, keyboard_event_count, ticket_id, interval):
         """
         Create a new Screenshot record and save the file content
         """
@@ -30,16 +30,17 @@ class Screenshot(object):
             os.makedirs(screenshots_dir)
 
         filename, extension = os.path.splitext(filename)
-        filename, targetfile, screenshot_hashed_name = self._create_unique_screenshot(screenshots_dir, filename,
-                                                                                      extension)
+        filename, targetfile, screenshot_hashed_name = self._create_unique_screenshot(
+            screenshots_dir, filename, extension
+        )
         file_dir = "screenshots" + "/" + author + "/" + screenshot_hashed_name
 
         time = to_timestamp(datetime.now(utc))
 
         with targetfile:
             with self.env.db_transaction as db:
-                db("INSERT INTO tracker_screenshots(filename, author, path, time, mouse_event_count, keyboard_event_count, task_id, interval) VALUES(%s, %s, %s, %s, %s, %s, %s, %s )",
-                   (filename, author, file_dir, time, mouse_event_count, keyboard_event_count, task_id, interval))
+                db("INSERT INTO tracker_screenshots(filename, author, path, time, mouse_event_count, keyboard_event_count, ticket_id, interval) VALUES(%s, %s, %s, %s, %s, %s, %s, %s )",
+                   (filename, author, file_dir, time, mouse_event_count, keyboard_event_count, ticket_id, interval))
                 shutil.copyfileobj(fileobject, targetfile)
 
     def _create_unique_screenshot(self, dir, filename, extension):
@@ -64,7 +65,7 @@ class Screenshot(object):
                 filename = '%s.%d%s' % (parts[0], idx, parts[1])
 
     def _get_hashed_screenshot_name(self, filename):
-        hash = sha1(encode("utf-8")).hexdigest()
+        hash = sha1(filename.encode("utf-8")).hexdigest()
         return hash
 
 
@@ -132,14 +133,19 @@ class TrackerUploaderAndCommentAdderModule(Component):
             raise TracError("Username does not exist!")
 
         screenshot = Screenshot(self.env)
+
         screenshot.insert(
-            upload.filenam,
+            upload.filename,
             upload.file,
             username,
-            upload.mouse_event_count,
-            upload.keyboard_event_count,
-            upload.task_id,
-            upload.interval
+            10,
+            10,
+            5,
+            10
+            #upload.mouse_event_count,
+            #upload.keyboard_event_count,
+            #upload.ticket_id,
+            #upload.interval
         )
 
     def _download_client_file(self, req):

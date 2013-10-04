@@ -42,7 +42,15 @@ class TrackerApi(object):
             context,
             date,
             'tracker_screenshots',
-            ('id', 'filename', 'author', 'path', 'time', 'mouse_event_count', 'keyboard_event_count', 'interval', 'task_id'),
+            ('id',
+             'filename',
+             'author',
+             'path',
+             'time',
+             'mouse_event_count',
+             'keyboard_event_count',
+             'interval',
+             'ticket_id'),
             False,
             'author = %s', (username,))
 

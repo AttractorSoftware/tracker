@@ -140,14 +140,6 @@
 
     <h2>${_("Username")}: <em>${username if username else None}</em></h2>
 
-    <form action="/trac-dev/tracker/addScreenshot" enctype="multipart/form-data">
-        <h2>Форма отправки скриншотов</h2>
-        <div><label for="">File</label><input type="file"/></div>
-        <div><label for="">Mouse event count</label><input type="text"/></div>
-        <div><label for="">Keyboard event count</label><input type="text"/></div>
-        <div><label for="">Time</label><input type="text"/></div>
-        <input type="submit"/>
-    </form>
     <table border="3px" width="99%">
         <py:for each="hourse in template_hourse">
             <tr>
