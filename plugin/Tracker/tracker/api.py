@@ -38,9 +38,13 @@ class TrackerApi(object):
         return items
 
     def get_screenshots(self, context, username, date):
-        return self._get_items(context, date, 'tracker_screenshots', ('id', 'filename', 'author', 'path', 'time'),
-                               False,
-                               'author = %s', (username,))
+        return self._get_items(
+            context,
+            date,
+            'tracker_screenshots',
+            ('id', 'filename', 'author', 'path', 'time', 'mouse_event_count', 'keyboard_event_count', 'interval', 'task_id'),
+            False,
+            'author = %s', (username,))
 
     def get_screenshot(self, context, id):
         screenshot = self._get_items(context, None, 'tracker_screenshots', ('id', 'filename', 'author', 'path', 'time'),

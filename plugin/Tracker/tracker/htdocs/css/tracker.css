@@ -89,13 +89,13 @@ table.user-screenshots tbody td {
     background: url('../img/mouse-ico.png') no-repeat;
     float: left;
     height: 31px;
-    padding: 14px 0 0 30px;
+    padding: 14px 10px 0 30px;
 }
 
 .tracker-image .keyboard-event-count {
     float: left;
     height: 18px;
-    padding: 13px 0 0 38px;
+    padding: 13px 10px 0 38px;
     background: url('../img/keyboard-ico.png') no-repeat;
 }
 

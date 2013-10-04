@@ -20,13 +20,13 @@ public class LoginForm {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (actionListener != null){
-                    try {
-                        actionListener.submitPressed();
-                    } catch (Exception e1) {
-                        e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    }
+            if (actionListener != null){
+                try {
+                    actionListener.submitPressed();
+                } catch (Exception e1) {
+                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
+            }
             }
         });
         cancelButton.addActionListener(new ActionListener() {

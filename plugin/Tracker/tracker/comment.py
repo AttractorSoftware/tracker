@@ -20,7 +20,7 @@ class Screenshot(object):
     def __init__(self, env):
         self.env = env
 
-    def insert(self, filename, fileobject, author):
+    def insert(self, filename, fileobject, author, mouse_event_count = 0, keyboard_event_count = 0, task_id = 0, interval = 10):
         """
         Create a new Screenshot record and save the file content
         """
@@ -38,8 +38,8 @@ class Screenshot(object):
 
         with targetfile:
             with self.env.db_transaction as db:
-                db("INSERT INTO tracker_screenshots(filename, author, path, time) VALUES(%s, %s, %s, %s)",
-                   (filename, author, file_dir, time))
+                db("INSERT INTO tracker_screenshots(filename, author, path, time, mouse_event_count, keyboard_event_count, task_id, interval) VALUES(%s, %s, %s, %s, %s, %s, %s, %s )",
+                   (filename, author, file_dir, time, mouse_event_count, keyboard_event_count, task_id, interval))
                 shutil.copyfileobj(fileobject, targetfile)
 
     def _create_unique_screenshot(self, dir, filename, extension):
@@ -64,7 +64,7 @@ class Screenshot(object):
                 filename = '%s.%d%s' % (parts[0], idx, parts[1])
 
     def _get_hashed_screenshot_name(self, filename):
-        hash = sha1(filename.encode("utf-8")).hexdigest()
+        hash = sha1(encode("utf-8")).hexdigest()
         return hash
 
 
@@ -132,7 +132,15 @@ class TrackerUploaderAndCommentAdderModule(Component):
             raise TracError("Username does not exist!")
 
         screenshot = Screenshot(self.env)
-        screenshot.insert(upload.filename, upload.file, username)
+        screenshot.insert(
+            upload.filenam,
+            upload.file,
+            username,
+            upload.mouse_event_count,
+            upload.keyboard_event_count,
+            upload.task_id,
+            upload.interval
+        )
 
     def _download_client_file(self, req):
         from pkg_resources import resource_filename

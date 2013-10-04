@@ -88,7 +88,6 @@ class TrackerUserListModule(Component):
 
     def _do_actions(self, context, actions):
 
-
         api = TrackerApi()
 
         time_interval = self.env.config.getint('tracker', 'time_interval', 10)
@@ -99,7 +98,6 @@ class TrackerUserListModule(Component):
         minute = 0
         min_hourse = 0
         max_hourse = 0
-
 
         for action in actions:
             if action == 'view':
@@ -156,15 +154,10 @@ class TrackerUserListModule(Component):
                                     minute += time_interval
                     minute += 1
 
-
-
-
-
                 context.req.data['allScreenshots'] = screenshotsWithMinutes
                 context.req.data['template_hourse'] = range(int(min_hourse), int(max_hourse)+time_separate)
                 context.req.data['time_interval'] = time_interval
                 context.req.data['time_separate'] = time_separate
-                context.req.data['author'] = context.req.args.get('username')
                 context.req.data['template'] = 'user_worklog_view.html'
 
                 add_stylesheet(context.req, 'trac/css/tracker.css')
