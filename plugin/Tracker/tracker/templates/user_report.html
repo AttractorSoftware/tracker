@@ -11,8 +11,18 @@
 </head>
 <body>
 <div id="content" class="tracker">
-    <h1>User REPORT:</h1>
+    <h1>Отчет для ${username}'а:</h1>
+    <p>
+        Отчет с ${fromDMY} по ${toDMY}
+    </p>
+    <p>
+        всего минут проработано: ${summaryWorkedTimeInMinutes}
+    </p>
 
+    <div py:for="task in tasks">
+        <hr />Задача <b>${task.name}</b>, Потрачено: <b>${task.minutes}</b> минут
+    </div>
+    <hr />
 </div>
 <div class="tracker-client-download">
 
