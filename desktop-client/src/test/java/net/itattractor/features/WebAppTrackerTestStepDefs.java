@@ -228,6 +228,13 @@ public class WebAppTrackerTestStepDefs {
         tasksWindow.getButton("start").click();
     }
 
+    @And("^Start following$")
+    public void start_following() throws Throwable {
+        recordWindow = adapter.getRecordWindow();
+        recordWindow.getButton("ok").click();
+        Thread.sleep(5000);
+    }
+
     @When("^I wrote comment \"([^\"]*)\" and submit$")
     public void I_wrote_comment_and_submit(String comment) throws Throwable {
         sentComment = comment;
