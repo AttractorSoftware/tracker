@@ -1,7 +1,7 @@
 Feature: In order to check work flow user should
 
   Background:
-    Given I'm working with "tracker-trac.demo.esdp.it-attractor.net/login" and my username is "vteremasov" and password "kr230393a"
+    Given I'm working with "tracker-trac.demo.esdp.it-attractor.net/login" and my username is "demo" and password "123"
 
   Scenario: User navigates to tracker tab on trac instance
     Given I open browser
