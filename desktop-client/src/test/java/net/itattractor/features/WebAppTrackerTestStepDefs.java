@@ -1,10 +1,12 @@
 package net.itattractor.features;
 
 import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import cucumber.runtime.PendingException;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -18,9 +20,14 @@ import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class WebAppTrackerTestStepDefs {
     Adapter adapter;
@@ -28,13 +35,32 @@ public class WebAppTrackerTestStepDefs {
     private Window tasksWindow;
     private Window recordWindow;
 
+    protected String url;
+    protected String username;
+    protected String password;
+
     WebDriver webDriver;
-    private String url;
-    private String username;
-    private String password;
     private String ticketSummary;
     private String ticketId;
     private String sentComment;
+
+
+    @Before
+    public void init() {
+        initWebDriver();
+    }
+
+    protected void initWebDriver() {
+        if (webDriver == null)
+            webDriver = new FirefoxDriver();
+    }
+
+
+    @Given("^I open browser$")
+    public void I_open_browser() throws Throwable {
+        webDriver = new FirefoxDriver();
+    }
+
 
     @Given("^I'm working with \"([^\"]*)\" and my username is \"([^\"]*)\" and password \"([^\"]*)\"$")
     public void I_m_working_with_and_my_username_is_and_password(String url, String usernmae, String password) throws Throwable {
@@ -43,11 +69,14 @@ public class WebAppTrackerTestStepDefs {
         this.password = password;
     }
 
-    @Given("^I open browser$")
-    public void I_open_browser() throws Throwable {
-        webDriver = new FirefoxDriver();
+    @Given("^The browser is run$")
+    public void The_browser_is_run() throws Throwable {
+        initWebDriver();
     }
 
+    protected void navigateBrowser(String host) {
+        webDriver.navigate().to("http://" + username + ":" + password + "@" + host);
+    }
 
     @When("^navigate to trac instance$")
     public void navigate_to_trac_instance() throws Throwable {
@@ -232,8 +261,9 @@ public class WebAppTrackerTestStepDefs {
     public void start_following() throws Throwable {
         recordWindow = adapter.getRecordWindow();
         recordWindow.getButton("ok").click();
-        Thread.sleep(5000);
     }
+
+
 
     @When("^I wrote comment \"([^\"]*)\" and submit$")
     public void I_wrote_comment_and_submit(String comment) throws Throwable {
@@ -263,5 +293,64 @@ public class WebAppTrackerTestStepDefs {
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    @And("^stay for a while \"([^\"]*)\" seconds$")
+    public void stay_for_a_while(Integer seconds) throws Throwable {
+        // Express the Regexp above with the code you wish you had
+        System.out.println("WebAppTrackerTestStepDefs.stay_for_a_while");
+
+        Date start = new Date();
+        Date end = new Date();
+
+        while(end.getTime() - start.getTime() < seconds * 1000){
+            end = new Date();
+        }
+    }
+
+    @And("^Emulate mouse click \"([^\"]*)\" and keyboard press \"([^\"]*)\"$")
+    public void Emulate_mouse_click_and_keyboard_press(Integer click_count, Integer press_count) throws Throwable {
+        Robot robot = new Robot();
+
+        for(int i = 0; i < click_count; i++){
+            robot.mousePress(InputEvent.BUTTON1_MASK);
+            robot.mouseRelease(InputEvent.BUTTON1_MASK);
+        }
+
+        for(int j =0; j < press_count; j++) {
+
+            robot.keyPress(KeyEvent.VK_1);
+            robot.keyRelease(KeyEvent.VK_1);
+
+        }
+
+
+    }
+
+    @Given("^I've made \"([^\"]*)\" keyboard events and \"([^\"]*)\" mouse events$")
+    public void I_ve_made_keyboard_events_and_mouse_events(String keyboardEventCoutn, String mouseEventCount) throws Throwable {
+
+    }
+
+    @When("^I open day report$")
+    public void I_open_day_report() throws Throwable {
+        The_browser_is_run();
+        navigate_to_trac_instance();
+        WebElement tabTracker = webDriver.findElement(By.linkText("Tracker"));
+        tabTracker.click();
+        WebElement reportLink = webDriver.findElement(By.linkText("Ежедневный отчет"));
+        reportLink.click();
+    }
+
+
+    @And("^Find frame by user \"([^\"]*)\" with \"([^\"]*)\" clicks and \"([^\"]*)\" presses$")
+    public void Find_frame_by_user_with_clicks_and_presses(String username, String clicks, String presses) throws Throwable {
+        WebElement frame = webDriver.findElement(By.cssSelector("div[author='" + username + "']"));
+        WebElement mouse_count_cont = webDriver.findElement(By.cssSelector("div[author='"+username+"'] .mouse-event-count"));
+        WebElement keyboard_count_cont = webDriver.findElement(By.cssSelector("div[author='"+username+"'] .keyboard-event-count"));
+
+        Assert.assertEquals(username, frame.getAttribute("author"));
+        Assert.assertEquals(mouse_count_cont.getText(), clicks);
+        Assert.assertEquals(keyboard_count_cont.getText(), presses);
     }
 }

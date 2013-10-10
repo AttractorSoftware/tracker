@@ -20,16 +20,18 @@ import java.util.List;
 
 public class TrackerPluginStepDefinitions {
 
-    private WebDriver webDriver;
     private String host;
     private String username;
     private String password;
+
+    private WebDriver webDriver;
 
     private WebElement usernameWebElement;
     private WebElement trackerFormUpdateButton;
     private WebElement chosenImage;
     private WebElement modalWindow;
     private WebElement divContainer;
+    private WebElement tabTracker;
 
     private void initConfigurations(String host, String username, String password) {
         this.host = host;
@@ -37,10 +39,6 @@ public class TrackerPluginStepDefinitions {
         this.password = password;
     }
 
-    private void initWebDriver() {
-        if (webDriver == null)
-            webDriver = new FirefoxDriver();
-    }
 
     private void setHost(String host) {
         this.host = host;
@@ -58,9 +56,6 @@ public class TrackerPluginStepDefinitions {
         webDriver.navigate().to("http://" + username + ":" + password + "@" + host);
     }
 
-    private void navigateBrowser() {
-        webDriver.navigate().to("http://" + username + ":" + password + "@" + this.host);
-    }
 
     private void findUserByUsername(String username) {
         List<WebElement> elements = webDriver.findElements(By.xpath("//./div[@id='content']/ul/li/a"));
@@ -83,24 +78,9 @@ public class TrackerPluginStepDefinitions {
         }
     }
 
-    @Before
-    public void init() {
-        initWebDriver();
-    }
-
     @Given("^I have host \"([^\"]*)\" username \"([^\"]*)\" and password \"([^\"]*)\"$")
     public void I_have_host_username_and_password(String host, String username, String password) throws Throwable {
         initConfigurations(host, username, password);
-    }
-
-    @Given("^The browser is run$")
-    public void The_browser_is_run() throws Throwable {
-        initWebDriver();
-    }
-
-    @When("^I open default host$")
-    public void I_open_default_host() throws Throwable {
-        navigateBrowser();
     }
 
     @Then("^I should see tab \"([^\"]*)\"$")
@@ -229,11 +209,11 @@ public class TrackerPluginStepDefinitions {
         element.sendKeys(this.username);
     }
 
-    @And("^click \"([^\"]*)\"$")
-    public void click(String value) throws Throwable {
-        WebElement element = webDriver.findElement(By.cssSelector("input[value=" + value + "]"));
-        element.click();
-    }
+//    @And("^click \"([^\"]*)\"$")
+//    public void click(String value) throws Throwable {
+//        WebElement element = webDriver.findElement(By.cssSelector("input[value=" + value + "]"));
+//        element.click();
+//    }
 
     @Then("^I should see ticket \"([^\"]*)\"$")
     public void I_should_see_ticket(String expectedTicket) throws Throwable {
@@ -242,4 +222,5 @@ public class TrackerPluginStepDefinitions {
             System.out.println(element.getText());
         }
     }
+
 }

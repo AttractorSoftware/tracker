@@ -151,7 +151,7 @@
                     <py:for each="screenshot in allScreenshots">
                         <py:if test="screenshot.hourse == hourse">
                             <td align="center" width="20%">
-                                <div class="tracker-image">
+                                <div class="tracker-image" author="${screenshot.author}">
                                     <a name="modal" href="#dialog_${screenshot.id}" title="${screenshot.filename}">
                                         <span class="mouse-event-count">${screenshot.mouse_event_count}</span>
                                         <span class="keyboard-event-count">${screenshot.keyboard_event_count}</span>
