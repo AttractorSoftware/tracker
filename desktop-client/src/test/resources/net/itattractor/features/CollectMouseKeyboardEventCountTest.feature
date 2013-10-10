@@ -2,9 +2,7 @@ Feature: If user make mouse or keyboard events, event count save in database
 
   Background: User use trac instance
     Given I'm working with "http://127.0.0.1:8000/trac-env" and my username is "admin" and password "secret"
-
-  Scenario: Make events
-    Given I'm on tasks form of application
+    And I'm on tasks form of application
     And I've chosen one ticket
     And Start following
     And Emulate mouse click "13" and keyboard press "5"
@@ -14,7 +12,4 @@ Feature: If user make mouse or keyboard events, event count save in database
     When I open day report
     And Find frame by user "admin" with "13" clicks and "5" presses
 
-
-  #Scenario: Did the screenshot create
-    #Given I've made "10" keyboard events and "10" mouse events
 
