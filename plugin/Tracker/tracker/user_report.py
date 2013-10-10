@@ -23,53 +23,54 @@ class TrackerUserReportModule(Component):
         match = re.match(r'/user_report(?:/(\D+))?(?:/(\d{2}-\d{2}-\d{4}))?(?:/(\d{2}-\d{2}-\d{4}))?$', req.path_info)
         if match:
             matches = match.groups()
-            req.args['username'] = 'admin' if not matches[0] else matches[0]
-            req.args['fromDMY'] = '01-01-2013'  if not matches[1] else matches[1]
-            req.args['toDMY'] = '31-12-2013' if not matches[2] else matches[2]
+            req.args['username'] = False if not matches[0] else matches[0]
+            req.args['fromDMY'] = False if not matches[1] else matches[1]
+            req.args['toDMY'] = False if not matches[2] else matches[2]
             return True
 
     def process_request(self, req):
-        username = req.args.get('username')
-        fromDMY = int(time.mktime(time.strptime(req.args.get('fromDMY'), '%d-%m-%Y'))).__str__()
-        toDMY = int(time.mktime(time.strptime(req.args.get('toDMY'), '%d-%m-%Y'))).__str__()
+        if req.args.get('fromDMY') and req.args.get('toDMY') and req.args.get('username'):
+            username = req.args.get('username')
+            fromDMY = int(time.mktime(time.strptime(req.args.get('fromDMY'), '%d-%m-%Y'))).__str__()
+            toDMY = int(time.mktime(time.strptime(req.args.get('toDMY'), '%d-%m-%Y'))).__str__()
 
-
-        DEFAULT_TIME_VALUE = 10
-        context = Context.from_request(req)
-        screenshots = self._get_users_screenshots(username, fromDMY, toDMY)
-        summaryWorkedTimeInMinutes = len(screenshots) * DEFAULT_TIME_VALUE
-        temp_tasks = {}
-        for screenshot in screenshots:
-            if screenshot['ticketId'] in temp_tasks.keys():
-                temp_tasks[screenshot['ticketId']]['minutes'] += DEFAULT_TIME_VALUE
-            else:
-                temp_tasks[screenshot['ticketId']] = {'minutes': DEFAULT_TIME_VALUE, 'name': screenshot['summary']}
-        tasks = []
-        for key, temp_task in temp_tasks.iteritems():
-            task = {
-                'minutes': temp_task['minutes'],
-                'name': temp_task['name']
+            DEFAULT_TIME_VALUE = 10
+            context = Context.from_request(req)
+            screenshots = self._get_users_screenshots(username, fromDMY, toDMY)
+            summaryWorkedTimeInMinutes = len(screenshots) * DEFAULT_TIME_VALUE
+            temp_tasks = {}
+            for screenshot in screenshots:
+                if screenshot['ticketId'] in temp_tasks.keys():
+                    temp_tasks[screenshot['ticketId']]['minutes'] += DEFAULT_TIME_VALUE
+                else:
+                    temp_tasks[screenshot['ticketId']] = {'minutes': DEFAULT_TIME_VALUE, 'name': screenshot['summary']}
+            tasks = []
+            for key, temp_task in temp_tasks.iteritems():
+                task = {
+                    'minutes': temp_task['minutes'],
+                    'name': temp_task['name']
+                }
+                tasks.append(task)
+            req.data = {
+                'screenshots': screenshots,
+                'tasks': tasks,
+                'summaryWorkedTimeInMinutes': summaryWorkedTimeInMinutes,
+                'fromDMY': req.args.get('fromDMY'),
+                'toDMY': req.args.get('toDMY'),
+                'username': req.args.get('username')
             }
-            tasks.append(task)
-        req.data = {
-            'screenshots': screenshots,
-            'tasks': tasks,
-            'summaryWorkedTimeInMinutes': summaryWorkedTimeInMinutes,
-            'fromDMY': req.args.get('fromDMY'),
-            'toDMY': req.args.get('toDMY'),
-            'username': req.args.get('username')
-        }
 
-        db = self.env.get_db_cnx()
-        context.cursor = db.cursor()
-        actions = self._get_actions(context)
+            db = self.env.get_db_cnx()
+            context.cursor = db.cursor()
+            actions = self._get_actions(context)
 
-        # template, content_type = self._do_actions(context, actions)
-
-        add_stylesheet(req, 'trac/css/tracker.css')
-
-
-        return "user_report.html", req.data, None
+            add_stylesheet(req, 'trac/css/tracker.css')
+            return "user_report.html", req.data, None
+        else:
+            req.data = {
+                'username': self.env.get_known_users
+            }
+            return "user_report_date_picker.html", req.data, None
 
     def _get_actions(self, context):
         pass
