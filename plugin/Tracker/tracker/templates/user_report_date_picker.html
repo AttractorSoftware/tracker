@@ -10,9 +10,27 @@
     <title>Tracker</title>
 </head>
 <body>
-    <p>Please choose dates from and to</p>
-    <label>From</label><input id="fromDMY" />
-    <label>To</label><input id="toDMY" />
-    <a href="/admin/" onclick="$(this).attr('href', window.location + $(this).attr('href') + $('#fromDMY').val() + '/' + $('#toDMY').val())">Show</a>
+    <ul id="nav">
+        <p>Please choose dates from and to</p>
+        <form onsubmit="return false">
+            <label>From <span style="color: #F00">*</span></label><input type="text" id="fromDMY" />
+            <label>To <span style="color: #F00">*</span></label><input type="text" id="toDMY"/>
+            <input onclick="checkReportForm()" type="submit" value="Построить отчет"/>
+        </form>
+    </ul>
+<script type="text/javascript">
+    function checkReportForm()
+    {
+        if ($('#reporting_user:checked').val() == '' || $('#fromDMY').val() == '' || $('#toDMY').val() == '') {
+            alert('Заполните все требуемые поля')
+        } else {
+            window.location = window.location + '/' + $('#fromDMY').val() + '/' + $('#toDMY').val()
+        }
+        return false
+    }
+    $('#fromDMY').datepicker({dateFormat:'dd-mm-yy'})
+    $('#toDMY').datepicker({dateFormat:'dd-mm-yy'})
+
+</script>
 </body>
 </html>

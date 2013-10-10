@@ -11,18 +11,15 @@
 </head>
 <body>
 <div id="content" class="tracker">
-    <py:choose test="username">
-        <py:otherwise>
-            <h1>Отчет для ${username}'а:</h1>
-            <p>Отчет с ${fromDMY} по ${toDMY}</p>
-            <p>всего минут проработано: ${summaryWorkedTimeInMinutes}</p>
-
-            <div py:for="task in tasks">
-                <hr />Задача <b>${task.name}</b>, Потрачено: <b>${task.minutes}</b> минут
-            </div>
-            <hr />
-        </py:otherwise>
-        </py:choose>
+    <h1>Отчет для ${username}'а:</h1>
+    <p>Отчет с ${fromDMY} по ${toDMY}</p>
+    <p>всего проработано: <b>${summaryWorkedTimeHours}</b> час(ов) <b>${summaryWorkedTimeMinutes}</b> минут(ы)</p>
+    <div py:for="task in tasks">
+        <hr />Задача <b>${task.name}</b>, Потрачено:
+        <b>${task.hours}</b> часов
+        <b>${task.minutes}</b> минут
+    </div>
+    <hr />
 </div>
 <div class="tracker-client-download">
 

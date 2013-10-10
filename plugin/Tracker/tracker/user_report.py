@@ -4,10 +4,11 @@ from reportlab.lib.colors import toColor
 
 from trac.core import Component, implements, TracError
 from trac.web import IRequestHandler
-from trac.web.chrome import ITemplateProvider, add_stylesheet
+from trac.web.chrome import ITemplateProvider, add_stylesheet, add_script
 from trac.mimeview import Context, Mimeview
 import datetime
 import time
+from tracker.api import TrackerApi
 
 
 class TrackerUserReportModule(Component):
@@ -29,13 +30,18 @@ class TrackerUserReportModule(Component):
             return True
 
     def process_request(self, req):
+        api = TrackerApi
+        context = Context.from_request(req)
+        db = self.env.get_db_cnx()
+        context.cursor = db.cursor()
+        actions = self._get_actions(context)
+
         if req.args.get('fromDMY') and req.args.get('toDMY') and req.args.get('username'):
             username = req.args.get('username')
             fromDMY = int(time.mktime(time.strptime(req.args.get('fromDMY'), '%d-%m-%Y'))).__str__()
             toDMY = int(time.mktime(time.strptime(req.args.get('toDMY'), '%d-%m-%Y'))).__str__()
 
             DEFAULT_TIME_VALUE = 10
-            context = Context.from_request(req)
             screenshots = self._get_users_screenshots(username, fromDMY, toDMY)
             summaryWorkedTimeInMinutes = len(screenshots) * DEFAULT_TIME_VALUE
             temp_tasks = {}
@@ -47,28 +53,30 @@ class TrackerUserReportModule(Component):
             tasks = []
             for key, temp_task in temp_tasks.iteritems():
                 task = {
-                    'minutes': temp_task['minutes'],
+                    'hours': int(temp_task['minutes'] / 60),
+                    'minutes': temp_task['minutes'] % 60,
                     'name': temp_task['name']
                 }
                 tasks.append(task)
             req.data = {
                 'screenshots': screenshots,
                 'tasks': tasks,
-                'summaryWorkedTimeInMinutes': summaryWorkedTimeInMinutes,
+                'summaryWorkedTimeHours': int(summaryWorkedTimeInMinutes / 60),
+                'summaryWorkedTimeMinutes': summaryWorkedTimeInMinutes % 60,
                 'fromDMY': req.args.get('fromDMY'),
                 'toDMY': req.args.get('toDMY'),
                 'username': req.args.get('username')
             }
 
-            db = self.env.get_db_cnx()
-            context.cursor = db.cursor()
-            actions = self._get_actions(context)
-
             add_stylesheet(req, 'trac/css/tracker.css')
             return "user_report.html", req.data, None
         else:
+            add_script(req, 'common/js/jquery-ui.js')
+            add_stylesheet(req, 'common/css/jquery-ui/jquery-ui.css')
+            add_script(req, 'common/js/jquery-ui-addons.js')
+            add_stylesheet(req, 'common/css/jquery-ui-addons.css')
             req.data = {
-                'username': self.env.get_known_users
+                'users': api.get_users(TrackerApi(), context)
             }
             return "user_report_date_picker.html", req.data, None
 

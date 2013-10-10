@@ -68,8 +68,6 @@ class TrackerApi(object):
     def get_screenshot_by_time(self):
         pass
 
-
-
     def _add_item(self):
         pass
 
