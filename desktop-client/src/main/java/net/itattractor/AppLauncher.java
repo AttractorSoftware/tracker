@@ -22,9 +22,15 @@ public class AppLauncher {
     private JFrame tasksFrame;
     private RecordForm recordForm;
     private ConnectionProvider provider;
+
+    public TrayIcon getTrayIcon() {
+        return trayIcon;
+    }
+
     private LogWriter logWriter;
     private TasksForm tasksForm;
     private final TrayIcon trayIcon;
+
     private final SystemTray tray;
     private Timer timer;
 
