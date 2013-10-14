@@ -6,7 +6,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import cucumber.runtime.PendingException;
+import net.itattractor.Ticket;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -24,10 +24,10 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class WebAppTrackerTestStepDefs {
     Adapter adapter;
@@ -44,6 +44,9 @@ public class WebAppTrackerTestStepDefs {
     private String ticketId;
     private String sentComment;
 
+    DateFormat dateFormat;
+    Date date;
+    public Integer minutes;
 
     @Before
     public void init() {
@@ -213,10 +216,12 @@ public class WebAppTrackerTestStepDefs {
 
     @And("^I've accepted ticket on trac$")
     public void I_ve_accepted_ticket_on_trac() throws Throwable {
-        I_m_on_main_page_of_tracker();
         I_create_new_ticket();
+        WebElement modify=webDriver.findElement(By.cssSelector("#no4"));
+        modify.click();
         webDriver.findElement(By.id("action_accept")).click();
         webDriver.findElement(By.name("submit")).click();
+
     }
 
     @When("^press \"([^\"]*)\" button$")
@@ -321,10 +326,7 @@ public class WebAppTrackerTestStepDefs {
 
             robot.keyPress(KeyEvent.VK_1);
             robot.keyRelease(KeyEvent.VK_1);
-
         }
-
-
     }
 
     @Given("^I've made \"([^\"]*)\" keyboard events and \"([^\"]*)\" mouse events$")
@@ -353,4 +355,134 @@ public class WebAppTrackerTestStepDefs {
         Assert.assertEquals(mouse_count_cont.getText(), clicks);
         Assert.assertEquals(keyboard_count_cont.getText(), presses);
     }
+
+    @Given("^I'm on Tracker page$")
+    public void I_m_on_tracker_page() throws Throwable {
+        navigate_to_trac_instance();
+        click_on_Tracker_menu_link();
+    }
+
+    @When("^I click on link Report of user \"([^\"]*)\"$")
+    public void I_click_on_link_report_of_user(String username) throws Throwable {
+        WebElement user = webDriver.findElement(By.cssSelector("li[author='"+username+"'] .report"));
+        user.click();
+    }
+
+    @Then("^should see choose date$")
+    public void should_see_choose_date() throws Throwable {
+        WebElement reportFor = webDriver.findElement(By.xpath("//ul[@id='nav']/p"));
+        Assert.assertEquals("Please choose dates from and to", reportFor.getText());
+        webDriver.quit();
+    }
+
+    @Given("^I'm on page Report of user \"([^\"]*)\"$")
+    public void I_m_on_page_report_of_user(String username) throws Throwable {
+        I_m_on_tracker_page();
+        I_click_on_link_report_of_user(username);
+    }
+
+    @And("^choose end date \"([^\"]*)\" in calendar$")
+    public void choose_end_date_in_calendar(String date) throws Throwable {
+        WebElement trackerDate = webDriver.findElement(By.cssSelector("#toDMY"));
+        trackerDate.clear();
+        trackerDate.sendKeys(date);
+    }
+
+    @And("^push submit button$")
+    public void push_submit_button() throws Throwable {
+        WebElement trackerCalendarMakeReportButton = webDriver.findElement(By.xpath("//ul[@id='nav']//input[@value='Построить отчет']"));
+        trackerCalendarMakeReportButton.click();
+
+    }
+
+    @Then("^I should see working hours plus 10 min$")
+    public void I_should_see_working_hours_plus_10_min() throws Throwable {
+        WebElement min = webDriver.findElement(By.xpath("//div[@id='content']//b[@id='min']"));
+        if (minutes==50)
+                minutes=0;
+        else
+            minutes+=10;
+        Assert.assertEquals(min.getText(),minutes.toString());
+        webDriver.quit();
+    }
+
+    @When("^choose todays date in calendar$")
+    public void choose_todays_date_in_calendar() throws Throwable {
+        dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        date = new Date();
+        WebElement trackerDate = webDriver.findElement(By.cssSelector("#fromDMY"));
+        trackerDate.clear();
+        trackerDate.sendKeys(dateFormat.format(date));
+        trackerDate.sendKeys();
+    }
+
+    @And("^working for 10 sec$")
+    public void working_for_10_sec() throws Throwable {
+        Emulate_mouse_click_and_keyboard_press(13,5);
+        stay_for_a_while(10);
+    }
+
+    @And("^choose the ticket$")
+    public void choose_the_ticket() throws Throwable {
+        I_on_tasks_form_of_application();
+        I_ve_chosen_one_ticket();
+        start_following();
+    }
+
+    @When("^I check working hours$")
+    public void I_check_working_hours() throws Throwable {
+        choose_todays_date_in_calendar();
+        choose_end_date_in_calendar("10-09-2015");
+        push_submit_button();
+        WebElement min = webDriver.findElement(By.xpath("//div[@id='content']//b[@id='min']"));
+        minutes=Integer.parseInt(min.getText());
+    }
+
+    @Given("^I'm working on new ticket for 10 sec$")
+    public void I_am_working_on_new_ticket_for_10_sec() throws Throwable {
+        navigate_to_trac_instance();
+        autorize_user();
+//        I_create_new_ticket();
+        I_ve_accepted_ticket_on_trac();
+
+        I_on_tasks_form_of_application();
+        I_click_refresh_button();
+        I_choose_new_ticket();
+        start_following();
+        Emulate_mouse_click_and_keyboard_press(13,5);
+        stay_for_a_while(10); }
+
+
+    @When("^I go to report table of user \"([^\"]*)\"$")
+    public void I_go_to_report_table(String username) throws Throwable {
+        I_m_on_page_report_of_user(username);
+        choose_todays_date_in_calendar();
+        choose_end_date_in_calendar("10-09-2015");
+        push_submit_button();
+    }
+
+    @Then("^I should see 10 min of new ticket")
+    public void I_should_see_10_min_of_new_ticket() throws Throwable {
+        WebElement min = webDriver.findElement(By.xpath("//div[@id='content']//div[@id='"+ticketSummary+"']//b[@id='min']"));
+        Assert.assertEquals(min.getText(),"10");
+        webDriver.quit();
+    }
+
+    @And("^I choose new ticket$")
+    public void I_choose_new_ticket() throws Throwable {
+        int anIndex = tasksWindow.getComboBox().getAwtComponent().getItemCount() - 1;
+        Ticket selectedTicket = (Ticket) tasksWindow.getComboBox().getAwtComponent().getModel().getElementAt(anIndex);
+        String ticketValue = selectedTicket.toString();
+        tasksWindow.getComboBox().select(ticketValue);
+        ticketId = ticketValue.substring(1, ticketValue.indexOf(':'));
+        ticketSummary = ticketValue.substring(ticketValue.indexOf(':') + 2);
+        tasksWindow.getButton("start").click();
+    }
+
+    public void autorize_user() throws Throwable {
+        WebElement element = webDriver.findElement(By.linkText("Login"));
+        element.click();
+
+    }
 }
+

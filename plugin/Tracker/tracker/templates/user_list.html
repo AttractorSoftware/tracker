@@ -19,10 +19,10 @@
             </py:when>
         <py:otherwise>
             <py:for each="user in users">
-                <li>
+                <li author="${user.author}">
                     <h1>${user.author}</h1>
                     <a href="users/${user.author}">Ежедневный отчет</a><br/>
-                    <a href="user_report/${user.author}">Отчет за период</a>
+                    <a href="user_report/${user.author}" class="report">Отчет за период</a>
                 </li>
             </py:for>
         </py:otherwise>
