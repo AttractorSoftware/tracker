@@ -12,15 +12,12 @@
 <body>
 <div id="content" class="tracker">
     <h1>Отчет для ${username}'а:</h1>
-    <p>
-        Отчет с ${fromDMY} по ${toDMY}
-    </p>
-    <p>
-        всего минут проработано: ${summaryWorkedTimeInMinutes}
-    </p>
-
+    <p>Отчет с ${fromDMY} по ${toDMY}</p>
+    <p>всего проработано: <b>${summaryWorkedTimeHours}</b> час(ов) <b>${summaryWorkedTimeMinutes}</b> минут(ы)</p>
     <div id="${task.name}" py:for="task in tasks">
-        <hr />Задача <b>${task.name}</b>, Потрачено: <b id="min">${task.minutes}</b> минут
+        <hr />Задача <b>${task.name}</b>, Потрачено:
+        <b>${task.hours}</b> часов
+        <b id="min">${task.minutes}</b> минут
     </div>
     <hr />
 </div>
