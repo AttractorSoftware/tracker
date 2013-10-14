@@ -44,14 +44,11 @@ public class WebAppTrackerTestStepDefs {
     private String ticketId;
     private String sentComment;
 
+
     DateFormat dateFormat;
     Date date;
     public Integer minutes;
 
-    @Before
-    public void init() {
-        initWebDriver();
-    }
 
     protected void initWebDriver() {
         if (webDriver == null)
@@ -240,12 +237,12 @@ public class WebAppTrackerTestStepDefs {
         Assert.assertEquals(true, contains.isTrue());
     }
 
-    @After
-    public void after_scenario(){
-        if (webDriver != null) {
-            webDriver.close();
-        }
-    }
+//    @After
+//    public void after_scenario(){
+//        if (webDriver != null) {
+//            webDriver.close();
+//        }
+//    }
 
     @And("^I've closed ticket on trac$")
     public void I_ve_closed_ticket_on_trac() throws Throwable {

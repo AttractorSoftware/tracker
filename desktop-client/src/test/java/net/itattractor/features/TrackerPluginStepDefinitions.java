@@ -71,12 +71,12 @@ public class TrackerPluginStepDefinitions {
         }
     }
 
-    @After
-    public void quitFromBrowser() {
-        if (webDriver != null) {
-            webDriver.quit();
-        }
-    }
+//    @After
+//    public void quitFromBrowser() {
+//        if (webDriver != null) {
+//            webDriver.quit();
+//        }
+//    }
 
     @Given("^I have host \"([^\"]*)\" username \"([^\"]*)\" and password \"([^\"]*)\"$")
     public void I_have_host_username_and_password(String host, String username, String password) throws Throwable {

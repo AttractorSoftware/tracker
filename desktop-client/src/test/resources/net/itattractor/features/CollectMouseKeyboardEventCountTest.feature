@@ -1,15 +1,15 @@
-Feature: If user make mouse or keyboard events, event count save in database
+#language: ru
 
-  Background: User use trac instance
-    Given I'm working with "http://127.0.0.1:8000/trac-env" and my username is "admin" and password "123"
-    And I'm on tasks form of application
-    And I've chosen one ticket
-    And Start following
-    And Emulate mouse click "13" and keyboard press "5"
-    And stay for a while "11" seconds
+Функционал:
+  Сценарий: Создание скриншота
+    Допустим Запускаю клиентское приложение
+    И Выбираю первую в списке задачу
+    И Пишу "комментарий" и начинаю отслеживание
+    И Кликаю мышью "13" раз и нажимаю клавишу 1 "5" раз
+    И Жду "11" секунд
 
-  Scenario: Open day report
-    When I open day report
-    And Find frame by user "admin" with "13" clicks and "5" presses
-
-
+  Сценарий: Проверка сохранения скриншота
+    Допустим Запускаю серверное приложение
+    И Перехожу во вкладку "Tracker"
+    Если Открою "Ежедневный отчет"
+    Тогда Увижу скриншот юзера "tester" с количеством кликаний мышью "13" и нажатием клавиатуры "5" раз

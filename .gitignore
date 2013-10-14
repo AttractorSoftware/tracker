@@ -10,4 +10,5 @@ desktop-client/query.csv
 plugin/Tracker/TracTracker.egg-info/
 
 plugin/Tracker/build/
+plugin/Tracker/dist/
 *.pyc
