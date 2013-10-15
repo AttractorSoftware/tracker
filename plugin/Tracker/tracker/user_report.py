@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 import re
-from reportlab.lib.colors import toColor
+import time
 
-from trac.core import Component, implements, TracError
+from trac.core import Component, implements
 from trac.web import IRequestHandler
 from trac.web.chrome import ITemplateProvider, add_stylesheet, add_script
-from trac.mimeview import Context, Mimeview
-import datetime
-import time
+from trac.mimeview import Context
 from tracker.api import TrackerApi
 
 
