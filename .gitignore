@@ -5,10 +5,12 @@ out
 !research/ticket31/CucumberWebExample/.idea
 !research/ticket31/desktop-client/.idea
 screen
-desktop-client/target
+desktop-client/target/*
 desktop-client/query.csv
-plugin/Tracker/TracTracker.egg-info/
+plugin/Tracker/TracTracker.egg-info/*
 
-plugin/Tracker/build/
-plugin/Tracker/dist/
+
+plugin/Tracker/build/*
+plugin/Tracker/dist/*
+plugin/Tracker/dist/TracTracker-1.0-py2.7.egg
 *.pyc

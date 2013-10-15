@@ -21,7 +21,7 @@
             <py:for each="user in users">
                 <li author="${user.author}">
                     <h1>${user.author}</h1>
-                    <a href="users/${user.author}">Ежедневный отчет</a><br/>
+                    <a href="users/${user.author}" class="daily_report">Ежедневный отчет</a><br/>
                     <a href="user_report/${user.author}" class="report">Отчет за период</a>
                 </li>
             </py:for>
