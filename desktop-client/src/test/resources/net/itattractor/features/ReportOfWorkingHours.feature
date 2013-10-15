@@ -23,3 +23,4 @@ Feature: If user wants to see working hours of tickets,user should choose date a
     And  choose end date "10-09-2015" in calendar
     And push submit button
     Then I should see working hours plus 10 min
+
