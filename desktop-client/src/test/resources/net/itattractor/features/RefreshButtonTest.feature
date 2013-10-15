@@ -1,25 +1,27 @@
-Feature: In order to see only active tickets on tasks form, user should have option to update active tickets list
+#language: ru
 
-  Background: User uses trac instance
-    Given I'm working with "http://tracker-trac.demo.esdp.it-attractor.net" and my username is "demo" and password "123"
+Функционал: Проверяется отображение тикета в списке в зависимости от статуса тикета
 
+  Предыстория: User uses trac instance
+    Допустим Запускаю клиентское приложение
 
-  Scenario: Created ticket, but not accepted it
-    Given I'm on tasks form of application
-    And I'm on main page of trac
-    When I create new ticket
-    And press "Refresh" button
-    Then I shouldn't see created ticket in tasks list
+  Сценарий: Создаю тикет, но не добавляю его в прогресс
+    Допустим Запускаю серверное приложение
+    И Перехожу во вкладку "New Ticket"
+    Когда Заполняю поля нового тикета и сохраняю его
+    И Нажимаю кнопку обновить список тикетов
+    Тогда Не вижу в списке последний добавленный тикет
 
-  Scenario: Accepted ticket and see it on refresh of task list
-    Given I'm on tasks form of application
-    And I've accepted ticket on trac
-    When press "Refresh" button
-    Then I should see created ticket in tasks list
+  Сценарий: Создаю тикет и добавляю его в прогресс
+    Допустим Перехожу во вкладку "New Ticket"
+    Когда Заполняю поля нового тикета и сохраняю его
+    И Указываю статуст "accept" редактируемому тикету
+    И Нажимаю кнопку обновить список тикетов
+    Тогда Вижу в списке последний добавленный тикет
 
-  Scenario: Deleted ticket and see it on refresh of task list
-    Given I'm on tasks form of application
-    And I've closed ticket on trac
-    When press "Refresh" button
-    Then I shouldn't see created ticket in tasks list
-
+  Сценарий: Создаю тикет и закрываю его
+    Допустим Перехожу во вкладку "New Ticket"
+    Когда Заполняю поля нового тикета и сохраняю его
+    И Указываю статуст "resolve" редактируемому тикету
+    И Нажимаю кнопку обновить список тикетов
+    Тогда Не вижу в списке последний добавленный тикет

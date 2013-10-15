@@ -1,13 +1,22 @@
 package net.itattractor.features;
 
 import cucumber.api.java.ru.И;
+import cucumber.api.java.ru.Тогда;
 import cucumber.runtime.PendingException;
 import net.itattractor.features.helper.Driver;
+import org.junit.Assert;
 import org.uispec4j.Window;
+import org.uispec4j.assertion.Assertion;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.Date;
 
 public class ClientDefinitions {
@@ -60,5 +69,52 @@ public class ClientDefinitions {
         while(end.getTime() - start.getTime() < seconds * 1000){
             end = new Date();
         }
+    }
+
+    @Тогда("^В домашней директории в файле \"([^\"]*)\" в последней записи вижу \"([^\"]*)\"$")
+    public void В_домашней_директории_в_файле_в_последней_записи_вижу(String fileName, String comment) throws Throwable {
+
+        File file = new File(System.getProperty("user.home") + "/" + fileName);
+
+        try {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document document = docBuilder.parse(file);
+
+            Node tasks = document.getFirstChild();
+            Node lastChild = tasks.getLastChild();
+
+            String ticketId = lastChild.getAttributes().getNamedItem("id").getNodeValue();
+            String ticketSummary = lastChild.getAttributes().getNamedItem("name").getNodeValue();
+            Node description = lastChild.getChildNodes().item(1);
+            String textContent = description.getTextContent();
+
+            Assert.assertEquals(this.ticketId, ticketId);
+            Assert.assertEquals(this.ticketSummary, ticketSummary);
+            Assert.assertEquals(comment, textContent);
+
+        } catch (ParserConfigurationException e) { e.printStackTrace(); }
+    }
+
+    @И("^Нажимаю кнопку обновить список тикетов$")
+    public void Нажимаю_кнопку_обновить_список_тикетов() throws Throwable {
+
+        Driver.getClientInstance().getTasksWindow().getButton("Refresh").click();
+
+    }
+
+    @Тогда("^Не вижу в списке последний добавленный тикет$")
+    public void Не_вижу_в_списке_последний_добавленный_новый_тикет() throws Throwable {
+
+        Assertion contains = Driver.getClientInstance().getTasksWindow().getComboBox().contains(
+                CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
+        Assert.assertEquals(false, contains.isTrue());
+    }
+
+    @Тогда("^Вижу в списке последний добавленный тикет$")
+    public void Вижу_в_списке_последний_добавленный_тикет() throws Throwable {
+        Assertion contains = Driver.getClientInstance().getTasksWindow().getComboBox().contains(
+                CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
+        Assert.assertEquals(true, contains.isTrue());
     }
 }

@@ -1,5 +1,6 @@
 package net.itattractor.features;
 
 public class CommonData {
-    public static String screenshotId;
+    public static String latestTicketId;
+    public static String latestTicketSummary;
 }

@@ -26,7 +26,8 @@ public class CommonDefinitions {
 
     @Допустим("^Запускаю серверное приложение$")
     public void Запускаю_серверное_приложение() throws Throwable {
-        Driver.getServerInstance().navigate().to("http://" + username + ":" + password + "@" + url.substring("http://".length()));
+        Driver.getServerInstance().navigate().to("http://" + username + ":" + password + "@" + url.substring("http://".length())+"/login");
+        System.out.print("http://" + username + ":" + password + "@" + url.substring("http://".length()));
     }
 
     @И("^Перехожу во вкладку \"([^\"]*)\"$")

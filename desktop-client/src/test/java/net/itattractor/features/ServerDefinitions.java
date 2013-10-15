@@ -1,12 +1,13 @@
 package net.itattractor.features;
 
-import cucumber.api.java.ru.Если;
-import cucumber.api.java.ru.Тогда;
+import cucumber.api.java.ru.*;
+import cucumber.runtime.PendingException;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.util.Date;
 import java.util.List;
 
 public class ServerDefinitions {
@@ -35,5 +36,24 @@ public class ServerDefinitions {
     @Если("^Открою отчет с ссылкой \"([^\"]*)\" пользователя \"([^\"]*)\"$")
     public void Открою_отчет_с_ссылкой_пользователя(String report_name, String author) throws Throwable {
         Driver.getServerInstance().findElement(By.xpath("//li[contains(@author,'"+author+"')]/a[text()='"+report_name+"']")).click();
+    }
+
+    @Когда("^Заполняю поля нового тикета и сохраняю его$")
+    public void Заполняю_поля_нового_тикета_и_сохраняю_его() throws Throwable {
+
+        WebElement summary = Driver.getServerInstance().findElement(By.id("field-summary"));
+        String ticketSummary = new Date().toString();
+        summary.sendKeys(ticketSummary);
+        Driver.getServerInstance().findElement(By.name("submit")).click();
+        CommonData.latestTicketId = Driver.getServerInstance().findElement(By.className("trac-id")).getText();
+        CommonData.latestTicketSummary = ticketSummary;
+    }
+
+    @И("^Указываю статуст \"([^\"]*)\" редактируемому тикету$")
+    public void Указываю_статуст_редактируемому_тикету(String status) throws Throwable {
+        WebElement modifyBtn = Driver.getServerInstance().findElement(By.cssSelector("#no4"));
+        modifyBtn.click();
+        Driver.getServerInstance().findElement(By.id("action_"+status)).click();
+        Driver.getServerInstance().findElement(By.name("submit")).click();
     }
 }
