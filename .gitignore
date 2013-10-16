@@ -1,6 +1,7 @@
 *.iml
 *.*~
 out
+.DS_Store
 .idea
 !research/ticket31/CucumberWebExample/.idea
 !research/ticket31/desktop-client/.idea
