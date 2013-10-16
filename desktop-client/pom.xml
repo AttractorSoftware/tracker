@@ -86,14 +86,6 @@
                     <failOnError>true</failOnError>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -162,11 +154,6 @@
             <artifactId>selenium-java</artifactId>
             <version>2.33.0</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.clojars.eduardoejp</groupId>
-            <artifactId>jnativehook</artifactId>
-            <version>1.1.0rc2</version>
         </dependency>
 
     </dependencies>
