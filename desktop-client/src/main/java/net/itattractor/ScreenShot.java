@@ -40,6 +40,7 @@ public class ScreenShot extends Thread {
         }
         BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         try {
+
             if (shouldSend(System.currentTimeMillis()))
             {
             File screenshot = new File(homeDirectory + Config.getValue("screenshotDirectory") + new Date().toString() + "." + Config.getValue("screenshotExtension"));
