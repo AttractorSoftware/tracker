@@ -22,4 +22,11 @@ public class Driver {
         }
         return serverInstance;
     }
+
+    public static void closeServerInstance() {
+        if (serverInstance != null) {
+            serverInstance.close();
+            serverInstance = null;
+        }
+    }
 }

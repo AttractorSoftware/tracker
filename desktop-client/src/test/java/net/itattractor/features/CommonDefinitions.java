@@ -1,9 +1,7 @@
 package net.itattractor.features;
 
 import cucumber.api.java.ru.Допустим;
-import cucumber.api.java.ru.И;
 import net.itattractor.features.helper.Driver;
-import org.openqa.selenium.By;
 import org.uispec4j.Window;
 
 
@@ -26,8 +24,7 @@ public class CommonDefinitions {
 
     @Допустим("^Запускаю серверное приложение$")
     public void Запускаю_серверное_приложение() throws Throwable {
-        Driver.getServerInstance().navigate().to("http://" + username + ":" + password + "@" + url.substring("http://".length())+"/login");
-        System.out.print("http://" + username + ":" + password + "@" + url.substring("http://".length()));
+        Driver.getServerInstance().navigate().to("http://" + username + ":" + password + "@" + url.substring("http://".length()) + "/login");
     }
 
 }

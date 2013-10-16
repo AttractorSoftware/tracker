@@ -1,35 +1,13 @@
-Feature: In order to check work flow user should
+#language: ru
 
-  Background:
-    Given I'm working with "tracker-trac.demo.esdp.it-attractor.net/login" and my username is "demo" and password "123"
+Функционал: Проверка плагина на сервере
 
-  Scenario: User navigates to tracker tab on trac instance
-    Given I open browser
-    When navigate to trac instance
-    Then should see tracker tab in main menu
+  Предыстория:
+    Допустим Запускаю серверное приложение
 
-  Scenario: User chooses one of the users on tracker tab
-    Given I'm on main page of trac
-    When click on Tracker menu link
-    Then should see list of users and choose first
-    And close browser
-#    And should see screenshot work flow by date "08/19/13"
+  Сценарий: Проверить наличие вкладки Tracker
+    Тогда Должен увидеть в меню вкладку "Tracker"
 
-    Scenario: User check screenshots work flow
-      Given First user from user list on tracker main page is chosen
-      When click on that user
-      And choose date in "08/19/13" calendar
-      And push update button
-      Then should see screensots
-
-    Scenario: Check authenticate module
-      Given I open browser
-      When I send "tracker-trac.demo.esdp.it-attractor.net/authenticate" and my username "demo" and password "123"
-      Then I should see the next status "Success"
-
-    Scenario: Are there any screenshots of the user by date
-      Given Open tracker's users page
-      When I find user by username "demo" click on that user
-      And choose date in "09/02/13" calendar
-      And push update button
-      Then should see screensots
+  Сценарий: Выбрать первого юзера из списка
+    Допустим Перехожу во вкладку "Tracker"
+    Если Открою отчет с ссылкой "Ежедневный отчет" пользователя "tester"

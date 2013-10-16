@@ -2,7 +2,6 @@ package net.itattractor.features;
 
 import cucumber.api.java.ru.И;
 import cucumber.api.java.ru.Тогда;
-import cucumber.runtime.PendingException;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.uispec4j.Window;
@@ -33,12 +32,14 @@ public class ClientDefinitions {
         String selectedTicket = tasksWindow.getComboBox().getAwtComponent().getSelectedItem().toString();
         tasksWindow.getComboBox().select(selectedTicket);
         ticketId = selectedTicket.substring(1, selectedTicket.indexOf(':'));
+        CommonData.latestTicketId = ticketId;
         ticketSummary = selectedTicket.substring(selectedTicket.indexOf(':') + 2);
         tasksWindow.getButton("start").click();
     }
 
     @И("^Пишу \"([^\"]*)\" и начинаю отслеживание$")
     public void Пишу_и_начинаю_отслеживание(String comment) throws Throwable {
+        CommonData.comment = comment;
         recordWindow = Driver.getClientInstance().getRecordWindow();
         recordWindow.getInputTextBox("Label").setText(comment);
         recordWindow.getButton("ok").click();
@@ -48,12 +49,12 @@ public class ClientDefinitions {
     public void Кликаю_мышью_раз_и_нажимаю_клавишу_раз(Integer clickCount, Integer pressCount) throws Throwable {
         Robot robot = new Robot();
 
-        for(int i = 0; i < clickCount; i++){
+        for (int i = 0; i < clickCount; i++) {
             robot.mousePress(InputEvent.BUTTON1_MASK);
             robot.mouseRelease(InputEvent.BUTTON1_MASK);
         }
 
-        for(int j =0; j < pressCount; j++) {
+        for (int j = 0; j < pressCount; j++) {
 
             robot.keyPress(KeyEvent.VK_1);
             robot.keyRelease(KeyEvent.VK_1);
@@ -66,7 +67,7 @@ public class ClientDefinitions {
         Date start = new Date();
         Date end = new Date();
 
-        while(end.getTime() - start.getTime() < seconds * 1000){
+        while (end.getTime() - start.getTime() < seconds * 1000) {
             end = new Date();
         }
     }
@@ -93,7 +94,9 @@ public class ClientDefinitions {
             Assert.assertEquals(this.ticketSummary, ticketSummary);
             Assert.assertEquals(comment, textContent);
 
-        } catch (ParserConfigurationException e) { e.printStackTrace(); }
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     @И("^Нажимаю кнопку обновить список тикетов$")

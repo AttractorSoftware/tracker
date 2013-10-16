@@ -4,6 +4,8 @@ import net.itattractor.AppLauncher;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
 
+import java.awt.*;
+
 public class Adapter implements UISpecAdapter {
 
     private AppLauncher appLauncher;
@@ -24,5 +26,9 @@ public class Adapter implements UISpecAdapter {
 
     public Window getRecordWindow(){
         return new Window(appLauncher.getRecordFrame());
+    }
+
+    public TrayIcon getTrayIcon() {
+        return appLauncher.getTrayIcon();
     }
 }
