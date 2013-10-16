@@ -117,4 +117,21 @@ public class ClientDefinitions {
                 CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         Assert.assertEquals(true, contains.isTrue());
     }
+
+    @И("^Работаю над последним созданым тикетом$")
+    public void Работаю_над_последним_созданым_тикетом() throws Throwable {
+        Выбираю_последний_созданный_тикет();
+        Пишу_и_начинаю_отслеживание("Автоматически созданный комментарий");
+        Кликаю_мышью_раз_и_нажимаю_клавишу_раз(13, 5);
+        Жду_секунд(11);
+    }
+
+    @И("^Выбираю последний созданный тикет$")
+    public void Выбираю_последний_созданный_тикет() throws Throwable {
+
+        tasksWindow = Driver.getClientInstance().getTasksWindow();
+        tasksWindow.getComboBox().select(CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
+        tasksWindow.getButton("start").click();
+
+    }
 }

@@ -30,9 +30,5 @@ public class CommonDefinitions {
         System.out.print("http://" + username + ":" + password + "@" + url.substring("http://".length()));
     }
 
-    @И("^Перехожу во вкладку \"([^\"]*)\"$")
-    public void Перехожу_во_вкладку(String tab) throws Throwable {
-        Driver.getServerInstance().findElement(By.xpath("//a[text()='" + tab + "']")).click();
-    }
 }
 
