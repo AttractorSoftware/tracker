@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.*;
+import java.util.Calendar;
 import java.util.Date;
 
 public class ScreenShot extends Thread {
@@ -18,6 +19,17 @@ public class ScreenShot extends Thread {
         screenshotSender = new ScreenshotSender();
     }
 
+    public static boolean shouldSend(long epoch) {
+
+        Calendar sentDate = Calendar.getInstance();
+        sentDate.setTimeInMillis(epoch);
+        int minutes = sentDate.get(Calendar.MINUTE);
+        if (minutes%10==0 && EventCounter.keyCounter>=10 && EventCounter.mouseCounter>=10)
+            return true;
+        else
+            return false;
+    }
+
     public void screenShot() {
         screenshotSender.setTicket(currentTicket);
         Robot robot = null;
@@ -28,11 +40,15 @@ public class ScreenShot extends Thread {
         }
         BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         try {
+            if (shouldSend(System.currentTimeMillis()))
+            {
             File screenshot = new File(homeDirectory + Config.getValue("screenshotDirectory") + new Date().toString() + "." + Config.getValue("screenshotExtension"));
             ImageIO.write(screenShot, Config.getValue("screenshotExtension"), screenshot);
-            screenshotSender.sendScreenshot(screenshot);
-            EventCounter.keyCounter=0;
-            EventCounter.mouseCounter=0;
+                screenshotSender.sendScreenshot(screenshot);
+                EventCounter.keyCounter=0;
+                EventCounter.mouseCounter=0;
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
