@@ -2,6 +2,7 @@ package net.itattractor.features;
 
 import cucumber.api.java.ru.И;
 import cucumber.api.java.ru.Тогда;
+import cucumber.runtime.PendingException;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.uispec4j.Window;
@@ -107,7 +108,7 @@ public class ClientDefinitions {
     }
 
     @Тогда("^Не вижу в списке последний добавленный тикет$")
-    public void Не_вижу_в_списке_последний_добавленный_новый_тикет() throws Throwable {
+    public void Не_вижу_в_списке_последний_добавленный_тикет() throws Throwable {
 
         Assertion contains = Driver.getClientInstance().getTasksWindow().getComboBox().contains(
                 CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
@@ -125,7 +126,7 @@ public class ClientDefinitions {
     public void Работаю_над_последним_созданым_тикетом() throws Throwable {
         Выбираю_последний_созданный_тикет();
         Пишу_и_начинаю_отслеживание("Автоматически созданный комментарий");
-        Кликаю_мышью_раз_и_нажимаю_клавишу_раз(13, 5);
+        Кликаю_мышью_раз_и_нажимаю_клавишу_раз(13, 15);
         Жду_секунд(11);
     }
 
@@ -135,6 +136,11 @@ public class ClientDefinitions {
         tasksWindow = Driver.getClientInstance().getTasksWindow();
         tasksWindow.getComboBox().select(CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         tasksWindow.getButton("start").click();
+
+    }
+
+    @И("^Имитирую системное время \"([^\"]*)\"$")
+    public void Имитирую_системное_время(String time) throws Throwable {
 
     }
 }

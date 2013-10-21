@@ -10,7 +10,7 @@
     <title>Tracker</title>
     <style type="text/css">
         #mask {
-            position: absolute;
+            position: fixed;
             left: 0;
             top: 0;
             height: 100%;
@@ -19,19 +19,25 @@
             background-color: #000;
             display: none;
             font-family: Georgia;
+            opacity: 0.3;
+            filter: alpha(opacity=30);
         }
 
         #boxes .window {
-            position: absolute;
+            position: fixed;
             left: 0;
-            top: 0;
-            width: 840px;
-            height: 500px;
+            top: 5%;
+            width: 100%;
             display: none;
             z-index: 9999;
-            padding: 20px;
             text-align: center;
             font-size: 25px;
+        }
+
+        #boxes .window  img {
+            border: solid 1px #666;
+            width: 75%;
+            top: 5%;
         }
 
         #boxes #dialog {
@@ -43,7 +49,8 @@
             margin-top: 0px;
             margin: 0px;
             position: relative;
-            left: -27px;
+            left: -11%;
+            border: 0;
         }
 
         table tbody tr {
@@ -92,18 +99,14 @@
             $('a[name=modal]').click(function (e) {
                 e.preventDefault();
                 var id = $(this).attr('href');
-                var maskHeight = $(document).height();
-                var maskWidth = $(document).width();
 
-                $('#mask').css({'width': maskWidth, 'height': maskHeight});
-                $('#mask').fadeIn(1000);
-                $('#mask').fadeTo("slow", 0.8);
+                $('#mask').fadeIn();
 
-                var winH = $(window).height();
-                var winW = $(window).width();
-                $(id).css('top', winH / 2 - $(id).height() / 2);
-                $(id).css('left', winW / 2 - $(id).width() / 2);
-                $(id).fadeIn(1000);
+//                var winH = $(window).height();
+//                var winW = $(window).width();
+//                $(id).css('top', winH / 2 - $(id).height() / 2);
+//                $(id).css('left', winW / 2 - $(id).width() / 2);
+                $(id).fadeIn();
             });
             $('.window .close').click(function (e) {
                 e.preventDefault();
@@ -162,8 +165,7 @@
 
                                     <div id="boxes">
                                         <div style="margin: 0 auto;" id="dialog_${screenshot.id}" class="window">
-                                            <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}"
-                                                 style="width:90%; height: 90%;"/>
+                                            <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}"/>
                                             <span><a href="#" class="close">X</a></span>
                                         </div>
                                         <div id="mask"></div>

@@ -85,6 +85,10 @@ table.user-screenshots tbody td {
     vertical-align: top;
 }
 
+.tracker-image {
+    font-size: 12px;
+}
+
 .tracker-image .mouse-event-count {
     background: url('../img/mouse-ico.png') no-repeat;
     float: left;
