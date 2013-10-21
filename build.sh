@@ -18,6 +18,8 @@ cd $PARENT_DIR
 
 tracd -p 8000 --basic-auth="trac-env,${PARENT_DIR}/trac-env/.htpasswd,trac-env" $PARENT_DIR/trac-env &
 
+cd $TRACKER_HOME/desktop-client
 
+mvn test
 
-
+killall tracd
