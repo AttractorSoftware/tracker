@@ -13,7 +13,10 @@ cp -rf $PLUGIN_HOME/dist/*.egg $PARENT_DIR/trac-env/plugins/
 cd $TRACKER_HOME
 
 trac-admin $PARENT_DIR/trac-env upgrade
-tracd -p 8000 --basic-auth="${PARENT_DIR}/trac-env,${PARENT_DIR}/trac-env/.htpasswd,trac-env" $PARENT_DIR/trac-env &
+
+cd $PARENT_DIR
+
+tracd -p 8000 --basic-auth="trac-env,${PARENT_DIR}/trac-env/.htpasswd,trac-env" $PARENT_DIR/trac-env &
 
 
 
