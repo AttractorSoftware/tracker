@@ -16,10 +16,4 @@ trac-admin $PARENT_DIR/trac-env upgrade
 
 cd $PARENT_DIR
 
-tracd -p 8000 --basic-auth="trac-env,${PARENT_DIR}/trac-env/.htpasswd,trac-env" $PARENT_DIR/trac-env &
-
-cd $TRACKER_HOME/desktop-client
-
-mvn test
-
-killall tracd
+/sbin/start-stop-daemon --start --quiet --user jenkins --pidfile /tmp/tracd.pid --exec /usr/local/bin/tracd -- --daemonize --pidfile=/tmp/tracd.pid --port=8000 --basic-auth="trac-env,${PARENT_DIR}/trac-env/.htpasswd,trac-env" $PARENT_DIR/trac-env
