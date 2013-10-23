@@ -5,7 +5,7 @@ import re
 import os.path
 import os
 
-from trac.core import Component, implements
+from trac.core import Component, implements, TracError
 from trac.util.datefmt import user_time, parse_date, to_datetime, to_timestamp
 from trac.web import IRequestHandler
 from trac.web.chrome import ITemplateProvider, add_stylesheet, Chrome
@@ -128,8 +128,12 @@ class TrackerUserListModule(Component):
                     for screenshot in screenshots:
                         screenshot["hourse"] = datetime.datetime.fromtimestamp(screenshot["time"]).strftime('%H')
                         if (int(screenshot["hourse"]) == hourse):
-                            min_hourse = hourse
-                            max_hourse = hourse
+                            if min_hourse == 0:
+                                min_hourse = hourse
+                            elif min_hourse > hourse:
+                                min_hourse = hourse
+                            if max_hourse < hourse:
+                                max_hourse = hourse
                             screenshotsWithHourse.append({hourse:screenshot})
 
                 while (minute <= 59):
@@ -140,18 +144,9 @@ class TrackerUserListModule(Component):
                                 screenshotHourse = datetime.datetime.fromtimestamp(screenshotsAll[index]["time"]).strftime('%H')
 
                                 template_hourse.append(int(screenshotHourse))
-                                if screenshotHourse > max_hourse:
-                                    max_hourse = screenshotHourse
-                                else:
-                                    min_hourse = screenshotHourse
                                 screenshotsAll[index]['hourse'] = int(screenshotHourse)
                                 screenshotsAll[index]['minute'] = int(screenshotMinute)
                                 screenshotsWithMinutes.append(screenshotsAll[index])
-
-                                if minute % time_interval != 0:
-                                    minute = (minute - (minute % time_interval)) + time_interval
-                                else:
-                                    minute += time_interval
                     minute += 1
 
                 context.req.data['allScreenshots'] = screenshotsWithMinutes
