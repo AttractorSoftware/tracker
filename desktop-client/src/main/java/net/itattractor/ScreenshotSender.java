@@ -22,6 +22,8 @@ public class ScreenshotSender {
     private ConnectionProvider connectionProvider;
     private Ticket currentTicket;
 
+    private TimeProvider timeProvider;
+
     public boolean sendScreenshot(File file) throws Exception {
 
         connectionProvider = ConnectionProvider.getInstance();
@@ -50,6 +52,7 @@ public class ScreenshotSender {
         entity.addPart("action", new StringBody("addScreenshot"));
         entity.addPart("ticket_id", new StringBody(String.valueOf(currentTicket.getTicketId())));
         entity.addPart("interval", new StringBody(Config.getValue("screenshotPeriod")));
+        entity.addPart("time", new StringBody(Long.toString(timeProvider.getTimeInMilliseconds())));
         entity.addPart("mouse_event_count", new StringBody(Integer.toString(EventCounter.mouseCounter)));
         entity.addPart("keyboard_event_count", new StringBody(Integer.toString(EventCounter.keyCounter)));
         httpPost.setEntity(entity);
@@ -90,5 +93,9 @@ public class ScreenshotSender {
 
     public void setTicket(Ticket ticket) {
         this.currentTicket = ticket;
+    }
+
+    public void setTimeProvider(TimeProvider timeProvider) {
+        this.timeProvider = timeProvider;
     }
 }

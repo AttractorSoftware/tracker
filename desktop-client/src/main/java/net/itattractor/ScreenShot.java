@@ -5,14 +5,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.*;
 import java.util.Calendar;
-import java.util.Date;
 
 public class ScreenShot extends Thread {
     private final ScreenshotSender screenshotSender;
     private String homeDirectory;
     private Ticket currentTicket;
+    private TimeProvider timeProvider;
 
     public ScreenShot(ConnectionProvider connectionProvider) {
         homeDirectory = System.getProperty("user.home");
@@ -41,9 +40,9 @@ public class ScreenShot extends Thread {
         BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         try {
 
-            if (shouldSend(System.currentTimeMillis()))
+            if (shouldSend(timeProvider.getTimeInMilliseconds()))
             {
-            File screenshot = new File(homeDirectory + Config.getValue("screenshotDirectory") + new Date().toString() + "." + Config.getValue("screenshotExtension"));
+            File screenshot = new File(homeDirectory + Config.getValue("screenshotDirectory") + timeProvider.getDate() + "." + Config.getValue("screenshotExtension"));
             ImageIO.write(screenShot, Config.getValue("screenshotExtension"), screenshot);
                 screenshotSender.sendScreenshot(screenshot);
                 EventCounter.keyCounter=0;
@@ -72,5 +71,9 @@ public class ScreenShot extends Thread {
     }
     public void setCurrentTicket(Ticket currentTicket) {
         this.currentTicket = currentTicket;
+    }
+
+    public void setTimeProvider(TimeProvider timeProvider) {
+        this.timeProvider = timeProvider;
     }
 }

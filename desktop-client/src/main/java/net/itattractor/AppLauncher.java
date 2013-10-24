@@ -153,6 +153,8 @@ public class AppLauncher {
 
     private class TasksFormActionListenerImpl implements TasksFormActionListener {
 
+        private TimeProvider timeProvider;
+
         @Override
         public void startPressed(Ticket ticket) {
             tasksFrame.setVisible(false);
@@ -166,8 +168,14 @@ public class AppLauncher {
             recordFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             recordFrame.setSize(500, 300);
             recordFrame.setVisible(true);
-            EventCounter.ActivateEvent();
             ScreenShot screenShot = new ScreenShot(provider);
+            if (!Boolean.parseBoolean(Config.getValue("testMode"))) {
+                timeProvider = new SystemTimeProvider();
+                screenShot.setTimeProvider(timeProvider);
+            } else {
+                timeProvider = new FakeTimeProvider();
+                screenShot.setTimeProvider(timeProvider);
+            }
             screenShot.setCurrentTicket(ticket);
             new Thread(screenShot).start();
 
@@ -182,6 +190,7 @@ public class AppLauncher {
                 }
             });
         }
+
     }
 
     private class RecordFormActionListenerImpl implements RecordFormActionListener {
@@ -223,4 +232,5 @@ public class AppLauncher {
             tasksFrame.setVisible(true);
             currentFrame = tasksFrame;        }
     }
+
 }
