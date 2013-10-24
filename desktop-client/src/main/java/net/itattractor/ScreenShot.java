@@ -30,6 +30,7 @@ public class ScreenShot extends Thread {
     }
 
     public void screenShot() {
+        screenshotSender.setTimeProvider(timeProvider);
         screenshotSender.setTicket(currentTicket);
         Robot robot = null;
         try {
@@ -37,14 +38,17 @@ public class ScreenShot extends Thread {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
         try {
 
             if (shouldSend(timeProvider.getTimeInMilliseconds()))
             {
-            File screenshot = new File(homeDirectory + Config.getValue("screenshotDirectory") + timeProvider.getDate() + "." + Config.getValue("screenshotExtension"));
-            ImageIO.write(screenShot, Config.getValue("screenshotExtension"), screenshot);
+                BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+
+                File screenshot = new File(homeDirectory + Config.getValue("screenshotDirectory") + timeProvider.getDate() + "." + Config.getValue("screenshotExtension"));
+                ImageIO.write(screenShot, Config.getValue("screenshotExtension"), screenshot);
                 screenshotSender.sendScreenshot(screenshot);
+                System.out.println("Key "+EventCounter.keyCounter);
+                System.out.println("Mouse "+EventCounter.mouseCounter);
                 EventCounter.keyCounter=0;
                 EventCounter.mouseCounter=0;
             }

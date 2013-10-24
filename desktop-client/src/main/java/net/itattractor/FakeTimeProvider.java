@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 
 public class FakeTimeProvider implements TimeProvider {
     private SimpleDateFormat date;
-    private String dateInString;
+    private String dateInString="13.09.2013 18:20:10";
 
     public FakeTimeProvider() {
         this.date = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
@@ -13,6 +13,11 @@ public class FakeTimeProvider implements TimeProvider {
 
     @Override
     public long getTimeInMilliseconds() {
+        try {
+            date.parse(dateInString).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return date.getCalendar().getTimeInMillis();
     }
 

@@ -168,13 +168,16 @@ public class AppLauncher {
             recordFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             recordFrame.setSize(500, 300);
             recordFrame.setVisible(true);
+            EventCounter.ActivateEvent();
             ScreenShot screenShot = new ScreenShot(provider);
             if (!Boolean.parseBoolean(Config.getValue("testMode"))) {
                 timeProvider = new SystemTimeProvider();
                 screenShot.setTimeProvider(timeProvider);
+                Config.setValue("screenshotPeriod","60000");
             } else {
                 timeProvider = new FakeTimeProvider();
                 screenShot.setTimeProvider(timeProvider);
+                Config.setValue("screenshotPeriod","10000");
             }
             screenShot.setCurrentTicket(ticket);
             new Thread(screenShot).start();
