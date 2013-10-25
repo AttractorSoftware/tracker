@@ -2,6 +2,7 @@ package net.itattractor.features;
 
 import cucumber.api.java.After;
 import cucumber.api.java.ru.*;
+import net.itattractor.Config;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -93,29 +94,26 @@ public class ServerDefinitions {
     }
 
 
-    @И("^Укажу период с сегодняшнего по завтрашний день$")
-    public void Укажу_период_с_сегодняшнего_по_завтрашний_день() throws Throwable {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        Date date = new Date();
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-        Date tomorrow = cal.getTime();
-
+    @И("^Укажу период с \"([^\"]*)\" по \"([^\"]*)\"$")
+    public void Укажу_период_(String from,String to) throws Throwable {
         WebElement fromDate = Driver.getServerInstance().findElement(By.cssSelector("#fromDMY"));
         fromDate.clear();
-        fromDate.sendKeys(dateFormat.format(date));
+        fromDate.sendKeys(from);
         fromDate.sendKeys();
-
-
         WebElement toDate = Driver.getServerInstance().findElement(By.cssSelector("#toDMY"));
         toDate.clear();
-        toDate.sendKeys(dateFormat.format(tomorrow));
+        toDate.sendKeys(to);
         toDate.sendKeys();
-
         WebElement trackerCalendarMakeReportButton = Driver.getServerInstance().findElement(By.xpath("//ul[@id='nav']//input[@value='Построить отчет']"));
         trackerCalendarMakeReportButton.click();
+    }
+    @И("^Указываю дату \"([^\"]*)\"$")
+    public void Указываю_дату(String date) throws Throwable {
+        WebElement selectdate = Driver.getServerInstance().findElement(By.xpath("//form[@id='tracker-filter']//input[@id='tracker-date']"));
+        selectdate.clear();
+        selectdate.sendKeys(date);
+        WebElement updateButton = Driver.getServerInstance().findElement(By.xpath("//div[@class='buttons']//input[@value='Update']"));
+        updateButton.click();
     }
 
     @Тогда("^Вижу у последнего созданного тикета \"([^\"]*)\" наработанных минут$")

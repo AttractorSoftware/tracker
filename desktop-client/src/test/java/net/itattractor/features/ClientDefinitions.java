@@ -1,5 +1,6 @@
 package net.itattractor.features;
 
+import cucumber.api.java.Before;
 import cucumber.api.java.ru.И;
 import cucumber.api.java.ru.Тогда;
 import cucumber.runtime.PendingException;
@@ -26,6 +27,7 @@ public class ClientDefinitions {
     private Window recordWindow;
     private String ticketId;
     private String ticketSummary;
+
 
     @И("^Выбираю первую в списке задачу$")
     public void Выбираю_первую_в_списке_задачу() throws Throwable {
@@ -139,8 +141,4 @@ public class ClientDefinitions {
 
     }
 
-    @И("^Имитирую системное время \"([^\"]*)\"$")
-    public void Имитирую_системное_время(String time) throws Throwable {
-
-    }
 }

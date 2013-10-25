@@ -1,6 +1,7 @@
 package net.itattractor.features;
 
 import net.itattractor.AppLauncher;
+import net.itattractor.Config;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
 
@@ -12,6 +13,7 @@ public class Adapter implements UISpecAdapter {
 
     public Adapter(){
         appLauncher = new AppLauncher();
+        Config.setValue("testMode","true");
         appLauncher.start();
     }
 

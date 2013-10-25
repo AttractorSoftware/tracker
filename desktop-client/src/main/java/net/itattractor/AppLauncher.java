@@ -35,6 +35,7 @@ public class AppLauncher {
     private Timer timer;
 
     public AppLauncher() {
+        Config.init();
         timer = null;
         PopupMenu popup = new PopupMenu();
         Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
@@ -75,11 +76,10 @@ public class AppLauncher {
                 System.exit(0);
             }
         });
+
     }
 
     public void start() {
-        Config.init();
-
         loginFrame = new JFrame("login form");
 
         loginForm = new LoginForm();

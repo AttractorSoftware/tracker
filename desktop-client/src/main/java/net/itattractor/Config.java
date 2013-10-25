@@ -23,7 +23,7 @@ public class Config {
     public static String getValue(String key) {
         return properties.getProperty(key);
     }
-    public static void setValue(String key,String interval) {
-        properties.setProperty(key,interval);
+    public static void setValue(String key,String value) {
+        properties.setProperty(key,value);
     }
 }
