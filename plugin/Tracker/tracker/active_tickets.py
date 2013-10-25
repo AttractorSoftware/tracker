@@ -7,7 +7,7 @@ class ActiveTickets(Component):
     implements(IRequestHandler)
 
     def match_request(self, req):
-        match = re.match(r'/tracker/tickets/([a-zA-Z0-9]+)$', req.path_info)
+        match = re.match(r'/tracker/tickets/([-\._a-zA-Z0-9]+)$', req.path_info)
         if match:
             username = match.groups()
             req.args['username'] = username[0]
