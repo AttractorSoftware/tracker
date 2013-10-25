@@ -89,6 +89,7 @@ public class AppLauncher {
         loginFrame.setSize(320, 240);
         loginFrame.setLocationRelativeTo(null);
         loginFrame.setVisible(true);
+        //loginFrame.getRootPane().setDefaultButton(loginForm.getSubmitButton());
         currentFrame = loginFrame;
         loginFrame.addWindowStateListener(new WindowStateListener() {
             @Override
