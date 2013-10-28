@@ -76,6 +76,7 @@ class TrackerUserReportModule(Component):
             req.data = {
                 'users': api.get_users(TrackerApi(), context)
             }
+            add_stylesheet(req, 'trac/css/tracker.css')
             return "user_report_date_picker.html", req.data, None
 
     def _get_actions(self, context):
