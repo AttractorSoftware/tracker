@@ -1,9 +1,7 @@
 package net.itattractor.features;
 
-import cucumber.api.java.Before;
 import cucumber.api.java.ru.И;
 import cucumber.api.java.ru.Тогда;
-import cucumber.runtime.PendingException;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.uispec4j.Window;

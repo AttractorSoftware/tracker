@@ -2,6 +2,7 @@ package net.itattractor.features;
 
 import cucumber.api.java.After;
 import cucumber.api.java.ru.*;
+import cucumber.runtime.PendingException;
 import net.itattractor.Config;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
@@ -12,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ServerDefinitions {
 
@@ -63,8 +65,8 @@ public class ServerDefinitions {
 
     @Когда("^Заполняю поля нового тикета и сохраняю его$")
     public void Заполняю_поля_нового_тикета_и_сохраняю_его() throws Throwable {
-
-        WebElement summary = Driver.getServerInstance().findElement(By.id("field-summary"));
+        Driver.getServerInstance().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        WebElement summary = Driver.getServerInstance().findElement(By.xpath("//*[@id=\"field-summary\"]"))    ;
         String ticketSummary = new Date().toString();
         summary.sendKeys(ticketSummary);
         Driver.getServerInstance().findElement(By.name("submit")).click();
@@ -118,6 +120,7 @@ public class ServerDefinitions {
 
     @Тогда("^Вижу у последнего созданного тикета \"([^\"]*)\" наработанных минут$")
     public void Вижу_у_последнего_созданного_тикета_наработанных_минут(String mins) throws Throwable {
+        Thread.sleep(5000);
         WebElement min_cont = Driver.getServerInstance().findElement(By.xpath("//div[@id='content']//div[@id='" + CommonData.latestTicketSummary + "']//b[@id='min']"));
         Assert.assertEquals(min_cont.getText(), mins);
     }
@@ -138,5 +141,16 @@ public class ServerDefinitions {
     @After
     public void closeBrowser() throws Exception {
         Driver.closeServerInstance();
+    }
+
+    @И("^Открою отчет с ссылкой \"([^\"]*)\" за \"([^\"]*)\" пользователя \"([^\"]*)\"$")
+    public void Открою_отчет_с_ссылкой_за_пользователя(String link_text, String date, String author) throws Throwable {
+        List<WebElement> users = Driver.getServerInstance().findElements(By.cssSelector("#content ul"));
+        if (!users.get(0).getText().equals("No users found")) {
+            Driver.getServerInstance().findElement(By.xpath("//li[contains(@author,'" + author + "')]/a[text()='" + link_text + "']")).click();
+        }
+        Driver.getServerInstance().findElement(By.xpath("//*[@id=\"tracker-date\"]")).clear();
+        Driver.getServerInstance().findElement(By.xpath("//*[@id=\"tracker-date\"]")).sendKeys(date);
+        Driver.getServerInstance().findElement(By.xpath("//*[@id=\"tracker-filter\"]/div[2]/input")).click();
     }
 }
