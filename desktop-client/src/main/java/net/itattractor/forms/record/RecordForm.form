@@ -18,8 +18,6 @@
     <rowspec value="center:max(d;4px):noGrow"/>
     <colspec value="fill:max(d;4px):noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
-    <colspec value="fill:max(d;4px):noGrow"/>
-    <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:d:noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:max(d;4px):grow"/>
@@ -35,35 +33,28 @@
     <children>
       <component id="126f4" class="javax.swing.JLabel" binding="currentTaskLabel">
         <constraints>
-          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
+          <labelFor value="25756"/>
           <name value="currentTaskLabel"/>
-          <text value="current task"/>
+          <text value="&amp;current task"/>
         </properties>
-      </component>
-      <component id="5c3a6" class="javax.swing.JTextArea" binding="descriptionTextArea">
-        <constraints>
-          <grid row="4" column="4" row-span="1" col-span="5" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
-          <forms defaultalign-horz="false" defaultalign-vert="false"/>
-        </constraints>
-        <properties/>
       </component>
       <component id="493e7" class="javax.swing.JLabel">
         <constraints>
-          <grid row="8" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
-          <text value="remind me again in"/>
+          <labelFor value="209d0"/>
+          <text value="&amp;remind me again in"/>
         </properties>
       </component>
       <component id="209d0" class="javax.swing.JSpinner" binding="periodTimeSpinner" custom-create="true">
         <constraints>
-          <grid row="8" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false"/>
         </constraints>
         <properties/>
@@ -76,7 +67,7 @@
         <colspec value="left:4dlu:noGrow"/>
         <colspec value="fill:max(d;4px):grow"/>
         <constraints>
-          <grid row="12" column="4" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="12" column="2" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties/>
@@ -88,7 +79,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <text value="ok"/>
+              <text value="&amp;ok"/>
             </properties>
           </component>
           <component id="3b796" class="javax.swing.JButton" binding="switchTaskButton" default-binding="true">
@@ -97,44 +88,56 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
-              <text value="switch task"/>
+              <text value="&amp;switch task"/>
             </properties>
           </component>
         </children>
       </grid>
       <component id="bb982" class="javax.swing.JLabel">
         <constraints>
-          <grid row="8" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
           <forms/>
         </constraints>
         <properties>
           <text value="minutes"/>
         </properties>
       </component>
-      <component id="25756" class="javax.swing.JTextPane" binding="currentTaskPane" custom-create="true">
+      <scrollpane id="318ae">
         <constraints>
-          <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="50"/>
-          </grid>
+          <grid row="4" column="2" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
-        <properties>
-          <editable value="false"/>
-          <enabled value="true"/>
-          <foreground color="-6710887"/>
-        </properties>
-      </component>
-      <component id="ffd74" class="javax.swing.JLabel">
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="5c3a6" class="javax.swing.JTextArea" binding="descriptionTextArea">
+            <constraints/>
+            <properties>
+              <lineWrap value="true"/>
+              <text value=""/>
+              <wrapStyleWord value="false"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+      <scrollpane id="1afdc">
         <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-          <forms/>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-horz="false" defaultalign-vert="false"/>
         </constraints>
-        <properties>
-          <labelFor value="5c3a6"/>
-          <text value="Label"/>
-          <visible value="false"/>
-        </properties>
-      </component>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="25756" class="javax.swing.JTextPane" binding="currentTaskPane" custom-create="true">
+            <constraints/>
+            <properties>
+              <editable value="false"/>
+              <enabled value="true"/>
+              <foreground color="-6710887"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>
