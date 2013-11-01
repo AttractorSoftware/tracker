@@ -14,8 +14,8 @@ public class CommonDefinitions {
     private String username = "tester";
     private String password = "tester";
 
-    @Допустим("^Запускаю клиентское приложение$")
-    public void Запускаю_клиентское_приложение() throws Throwable {
+    @Допустим("^запускаю клиентское приложение$")
+    public void запускаю_клиентское_приложение() throws Throwable {
         loginWindow = Driver.getClientInstance().getMainWindow();
         loginWindow.getInputTextBox("url").setText(url);
         loginWindow.getInputTextBox("username").setText(username);
@@ -23,8 +23,8 @@ public class CommonDefinitions {
         loginWindow.getButton("submit").click();
     }
 
-    @Допустим("^Запускаю серверное приложение$")
-    public void Запускаю_серверное_приложение() throws Throwable {
+    @Допустим("^открываю главную страницу тракера$")
+    public void открываю_главную_страницу_тракера() throws Throwable {
         Driver.getServerInstance().navigate().to("http://" + username + ":" + password + "@" + url.substring("http://".length()) + "/login");
     }
 

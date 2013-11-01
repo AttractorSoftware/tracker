@@ -16,16 +16,23 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ServerDefinitions {
+    private final CommonDefinitions commonDefinitions;
+    private final ClientDefinitions clientDefinitions;
 
     private WebElement screenshotBlock;
 
-    @И("^Перехожу во вкладку \"([^\"]*)\"$")
-    public void Перехожу_во_вкладку(String tab) throws Throwable {
+    public ServerDefinitions(CommonDefinitions commonDefinitions, ClientDefinitions clientDefinitions) {
+        this.commonDefinitions = commonDefinitions;
+        this.clientDefinitions = clientDefinitions;
+    }
+
+    @И("^перехожу во вкладку \"([^\"]*)\"$")
+    public void перехожу_во_вкладку(String tab) throws Throwable {
         Driver.getServerInstance().findElement(By.xpath("//a[text()='" + tab + "']")).click();
     }
 
-    @Тогда("^Увижу скриншот юзера \"([^\"]*)\" с количеством кликаний мышью \"([^\"]*)\" и нажатием клавиатуры \"([^\"]*)\" раз$")
-    public void Увижу_скриншот_юзера_с_количеством_кликаний_мышью_и_нажатием_клавиатуры_раз(String username, String clickCount, String pressCount) throws Throwable {
+    @То("^вижу скриншот юзера \"([^\"]*)\" с количеством кликаний мышью \"([^\"]*)\" и нажатием клавиатуры \"([^\"]*)\" раз$")
+    public void вижу_скриншот_юзера_с_количеством_кликаний_мышью_и_нажатием_клавиатуры_раз(String username, String clickCount, String pressCount) throws Throwable {
         List<WebElement> elements = Driver.getServerInstance().findElements(By.className("tracker-image"));
         WebElement element = elements.get(elements.size() - 1);
 
@@ -36,16 +43,16 @@ public class ServerDefinitions {
         Assert.assertEquals(keyboard_count_cont.getText(), pressCount);
     }
 
-    @Если("^Открою отчет с ссылкой \"([^\"]*)\" пользователя \"([^\"]*)\"$")
-    public void Открою_отчет_с_ссылкой_пользователя(String report_name, String author) throws Throwable {
+    @Если("^открою отчет с ссылкой \"([^\"]*)\" пользователя \"([^\"]*)\"$")
+    public void открою_отчет_с_ссылкой_пользователя(String report_name, String author) throws Throwable {
         List<WebElement> users = Driver.getServerInstance().findElements(By.cssSelector("#content ul"));
         if (!users.get(0).getText().equals("No users found")) {
             Driver.getServerInstance().findElement(By.xpath("//li[contains(@author,'" + author + "')]/a[text()='" + report_name + "']")).click();
         }
     }
 
-    @Тогда("^Должен увидеть в меню вкладку \"([^\"]*)\"$")
-    public void Должен_увидеть_в_меню_вкладку(String tab) throws Throwable {
+    @Тогда("^вижу в меню вкладку \"([^\"]*)\"$")
+    public void вижу_в_меню_вкладку(String tab) throws Throwable {
         List<WebElement> items = Driver.getServerInstance().findElements(By.cssSelector("#mainnav a"));
         boolean contains = false;
         for (WebElement item : items) {
@@ -56,15 +63,15 @@ public class ServerDefinitions {
         Assert.assertTrue(contains);
     }
 
-    @И("^Вижу этот добавленный комментарий$")
-    public void Вижу_этот_добавленный_комментарий() throws Throwable {
+    @И("^вижу этот добавленный комментарий$")
+    public void вижу_этот_добавленный_комментарий() throws Throwable {
         Driver.getServerInstance().navigate().to("http://127.0.0.1:8000/trac-env/ticket/" + CommonData.latestTicketId);
         List<WebElement> change = Driver.getServerInstance().findElements(By.cssSelector(".comment p"));
         Assert.assertEquals(CommonData.comment, (change.get(change.size() - 1)).getText());
     }
 
-    @Когда("^Заполняю поля нового тикета и сохраняю его$")
-    public void Заполняю_поля_нового_тикета_и_сохраняю_его() throws Throwable {
+    @Когда("^заполняю поля нового тикета и сохраняю его$")
+    public void заполняю_поля_нового_тикета_и_сохраняю_его() throws Throwable {
         Driver.getServerInstance().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         WebElement summary = Driver.getServerInstance().findElement(By.xpath("//*[@id=\"field-summary\"]"))    ;
         String ticketSummary = new Date().toString();
@@ -74,30 +81,30 @@ public class ServerDefinitions {
         CommonData.latestTicketSummary = ticketSummary;
     }
 
-    @И("^Указываю статуст \"([^\"]*)\" редактируемому тикету$")
-    public void Указываю_статуст_редактируемому_тикету(String status) throws Throwable {
+    @И("^указываю статус \"([^\"]*)\" редактируемому тикету$")
+    public void указываю_статус_редактируемому_тикету(String status) throws Throwable {
         WebElement modifyBtn = Driver.getServerInstance().findElement(By.cssSelector("#no4"));
         modifyBtn.click();
         Driver.getServerInstance().findElement(By.id("action_" + status)).click();
         Driver.getServerInstance().findElement(By.name("submit")).click();
     }
 
-    @То("^Увижу заголовок \"([^\"]*)\"$")
-    public void Увижу_заголовок(String header) throws Throwable {
+    @То("^вижу заголовок \"([^\"]*)\"$")
+    public void вижу_заголовок(String header) throws Throwable {
         WebElement reportFor = Driver.getServerInstance().findElement(By.xpath("//ul[@id='nav']/p"));
         Assert.assertEquals(header, reportFor.getText());
     }
 
-    @Допустим("^Создаю новый тикет со статусом \"([^\"]*)\"$")
-    public void Создаю_новый_тикет_со_статусом(String ticketStatus) throws Throwable {
-        Перехожу_во_вкладку("New Ticket");
-        Заполняю_поля_нового_тикета_и_сохраняю_его();
-        Указываю_статуст_редактируемому_тикету(ticketStatus);
+    @Допустим("^создаю новый тикет со статусом \"([^\"]*)\"$")
+    public void создаю_новый_тикет_со_статусом(String ticketStatus) throws Throwable {
+        перехожу_во_вкладку("New Ticket");
+        заполняю_поля_нового_тикета_и_сохраняю_его();
+        указываю_статус_редактируемому_тикету(ticketStatus);
     }
 
 
-    @И("^Укажу период с \"([^\"]*)\" по \"([^\"]*)\"$")
-    public void Укажу_период_(String from,String to) throws Throwable {
+    @И("^укажу период с \"([^\"]*)\" по \"([^\"]*)\"$")
+    public void укажу_период_(String from,String to) throws Throwable {
         WebElement fromDate = Driver.getServerInstance().findElement(By.cssSelector("#fromDMY"));
         fromDate.clear();
         fromDate.sendKeys(from);
@@ -109,30 +116,22 @@ public class ServerDefinitions {
         WebElement trackerCalendarMakeReportButton = Driver.getServerInstance().findElement(By.xpath("//ul[@id='nav']//input[@value='Построить отчет']"));
         trackerCalendarMakeReportButton.click();
     }
-    @И("^Указываю дату \"([^\"]*)\"$")
-    public void Указываю_дату(String date) throws Throwable {
-        WebElement selectdate = Driver.getServerInstance().findElement(By.xpath("//form[@id='tracker-filter']//input[@id='tracker-date']"));
-        selectdate.clear();
-        selectdate.sendKeys(date);
-        WebElement updateButton = Driver.getServerInstance().findElement(By.xpath("//div[@class='buttons']//input[@value='Update']"));
-        updateButton.click();
-    }
 
-    @Тогда("^Вижу у последнего созданного тикета \"([^\"]*)\" наработанных минут$")
-    public void Вижу_у_последнего_созданного_тикета_наработанных_минут(String mins) throws Throwable {
+    @Тогда("^вижу у последнего созданного тикета \"([^\"]*)\" наработанных минут$")
+    public void вижу_у_последнего_созданного_тикета_наработанных_минут(String mins) throws Throwable {
         Thread.sleep(5000);
         WebElement min_cont = Driver.getServerInstance().findElement(By.xpath("//div[@id='content']//div[@id='" + CommonData.latestTicketSummary + "']//b[@id='min']"));
         Assert.assertEquals(min_cont.getText(), mins);
     }
 
-    @Если("^Кликаю по первому скриншоту$")
-    public void Кликаю_по_первому_скриншоту() throws Throwable {
+    @Если("^кликаю по первому скриншоту$")
+    public void кликаю_по_первому_скриншоту() throws Throwable {
         screenshotBlock = Driver.getServerInstance().findElement(By.cssSelector(".tracker-image"));
         screenshotBlock.findElement(By.xpath("a/img")).click();
     }
 
-    @То("^Должен увидеть модальное окно скриншота$")
-    public void Должен_увидеть_модальное_окно_скриншота() throws Throwable {
+    @То("^вижу модальное окно скриншота$")
+    public void вижу_модальное_окно_скриншота() throws Throwable {
         WebElement modalWindow = screenshotBlock.findElement(By.xpath("//./div[@id='boxes']/div"));
         String display = modalWindow.getCssValue("display");
         Assert.assertEquals(display, "block");
@@ -143,8 +142,8 @@ public class ServerDefinitions {
         Driver.closeServerInstance();
     }
 
-    @И("^Открою отчет с ссылкой \"([^\"]*)\" за \"([^\"]*)\" пользователя \"([^\"]*)\"$")
-    public void Открою_отчет_с_ссылкой_за_пользователя(String link_text, String date, String author) throws Throwable {
+    @И("^открываю отчет с ссылкой \"([^\"]*)\" за \"([^\"]*)\" пользователя \"([^\"]*)\"$")
+    public void открываю_отчет_с_ссылкой_за_пользователя(String link_text, String date, String author) throws Throwable {
         List<WebElement> users = Driver.getServerInstance().findElements(By.cssSelector("#content ul"));
         if (!users.get(0).getText().equals("No users found")) {
             Driver.getServerInstance().findElement(By.xpath("//li[contains(@author,'" + author + "')]/a[text()='" + link_text + "']")).click();
@@ -153,4 +152,30 @@ public class ServerDefinitions {
         Driver.getServerInstance().findElement(By.xpath("//*[@id=\"tracker-date\"]")).sendKeys(date);
         Driver.getServerInstance().findElement(By.xpath("//*[@id=\"tracker-filter\"]/div[2]/input")).click();
     }
+
+    @Допустим("^началась работа по новому тикету$")
+    public void началась_работа_по_новому_тикету() throws Throwable {
+        создаю_новый_тикет_со_статусом("accept");
+        commonDefinitions.запускаю_клиентское_приложение();
+        clientDefinitions.работаю_над_последним_созданым_тикетом();
+    }
+
+    @Допустим("^создаю новый тикет$")
+    public void создаю_новый_тикет() throws Throwable {
+        commonDefinitions.открываю_главную_страницу_тракера();
+        перехожу_во_вкладку("New Ticket");
+        заполняю_поля_нового_тикета_и_сохраняю_его();
+    }
+
+    @То("^вижу пользователя \"([^\"]*)\" в списке Users$")
+    public void вижу_пользователя_в_списке_Users(String username) throws Throwable {
+        WebElement user = Driver.getServerInstance().findElement(By.xpath("//li[contains(@author,'" + username + "')]/h1"));
+        Assert.assertEquals(username, user.getText());
+    }
+    @То("^вижу ссылку \"([^\"]*)\" пользователя \"([^\"]*)\"$")
+    public void вижу_ссылку_пользователя(String link,String username) throws Throwable {
+        WebElement report = Driver.getServerInstance().findElement(By.xpath("//li[contains(@author,'" + username + "')]/a[@class=\"daily_report\"]"));
+        Assert.assertEquals(link, report.getText());
+    }
+
 }

@@ -27,8 +27,8 @@ public class ClientDefinitions {
     private String ticketSummary;
 
 
-    @И("^Выбираю первую в списке задачу$")
-    public void Выбираю_первую_в_списке_задачу() throws Throwable {
+    @И("^выбираю первую в списке задачу$")
+    public void выбираю_первую_в_списке_задачу() throws Throwable {
         tasksWindow = Driver.getClientInstance().getTasksWindow();
         String selectedTicket = tasksWindow.getComboBox().getAwtComponent().getSelectedItem().toString();
         tasksWindow.getComboBox().select(selectedTicket);
@@ -38,16 +38,16 @@ public class ClientDefinitions {
         tasksWindow.getButton("start").click();
     }
 
-    @И("^Пишу \"([^\"]*)\" и начинаю отслеживание$")
-    public void Пишу_и_начинаю_отслеживание(String comment) throws Throwable {
+    @И("^пишу \"([^\"]*)\" и начинаю отслеживание$")
+    public void пишу_и_начинаю_отслеживание(String comment) throws Throwable {
         CommonData.comment = comment;
         recordWindow = Driver.getClientInstance().getRecordWindow();
-        recordWindow.getInputTextBox("Label").setText(comment);
-        recordWindow.getButton("ok").click();
+        recordWindow.getInputTextBox("descriptionTextArea").setText(comment);
+        recordWindow.getButton("okButton").click();
     }
 
-    @И("^Кликаю мышью \"([^\"]*)\" раз и нажимаю клавишу 1 \"([^\"]*)\" раз$")
-    public void Кликаю_мышью_раз_и_нажимаю_клавишу_раз(Integer clickCount, Integer pressCount) throws Throwable {
+    @И("^кликаю мышью \"([^\"]*)\" раз и нажимаю клавишу 1 \"([^\"]*)\" раз$")
+    public void кликаю_мышью_раз_и_нажимаю_клавишу_раз(Integer clickCount, Integer pressCount) throws Throwable {
         Robot robot = new Robot();
 
         for (int i = 0; i < clickCount; i++) {
@@ -63,8 +63,8 @@ public class ClientDefinitions {
         }
     }
 
-    @И("^Жду \"([^\"]*)\" секунд$")
-    public void Жду_секунд(Integer seconds) throws Throwable {
+    @И("^жду \"([^\"]*)\" секунд$")
+    public void жду_секунд(Integer seconds) throws Throwable {
         Date start = new Date();
         Date end = new Date();
 
@@ -73,8 +73,8 @@ public class ClientDefinitions {
         }
     }
 
-    @Тогда("^В домашней директории в файле \"([^\"]*)\" в последней записи вижу \"([^\"]*)\"$")
-    public void В_домашней_директории_в_файле_в_последней_записи_вижу(String fileName, String comment) throws Throwable {
+    @Тогда("^в домашней директории в файле \"([^\"]*)\" в последней записи вижу \"([^\"]*)\"$")
+    public void в_домашней_директории_в_файле_в_последней_записи_вижу(String fileName, String comment) throws Throwable {
 
         File file = new File(System.getProperty("user.home") + "/" + fileName);
 
@@ -100,43 +100,42 @@ public class ClientDefinitions {
         }
     }
 
-    @И("^Нажимаю кнопку обновить список тикетов$")
-    public void Нажимаю_кнопку_обновить_список_тикетов() throws Throwable {
+    @И("^нажимаю кнопку обновить список тикетов$")
+    public void нажимаю_кнопку_обновить_список_тикетов() throws Throwable {
 
         Driver.getClientInstance().getTasksWindow().getButton("Refresh").click();
 
     }
 
-    @Тогда("^Не вижу в списке последний добавленный тикет$")
-    public void Не_вижу_в_списке_последний_добавленный_тикет() throws Throwable {
+    @Тогда("^не вижу в списке последний добавленный тикет$")
+    public void не_вижу_в_списке_последний_добавленный_тикет() throws Throwable {
 
         Assertion contains = Driver.getClientInstance().getTasksWindow().getComboBox().contains(
                 CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         Assert.assertEquals(false, contains.isTrue());
     }
 
-    @Тогда("^Вижу в списке последний добавленный тикет$")
-    public void Вижу_в_списке_последний_добавленный_тикет() throws Throwable {
+    @Тогда("^вижу в списке последний добавленный тикет$")
+    public void вижу_в_списке_последний_добавленный_тикет() throws Throwable {
         Assertion contains = Driver.getClientInstance().getTasksWindow().getComboBox().contains(
                 CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         Assert.assertEquals(true, contains.isTrue());
     }
 
-    @И("^Работаю над последним созданым тикетом$")
-    public void Работаю_над_последним_созданым_тикетом() throws Throwable {
-        Выбираю_последний_созданный_тикет();
-        Пишу_и_начинаю_отслеживание("Автоматически созданный комментарий");
-        Кликаю_мышью_раз_и_нажимаю_клавишу_раз(13, 15);
-        Жду_секунд(11);
+    @И("^работаю над последним созданым тикетом$")
+    public void работаю_над_последним_созданым_тикетом() throws Throwable {
+        выбираю_последний_созданный_тикет();
+        пишу_и_начинаю_отслеживание("Автоматически созданный комментарий");
+        кликаю_мышью_раз_и_нажимаю_клавишу_раз(13, 15);
+        жду_секунд(11);
     }
 
-    @И("^Выбираю последний созданный тикет$")
-    public void Выбираю_последний_созданный_тикет() throws Throwable {
+    @И("^выбираю последний созданный тикет$")
+    public void выбираю_последний_созданный_тикет() throws Throwable {
 
         tasksWindow = Driver.getClientInstance().getTasksWindow();
         tasksWindow.getComboBox().select(CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         tasksWindow.getButton("start").click();
 
     }
-
 }

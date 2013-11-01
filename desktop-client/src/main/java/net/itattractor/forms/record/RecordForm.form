@@ -79,6 +79,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
+              <name value="okButton"/>
               <text value="&amp;ok"/>
             </properties>
           </component>
@@ -114,6 +115,7 @@
             <constraints/>
             <properties>
               <lineWrap value="true"/>
+              <name value="descriptionTextArea"/>
               <text value=""/>
               <wrapStyleWord value="false"/>
             </properties>
