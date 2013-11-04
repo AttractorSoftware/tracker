@@ -62,10 +62,13 @@ public class ServerDefinitions {
         }
         Assert.assertTrue(contains);
     }
+    @И("^перехожу на страницу данного тикета$")
+    public void перехожу_на_страницу_данного_тикета() throws Throwable {
+        Driver.getServerInstance().navigate().to("http://127.0.0.1:8000/trac-env/ticket/" + CommonData.latestTicketId);
+    }
 
     @И("^вижу этот добавленный комментарий$")
     public void вижу_этот_добавленный_комментарий() throws Throwable {
-        Driver.getServerInstance().navigate().to("http://127.0.0.1:8000/trac-env/ticket/" + CommonData.latestTicketId);
         List<WebElement> change = Driver.getServerInstance().findElements(By.cssSelector(".comment p"));
         Assert.assertEquals(CommonData.comment, (change.get(change.size() - 1)).getText());
     }
