@@ -30,7 +30,7 @@ public class EventCounter implements NativeKeyListener {
 
     public static class GlobalMouseListenerExample implements NativeMouseInputListener {
         public void nativeMouseClicked(NativeMouseEvent e) {
-            mouseCounter++;
+             mouseCounter++;
             //System.out.println("Mosue Clicked: " + e.getClickCount());
         }
 
@@ -60,6 +60,7 @@ public class EventCounter implements NativeKeyListener {
             GlobalScreen.registerNativeHook();
         }
         catch (NativeHookException ex) {
+            ex.printStackTrace();
             System.err.println("There was a problem registering the native hook.");
             System.err.println(ex.getMessage());
 
