@@ -29,4 +29,8 @@ public class Driver {
             serverInstance = null;
         }
     }
+
+    public static void reset() {
+        clientInstance = null;
+    }
 }

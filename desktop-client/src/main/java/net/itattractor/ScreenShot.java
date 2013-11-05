@@ -18,15 +18,12 @@ public class ScreenShot extends Thread {
         screenshotSender = new ScreenshotSender();
     }
 
-    public static boolean shouldSend(long epoch) {
+    public boolean shouldSend(long epoch) {
 
         Calendar sentDate = Calendar.getInstance();
         sentDate.setTimeInMillis(epoch);
         int minutes = sentDate.get(Calendar.MINUTE);
-        if (minutes%10==0 && EventCounter.keyCounter>=10 && EventCounter.mouseCounter>=10)
-            return true;
-        else
-            return false;
+        return ((minutes % 10) == 0) && (EventCounter.keyCounter >= 10) && (EventCounter.mouseCounter >= 10);
     }
 
     public void screenShot() {
@@ -40,17 +37,14 @@ public class ScreenShot extends Thread {
         }
         try {
 
-            if (shouldSend(timeProvider.getTimeInMilliseconds()))
-            {
+            if (shouldSend(timeProvider.getTimeInMilliseconds())) {
                 BufferedImage screenShot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
 
                 File screenshot = new File(homeDirectory + Config.getValue("screenshotDirectory") + timeProvider.getDate() + "." + Config.getValue("screenshotExtension"));
                 ImageIO.write(screenShot, Config.getValue("screenshotExtension"), screenshot);
                 screenshotSender.sendScreenshot(screenshot);
-                System.out.println("Key "+EventCounter.keyCounter);
-                System.out.println("Mouse "+EventCounter.mouseCounter);
-                EventCounter.keyCounter=0;
-                EventCounter.mouseCounter=0;
+                EventCounter.keyCounter = 0;
+                EventCounter.mouseCounter = 0;
             }
 
         } catch (IOException e) {
@@ -61,8 +55,6 @@ public class ScreenShot extends Thread {
     }
 
     public void run() {
-        File dir = new File(homeDirectory + Config.getValue("screenshotDirectory"));
-        dir.mkdirs();
         while (true) {
             try {
                 int screenshotPeriod = Integer.parseInt(Config.getValue("screenshotPeriod"));
@@ -73,6 +65,7 @@ public class ScreenShot extends Thread {
             }
         }
     }
+
     public void setCurrentTicket(Ticket currentTicket) {
         this.currentTicket = currentTicket;
     }

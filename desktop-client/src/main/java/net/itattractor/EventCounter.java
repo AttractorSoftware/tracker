@@ -13,44 +13,30 @@ public class EventCounter implements NativeKeyListener {
 
     public void nativeKeyPressed(NativeKeyEvent e) {
         keyCounter++;
-        //System.out.println("Key Pressed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
-        //    if (e.getKeyCode() == NativeKeyEvent.VK_ESCAPE) {
-        //       GlobalScreen.unregisterNativeHook();
-        //    }
     }
 
     public void nativeKeyReleased(NativeKeyEvent e) {
-        //  System.out.println("Key Released: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
     }
 
     public void nativeKeyTyped(NativeKeyEvent e) {
-        ;
     }
 
 
     public static class GlobalMouseListenerExample implements NativeMouseInputListener {
         public void nativeMouseClicked(NativeMouseEvent e) {
-             mouseCounter++;
-            //System.out.println("Mosue Clicked: " + e.getClickCount());
+            mouseCounter++;
         }
 
         public void nativeMousePressed(NativeMouseEvent e) {
-            //  System.out.println("Mosue Pressed: " + e.getButton());
-            // no code here
         }
 
         public void nativeMouseReleased(NativeMouseEvent e) {
-            //  System.out.println("Mosue Released: " + e.getButton());
-            // no code here
         }
 
         public void nativeMouseMoved(NativeMouseEvent e) {
-            // no code here
         }
 
         public void nativeMouseDragged(NativeMouseEvent e) {
-            //   System.out.println("Mosue Dragged: " + e.getX() + ", " + e.getY());
-            // no code here
         }
 
 

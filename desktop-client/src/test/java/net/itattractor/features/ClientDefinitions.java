@@ -1,5 +1,6 @@
 package net.itattractor.features;
 
+import cucumber.api.java.Before;
 import cucumber.api.java.ru.И;
 import cucumber.api.java.ru.Тогда;
 import net.itattractor.features.helper.Driver;
@@ -137,5 +138,15 @@ public class ClientDefinitions {
         tasksWindow.getComboBox().select(CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         tasksWindow.getButton("start").click();
 
+    }
+
+    @Before
+    public void closeClient(){
+        try {
+            Driver.reset();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
