@@ -46,24 +46,18 @@ class Screenshot(object):
 
     def _create_unique_screenshot(self, dir, filename, extension):
         parts = os.path.splitext(filename)
-        flags = os.O_CREAT + os.O_WRONLY + os.O_EXCL
+        flags = os.O_CREAT + os.O_WRONLY + os.O_TRUNC
         if hasattr(os, 'O_BINARY'):
             flags += os.O_BINARY
-        idx = 1
-        while 1:
-            hashed_screenshot_name = self._get_hashed_screenshot_name(filename)
-            hashed_screenshot_name = hashed_screenshot_name + extension
-            path = os.path.join(dir, hashed_screenshot_name)
-            try:
-                return filename, os.fdopen(os.open(path, flags, 0666), 'w'), hashed_screenshot_name
-            except OSError, e:
-                if e.errno != errno.EEXIST:
-                    raise
-                idx += 1
-                #a sanity check
-                if idx > 100:
-                    raise Exception('Failed to create unique name: ' + path)
-                filename = '%s.%d%s' % (parts[0], idx, parts[1])
+
+        hashed_screenshot_name = self._get_hashed_screenshot_name(filename)
+        hashed_screenshot_name = hashed_screenshot_name + extension
+        path = os.path.join(dir, hashed_screenshot_name)
+        return filename, os.fdopen(os.open(path, flags, 0666), 'wb'), hashed_screenshot_name
+
+
+
+
 
     def _get_hashed_screenshot_name(self, filename):
         hash = sha1(filename.encode("utf-8")).hexdigest()
