@@ -2,15 +2,13 @@ package net.itattractor.features;
 
 import cucumber.api.java.After;
 import cucumber.api.java.ru.*;
-import cucumber.runtime.PendingException;
-import net.itattractor.Config;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -18,8 +16,6 @@ import java.util.concurrent.TimeUnit;
 public class ServerDefinitions {
     private final CommonDefinitions commonDefinitions;
     private final ClientDefinitions clientDefinitions;
-
-    private WebElement screenshotBlock;
 
     public ServerDefinitions(CommonDefinitions commonDefinitions, ClientDefinitions clientDefinitions) {
         this.commonDefinitions = commonDefinitions;
@@ -94,7 +90,7 @@ public class ServerDefinitions {
 
     @То("^вижу заголовок \"([^\"]*)\"$")
     public void вижу_заголовок(String header) throws Throwable {
-        WebElement reportFor = Driver.getServerInstance().findElement(By.xpath("//ul[@id='nav']/p"));
+        WebElement reportFor = elementWaitByXpath("//ul[@id='nav']/p");
         Assert.assertEquals(header, reportFor.getText());
     }
 
@@ -108,34 +104,34 @@ public class ServerDefinitions {
 
     @И("^укажу период с \"([^\"]*)\" по \"([^\"]*)\"$")
     public void укажу_период_(String from,String to) throws Throwable {
-        WebElement fromDate = Driver.getServerInstance().findElement(By.cssSelector("#fromDMY"));
+        WebElement fromDate = elementWaitByCss("#fromDMY");
         fromDate.clear();
         fromDate.sendKeys(from);
         fromDate.sendKeys();
-        WebElement toDate = Driver.getServerInstance().findElement(By.cssSelector("#toDMY"));
+        WebElement toDate = elementWaitByCss("#toDMY");
         toDate.clear();
         toDate.sendKeys(to);
         toDate.sendKeys();
-        WebElement trackerCalendarMakeReportButton = Driver.getServerInstance().findElement(By.xpath("//ul[@id='nav']//input[@value='Построить отчет']"));
+        WebElement trackerCalendarMakeReportButton = elementWaitByXpath("//ul[@id='nav']//input[@value='Построить отчет']");
         trackerCalendarMakeReportButton.click();
     }
 
     @Тогда("^вижу у последнего созданного тикета \"([^\"]*)\" наработанных минут$")
     public void вижу_у_последнего_созданного_тикета_наработанных_минут(String mins) throws Throwable {
         Thread.sleep(5000);
-        WebElement min_cont = Driver.getServerInstance().findElement(By.xpath("//div[@id='content']//div[@id='" + CommonData.latestTicketSummary + "']//b[@id='min']"));
-        Assert.assertEquals(min_cont.getText(), mins);
+        WebElement element = elementWaitByXpath("//div[@id='content']//div[@id='" + CommonData.latestTicketSummary + "']//b[@id='min']");
+        Assert.assertEquals(element.getText(), mins);
     }
 
     @Если("^кликаю по первому скриншоту$")
     public void кликаю_по_первому_скриншоту() throws Throwable {
-        screenshotBlock = Driver.getServerInstance().findElement(By.cssSelector(".tracker-image"));
-        screenshotBlock.findElement(By.xpath("a/img")).click();
+        WebElement screeningsBlock = elementWaitByCss(".tracker-image");
+        screeningsBlock.findElement(By.xpath("a/img")).click();
     }
 
     @То("^вижу модальное окно скриншота$")
     public void вижу_модальное_окно_скриншота() throws Throwable {
-        WebElement modalWindow = screenshotBlock.findElement(By.xpath("//./div[@id='boxes']/div"));
+        WebElement modalWindow = elementWaitByXpath("//./div[@id='boxes']/div");
         String display = modalWindow.getCssValue("display");
         Assert.assertEquals(display, "block");
     }
@@ -147,13 +143,10 @@ public class ServerDefinitions {
 
     @И("^открываю отчет с ссылкой \"([^\"]*)\" за \"([^\"]*)\" пользователя \"([^\"]*)\"$")
     public void открываю_отчет_с_ссылкой_за_пользователя(String link_text, String date, String author) throws Throwable {
-        List<WebElement> users = Driver.getServerInstance().findElements(By.cssSelector("#content ul"));
-        if (!users.get(0).getText().equals("No users found")) {
-            Driver.getServerInstance().findElement(By.xpath("//li[contains(@author,'" + author + "')]/a[text()='" + link_text + "']")).click();
-        }
-        Driver.getServerInstance().findElement(By.xpath("//*[@id=\"tracker-date\"]")).clear();
-        Driver.getServerInstance().findElement(By.xpath("//*[@id=\"tracker-date\"]")).sendKeys(date);
-        Driver.getServerInstance().findElement(By.xpath("//*[@id=\"tracker-filter\"]/div[2]/input")).click();
+        elementWaitByXpath("//li[contains(@author,'" + author + "')]/a[text()='" + link_text + "']").click();
+        elementWaitByXpath("//*[@id=\"tracker-date\"]").clear();
+        elementWaitByXpath("//*[@id=\"tracker-date\"]").sendKeys(date);
+        elementWaitByXpath("//*[@id=\"tracker-filter\"]/div[2]/input").click();
     }
 
     @Допустим("^началась работа по новому тикету$")
@@ -172,13 +165,24 @@ public class ServerDefinitions {
 
     @То("^вижу пользователя \"([^\"]*)\" в списке Users$")
     public void вижу_пользователя_в_списке_Users(String username) throws Throwable {
-        WebElement user = Driver.getServerInstance().findElement(By.xpath("//li[contains(@author,'" + username + "')]/h1"));
+        WebElement user = elementWaitByXpath("//li[contains(@author,'" + username + "')]/h1");
         Assert.assertEquals(username, user.getText());
     }
     @То("^вижу ссылку \"([^\"]*)\" пользователя \"([^\"]*)\"$")
     public void вижу_ссылку_пользователя(String link,String username) throws Throwable {
-        WebElement report = Driver.getServerInstance().findElement(By.xpath("//li[contains(@author,'" + username + "')]/a[@class=\"daily_report\"]"));
+        WebElement report = elementWaitByXpath("//li[contains(@author,'" + username + "')]/a[@class=\"daily_report\"]");
         Assert.assertEquals(link, report.getText());
     }
 
+    private WebElement elementWaitByXpath(String xpathExpression) throws Exception {
+        WebDriverWait wait = new WebDriverWait(Driver.getServerInstance(), 10);
+
+        return wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpathExpression)));
+    }
+
+    private WebElement elementWaitByCss(String expression) throws Exception {
+        WebDriverWait wait = new WebDriverWait(Driver.getServerInstance(), 10);
+
+        return wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(expression)));
+    }
 }
