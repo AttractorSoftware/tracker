@@ -9,10 +9,9 @@
 PROJECTS_DIR=~/projects
 DEMO_REPO_DIR=${PROJECTS_DIR}/tracker/repo
 PLUGIN_CACHE_DIR=${PROJECTS_DIR}/demo/trac-env/plugins/.python-eggs-cache/TracTracker-1.0-py2.7.egg-tmp
+COMMIT_ID=`git log --pretty=format:'%h' -n 1`
 
 cd ${DEMO_REPO_DIR}
-
-echo ${JAVA_HOME}
 
 git clean -fd
 git reset --hard
@@ -21,7 +20,7 @@ rm -f ${PLUGIN_CACHE_DIR}/tracker/client/*.zip
 
 cd desktop-client
 
-mvn assembly:assembly -Dmaven.test.skip=true
+mvn assembly:assembly -Dmaven.test.skip=true -Dproject.version=${BUILD_NUMBER}.${COMMIT_ID}
 
 mkdir ../plugin/Tracker/tracker/client
 cp --remove-destination target/tracker-1.0-SNAPSHOT-dist.zip ../plugin/Tracker/tracker/client/
