@@ -10,6 +10,8 @@ import net.itattractor.forms.tasks.TasksFormActionListener;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 import java.util.Timer;
 
@@ -38,7 +40,8 @@ public class AppLauncher {
         Config.init();
         timer = null;
         PopupMenu popup = new PopupMenu();
-        Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
+        URL imageURL = ClassLoader.getSystemClassLoader().getResource("icon.png");
+        Image image = Toolkit.getDefaultToolkit().getImage(imageURL);
         trayIcon = new TrayIcon(image);
         tray = SystemTray.getSystemTray();
         MenuItem openItem = new MenuItem("Open");
@@ -89,7 +92,6 @@ public class AppLauncher {
         loginFrame.setSize(320, 240);
         loginFrame.setLocationRelativeTo(null);
         loginFrame.setVisible(true);
-        //loginFrame.getRootPane().setDefaultButton(loginForm.getSubmitButton());
         currentFrame = loginFrame;
         loginFrame.addWindowStateListener(new WindowStateListener() {
             @Override

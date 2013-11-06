@@ -8,7 +8,7 @@ public class CommentSenderTest {
     @Before
     public void setUp() throws Exception {
         Config.init();
-        ConnectionProvider.createInstance("http://tracker-trac.demo.esdp.it-attractor.net/", "demo", "123");
+        ConnectionProvider.createInstance("http://127.0.0.1:8000/trac-env", "tester", "tester");
     }
 
     @Test

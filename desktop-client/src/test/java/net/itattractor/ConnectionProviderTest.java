@@ -15,9 +15,9 @@ public class ConnectionProviderTest {
 
     @Before
     public void init() {
-        host = "http://tracker-trac.demo.esdp.it-attractor.net/";
-        username = "demo";
-        password = "123";
+        host = "http://127.0.0.1:8000/trac-env";
+        username = "tester";
+        password = "tester";
         ConnectionProvider.createInstance(host, username, password);
     }
 
