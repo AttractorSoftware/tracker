@@ -41,10 +41,7 @@ public class ServerDefinitions {
 
     @Если("^открою отчет с ссылкой \"([^\"]*)\" пользователя \"([^\"]*)\"$")
     public void открою_отчет_с_ссылкой_пользователя(String report_name, String author) throws Throwable {
-        List<WebElement> users = Driver.getServerInstance().findElements(By.cssSelector("#content ul"));
-        if (!users.get(0).getText().equals("No users found")) {
-            Driver.getServerInstance().findElement(By.xpath("//li[contains(@author,'" + author + "')]/a[text()='" + report_name + "']")).click();
-        }
+        elementWaitByXpath("//li[contains(@author,'" + author + "')]/a[text()='" + report_name + "']").click();
     }
 
     @Тогда("^вижу в меню вкладку \"([^\"]*)\"$")
