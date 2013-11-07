@@ -142,9 +142,11 @@ class TrackerUploaderAndCommentAdderModule(Component):
 
     def _download_client_file(self, req):
         from pkg_resources import resource_filename
+        import glob
 
-        filename = 'tracker-1.0-SNAPSHOT-dist.zip'
-        path_to_file = resource_filename(__name__, 'client') + "/" + filename
+        resources_path = resource_filename(__name__, 'client') + "/"
+        path_to_file = glob.glob(resources_path + "*.zip")[0]
+
 
         if os.path.exists(path_to_file):
             req.send_file(path_to_file, 'application/java-archive; charset=utf-8')

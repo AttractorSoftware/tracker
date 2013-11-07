@@ -8,8 +8,6 @@ import sys
 PACKAGE = 'TracTracker'
 VERSION = '1.0'
 
-CLIENT_PACKAGE_NAME = 'tracker-1.0-SNAPSHOT-dist.zip'
-
 setup(name=PACKAGE,
       version=VERSION,
       packages=['tracker', 'tracker.db'],
