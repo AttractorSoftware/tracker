@@ -32,6 +32,8 @@ cd ../plugin/Tracker/
 
 python setup.py egg_info -rb${BUILD_NUMBER}.${COMMIT_ID} bdist_egg
 
-cp -u dist/*.egg ${PROJECTS_DIR}/demo/trac-env/plugins/
+rm ${PROJECTS_DIR}/demo/trac-env/plugins/*
+
+cp dist/*.egg ${PROJECTS_DIR}/demo/trac-env/plugins/
 
 trac-admin ${PROJECTS_DIR}/demo/trac-env upgrade
