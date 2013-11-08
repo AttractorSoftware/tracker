@@ -8,8 +8,8 @@ import org.jnativehook.mouse.NativeMouseEvent;
 import org.jnativehook.mouse.NativeMouseInputListener;
 
 public class EventCounter implements NativeKeyListener {
-    static int keyCounter=0;
-    static int mouseCounter=0;
+    public static int keyCounter=0;
+    public static int mouseCounter=0;
 
     public void nativeKeyPressed(NativeKeyEvent e) {
         keyCounter++;

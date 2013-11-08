@@ -33,4 +33,8 @@ public class Adapter implements UISpecAdapter {
     public TrayIcon getTrayIcon() {
         return appLauncher.getTrayIcon();
     }
+
+    public AppLauncher getAppLauncher(){
+        return appLauncher;
+    }
 }

@@ -57,6 +57,7 @@
               <forms defaultalign-horz="false"/>
             </constraints>
             <properties>
+              <name value="start"/>
               <text value="&amp;start"/>
             </properties>
           </component>

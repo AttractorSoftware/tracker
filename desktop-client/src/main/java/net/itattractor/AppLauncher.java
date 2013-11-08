@@ -6,6 +6,9 @@ import net.itattractor.forms.record.RecordForm;
 import net.itattractor.forms.record.RecordFormActionListener;
 import net.itattractor.forms.tasks.TasksForm;
 import net.itattractor.forms.tasks.TasksFormActionListener;
+import net.itattractor.screenshot.Creator;
+import net.itattractor.screenshot.Sender;
+import net.itattractor.screenshot.Timer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +16,6 @@ import java.awt.event.*;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
-import java.util.Timer;
 
 public class AppLauncher {
     private JFrame currentFrame;
@@ -34,7 +36,8 @@ public class AppLauncher {
     private final TrayIcon trayIcon;
 
     private final SystemTray tray;
-    private Timer timer;
+    private java.util.Timer timer;
+    private Timer screenshotTimer;
 
     public AppLauncher() {
         Config.init();
@@ -80,6 +83,10 @@ public class AppLauncher {
             }
         });
 
+    }
+
+    public Thread getScreenshotTimer(){
+        return screenshotTimer;
     }
 
     public void start() {
@@ -172,18 +179,25 @@ public class AppLauncher {
             recordFrame.setSize(500, 300);
             recordFrame.setVisible(true);
             EventCounter.ActivateEvent();
-            ScreenShot screenShot = new ScreenShot(provider);
+
+            screenshotTimer = new Timer();
             if (!Boolean.parseBoolean(Config.getValue("testMode"))) {
                 timeProvider = new SystemTimeProvider();
-                screenShot.setTimeProvider(timeProvider);
                 Config.setValue("screenshotPeriod","60000");
             } else {
                 timeProvider = new FakeTimeProvider();
-                screenShot.setTimeProvider(timeProvider);
                 Config.setValue("screenshotPeriod","10000");
             }
-            screenShot.setCurrentTicket(ticket);
-            new Thread(screenShot).start();
+            screenshotTimer.setTimeProvider(timeProvider);
+
+            Creator creator = new Creator(ticket);
+            creator.setTimeProvider(timeProvider);
+            Sender sender = new Sender();
+
+            screenshotTimer.addCommand(1, creator);
+            screenshotTimer.addCommand(2, sender);
+
+            new Thread(screenshotTimer).start();
 
             currentFrame = recordFrame;
             recordFrame.addWindowListener(new WindowAdapter() {
@@ -222,7 +236,7 @@ public class AppLauncher {
         private void pause() {
             int remindAgainIn = Integer.parseInt(Config.getValue("remindAgainInMinutes"));
             recordFrame.setVisible(false);
-            timer = new Timer();
+            timer = new java.util.Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {

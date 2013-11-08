@@ -1,6 +1,7 @@
 package net.itattractor.features.helper;
 
 import net.itattractor.features.Adapter;
+import net.itattractor.screenshot.Timer;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -31,6 +32,12 @@ public class Driver {
     }
 
     public static void reset() {
-        clientInstance = null;
+       if(clientInstance != null) {
+           Timer screenshotTimer = (Timer) clientInstance.getAppLauncher().getScreenshotTimer();
+           if(screenshotTimer != null){
+               screenshotTimer.setFinished(true);
+           }
+           clientInstance = null;
+       }
     }
 }

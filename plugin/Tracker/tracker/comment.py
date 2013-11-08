@@ -45,7 +45,7 @@ class Screenshot(object):
                 shutil.copyfileobj(fileobject, targetfile)
 
     def _create_unique_screenshot(self, dir, filename, extension):
-        parts = os.path.splitext(filename)
+
         flags = os.O_CREAT + os.O_WRONLY + os.O_TRUNC
         if hasattr(os, 'O_BINARY'):
             flags += os.O_BINARY
