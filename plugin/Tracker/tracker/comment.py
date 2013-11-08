@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-import errno
 import os
 import re
 import shutil
@@ -9,18 +8,19 @@ import shutil
 from genshi import Markup
 from trac.config import IntOption
 from trac.core import *
-from trac.util.datefmt import utc, to_timestamp
+from trac.util.datefmt import utc
 from trac.web import IRequestHandler, RequestDone
 from trac.web.chrome import INavigationContributor
 from trac.util.datefmt import to_utimestamp
 from trac.util.compat import sha1
+from tracker.utils import calculate_client_package_path
 
 
 class Screenshot(object):
     def __init__(self, env):
         self.env = env
 
-    def insert(self, filename, fileobject, author, mouse_event_count, keyboard_event_count, ticket_id, interval,time):
+    def insert(self, filename, fileobject, author, mouse_event_count, keyboard_event_count, ticket_id, interval, time):
         """
         Create a new Screenshot record and save the file content
         """
@@ -35,13 +35,12 @@ class Screenshot(object):
         )
         file_dir = "screenshots" + "/" + author + "/" + screenshot_hashed_name
 
-
-
         with targetfile:
             with self.env.db_transaction as db:
                 db(
                     "INSERT INTO tracker_screenshots(filename, author, path, time, mouse_event_count, keyboard_event_count, ticket_id, interval) VALUES(%s, %s, %s, %s, %s, %s, %s, %s )",
-                    (filename, author, file_dir, str(long(time)/1000), mouse_event_count, keyboard_event_count, ticket_id, interval))
+                    (filename, author, file_dir, str(long(time) / 1000), mouse_event_count, keyboard_event_count,
+                     ticket_id, interval))
                 shutil.copyfileobj(fileobject, targetfile)
 
     def _create_unique_screenshot(self, dir, filename, extension):
@@ -56,12 +55,12 @@ class Screenshot(object):
         return filename, os.fdopen(os.open(path, flags, 0666), 'wb'), hashed_screenshot_name
 
 
-
-
-
     def _get_hashed_screenshot_name(self, filename):
         hash = sha1(filename.encode("utf-8")).hexdigest()
         return hash
+
+
+
 
 
 class TrackerUploaderAndCommentAdderModule(Component):
@@ -141,12 +140,8 @@ class TrackerUploaderAndCommentAdderModule(Component):
         )
 
     def _download_client_file(self, req):
-        from pkg_resources import resource_filename
-        import glob
 
-        resources_path = resource_filename(__name__, 'client') + "/"
-        path_to_file = glob.glob(resources_path + "*.zip")[0]
-
+        path_to_file = calculate_client_package_path()
 
         if os.path.exists(path_to_file):
             req.send_file(path_to_file, 'application/java-archive; charset=utf-8')

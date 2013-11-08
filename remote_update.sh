@@ -9,7 +9,7 @@
 PROJECTS_DIR=~/projects
 DEMO_REPO_DIR=${PROJECTS_DIR}/tracker/repo
 PLUGIN_CACHE_DIR=${PROJECTS_DIR}/demo/trac-env/plugins/.python-eggs-cache/TracTracker-1.0-py2.7.egg-tmp
-BUILD_NUMBER=`curl http://77.95.60.63:8080/job/tracker/lastStableBuild/buildNumber`
+BUILD_NUMBER=`curl http://77.95.60.63:8080/job/tracker/lastBuild/buildNumber`
 
 cd ${DEMO_REPO_DIR}
 
@@ -25,11 +25,12 @@ cd desktop-client
 mvn package -Dmaven.test.skip=true -Dproject.version=${BUILD_NUMBER}.${COMMIT_ID}
 
 mkdir ../plugin/Tracker/tracker/client
-cp --remove-destination target/tracker-1.0-SNAPSHOT-dist.zip ../plugin/Tracker/tracker/client/
+
+cp --remove-destination target/*.zip ../plugin/Tracker/tracker/client/
 
 cd ../plugin/Tracker/
 
-python setup.py bdist_egg
+python setup.py egg_info -rb${BUILD_NUMBER}.${COMMIT_ID} bdist_egg
 
 cp -u dist/*.egg ${PROJECTS_DIR}/demo/trac-env/plugins/
 

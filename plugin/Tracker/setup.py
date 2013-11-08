@@ -6,7 +6,7 @@ from setuptools import setup
 import sys
 
 PACKAGE = 'TracTracker'
-VERSION = '1.0'
+VERSION = '1.0dev.'
 
 setup(name=PACKAGE,
       version=VERSION,

@@ -17,6 +17,8 @@ from trac.mimeview import Context, Mimeview
 
 
 from tracker.api import ITrackerScreenshotsRenderer, TrackerApi
+from tracker.utils import calculate_client_package_name
+
 
 class TrackerUserListModule(Component):
     implements(INavigationContributor, ITemplateProvider, IRequestHandler)
@@ -192,7 +194,7 @@ class TrackerUserListModule(Component):
 
                 context.req.data['users'] = api.get_users(context)
                 context.req.data['template'] = 'user_list.html'
-                context.req.data['client'] = {'download_href': 'jar-tracker/tracker'}
+                context.req.data['client'] = {'download_href': 'jar-tracker/' + calculate_client_package_name()}
                 return 'screenshots', None
             else:
                 return 'screenshots', None
