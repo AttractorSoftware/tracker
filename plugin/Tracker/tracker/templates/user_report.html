@@ -15,7 +15,7 @@
     <p>Отчет с ${fromDMY} по ${toDMY}</p>
     <p>всего проработано: <b>${summaryWorkedTimeHours}</b> час(ов) <b>${summaryWorkedTimeMinutes}</b> минут(ы)</p>
     <div id="${task.name}" py:for="task in tasks">
-        <hr />Задача <b>${task.name}</b>, Потрачено:
+        <hr />Задача <b><a href="${task.href}">#${task.id}, ${task.name}</a></b>, Потрачено:
         <b>${task.hours}</b> часов
         <b id="min">${task.minutes}</b> минут
     </div>

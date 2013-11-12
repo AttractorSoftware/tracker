@@ -3,7 +3,7 @@ import re
 import time
 
 from trac.core import Component, implements
-from trac.web import IRequestHandler
+from trac.web import IRequestHandler, Href
 from trac.web.chrome import ITemplateProvider, add_stylesheet, add_script
 from trac.mimeview import Context
 from tracker.api import TrackerApi
@@ -47,13 +47,17 @@ class TrackerUserReportModule(Component):
                 if screenshot['ticketId'] in temp_tasks.keys():
                     temp_tasks[screenshot['ticketId']]['minutes'] += DEFAULT_TIME_VALUE
                 else:
-                    temp_tasks[screenshot['ticketId']] = {'minutes': DEFAULT_TIME_VALUE, 'name': screenshot['summary']}
+                    temp_tasks[screenshot['ticketId']] = {'minutes': DEFAULT_TIME_VALUE, 'name': screenshot['summary'],
+                                                          'id': screenshot['ticketId']}
             tasks = []
             for key, temp_task in temp_tasks.iteritems():
+                href = Href(req.base_path)
                 task = {
                     'hours': int(temp_task['minutes'] / 60),
                     'minutes': temp_task['minutes'] % 60,
-                    'name': temp_task['name']
+                    'name': temp_task['name'],
+                    'id': temp_task['id'],
+                    'href': href.ticket(temp_task['id'])
                 }
                 tasks.append(task)
             req.data = {
