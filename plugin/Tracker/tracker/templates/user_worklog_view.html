@@ -84,7 +84,6 @@
                     dataType: "json",
                     success: function (data) {
                         $.each(data, function (index) {
-                            ;
                             $.each($("#ui-datepicker-div .ui-state-default"), function (key) {
                                 if (++key == index) {
                                     $(this).css({'border': '2px solid #66FF66'});

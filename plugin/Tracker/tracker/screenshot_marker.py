@@ -18,9 +18,13 @@ class TrackerScreenshotMarkerModule(Component):
             user_name = req.args.get("userName")
             days = calendar.monthrange(int(thisYear), int(self._get_correct_month_name(thisMonth)))
             startDay, lastDay = days
+            startDay = 1;
             data = {}
             for day in range(startDay, lastDay):
-                date = str(day) + "/" + self._get_correct_month_name(thisMonth) + "/" + str(thisYear)
+                if day<10:
+                    date = str('0'+str(day)) + "/" + self._get_correct_month_name(thisMonth) + "/" + str(thisYear)
+                else:
+                    date = str(day) + "/" + self._get_correct_month_name(thisMonth) + "/" + str(thisYear)
                 date = date.strip()
 
                 if day == 0:
