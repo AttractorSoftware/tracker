@@ -113,3 +113,15 @@ table.user-screenshots tbody td {
 .tracker {
     min-height: 450px;
 }
+
+.user-list {
+	float: left;
+    width: 33.3%;
+    height: 180px;
+    display: inline;
+
+	}
+#nav-user-list {
+    overflow: auto;
+
+}

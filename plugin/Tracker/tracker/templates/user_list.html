@@ -12,14 +12,14 @@
 <body>
 <div id="content" class="tracker">
     <h1>Users:</h1>
-    <ul id="nav">
+    <ul id="nav-user-list">
         <py:choose test="users">
             <py:when test = 'None'>
             <p>No users found</p>
             </py:when>
         <py:otherwise>
             <py:for each="user in users">
-                <li author="${user.author}">
+                <li class="user-list" author="${user.author}">
                     <h1>${user.author}</h1>
                     <a href="users/${user.author}" class="daily_report">Ежедневный отчет</a><br/>
                     <a href="user_report/${user.author}" class="report">Отчет за период</a>
