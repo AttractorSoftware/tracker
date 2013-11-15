@@ -94,12 +94,14 @@ class TrackerUserListModule(Component):
 
         time_interval = self.env.config.getint('tracker', 'time_interval', 10)
         time_separate = 1
+        minutes_interval=0
         screenshotsWithHourse = []
         screenshotsWithMinutes = []
         template_hourse = []
         minute = 0
         min_hourse = 0
         max_hourse = 0
+        allScreenshots=[]
 
         for action in actions:
             if action == 'view':
@@ -140,23 +142,39 @@ class TrackerUserListModule(Component):
 
                 while (minute <= 59):
                     for screenshotsAll in screenshotsWithHourse:
+
                         for index in screenshotsAll:
+
                             screenshotMinute = datetime.datetime.fromtimestamp(float(screenshotsAll[index]["time"])).strftime('%M')
                             if int(screenshotMinute) == minute:
                                 screenshotHourse = datetime.datetime.fromtimestamp(screenshotsAll[index]["time"]).strftime('%H')
-
-                                template_hourse.append(int(screenshotHourse))
+                                if int(screenshotHourse) not in template_hourse:
+                                    template_hourse.append(int(screenshotHourse))
                                 screenshotsAll[index]['hourse'] = int(screenshotHourse)
                                 screenshotsAll[index]['minute'] = int(screenshotMinute)
+                                if len(screenshotsWithMinutes)>0 and screenshotsWithMinutes[0]['minute']==screenshotsAll[index]['minute']:
+                                    screenshotsWithMinutes.pop()
                                 screenshotsWithMinutes.append(screenshotsAll[index])
-                    minute += 1
+                    minute += 10
+                for hourse in template_hourse:
+                    for screenshot in screenshotsWithMinutes:
+                        if screenshot['hourse']==hourse:
+                            while screenshot['minute']!=minutes_interval:
+                                allScreenshots.append({"hourse":hourse,"screen":None,"minute":minutes_interval})
+                                minutes_interval+=10
+                            screenshot["screen"]=1
+                            allScreenshots.append(screenshot)
+                            minutes_interval+=10
+                    while (minutes_interval!=60):
+                        allScreenshots.append({"hourse":hourse,"screen":None,"minute":minutes_interval})
+                        minutes_interval+=10
+                    minutes_interval=0
 
-                context.req.data['allScreenshots'] = screenshotsWithMinutes
+                context.req.data['allScreenshots'] = allScreenshots
                 context.req.data['template_hourse'] = range(int(min_hourse), int(max_hourse)+time_separate)
                 context.req.data['time_interval'] = time_interval
                 context.req.data['time_separate'] = time_separate
                 context.req.data['template'] = 'user_worklog_view.html'
-
                 add_stylesheet(context.req, 'trac/css/tracker.css')
                 chrome = Chrome(self.env)
                 chrome.add_jquery_ui(context.req)

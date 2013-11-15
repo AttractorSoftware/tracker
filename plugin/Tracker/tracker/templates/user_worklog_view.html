@@ -61,6 +61,8 @@
             border: 1px dotted #ddd;
             padding: .3em .5em;
             vertical-align: middle;
+            vertical-align:bottom;
+            text-align:center;
         }
     </style>
     <script type="text/javascript">
@@ -145,33 +147,42 @@
     <table border="3px" width="100%">
         <py:for each="hourse in template_hourse">
             <tr>
-                <td align="center" width="5%">
+                <td style="vertical-align:middle;text-align:center"  width="5%">
                         <b>${hourse}:00-${hourse + time_separate}:00 Hours</b>
                 </td>
-                <py:for each="screenshot in allScreenshots">
-                    <py:if test="screenshot.hourse == hourse">
-                        <td align="center" width="15%">
-                            <div class="tracker-image" author="${screenshot.author}">
-                                <a name="modal" href="#dialog_${screenshot.id}" title="${screenshot.filename}">
-                                    <span class="mouse-event-count">${screenshot.mouse_event_count}</span>
-                                    <span class="keyboard-event-count">${screenshot.keyboard_event_count}</span>
-                                    <span class="time-count">${screenshot.minute} Min</span>
-                                    <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}"
-                                         style="width: 80%; height: 100%"/><br />
-                                </a>
+                    <py:for each="screenshot in allScreenshots">
+                        <py:if test="screenshot.hourse == hourse">
+                            <py:choose test="">
+                                <py:when test = 'screenshot.screen==None'>
+                                    <td width="15%">
+                                        <div class="tracker-image" author="${screenshot.author}">
+                                            <span class="time-count">${screenshot.minute} Min</span>
+                                        </div>
+                                    </td>
+                                </py:when>
+                                <py:otherwise>
+                                    <td width="15%">
+                                        <div class="tracker-image" author="${screenshot.author}">
+                                            <a name="modal" href="#dialog_${screenshot.id}" title="${screenshot.filename}">
+                                                <span class="mouse-event-count">${screenshot.mouse_event_count}</span>
+                                                <span class="keyboard-event-count">${screenshot.keyboard_event_count}</span>
+                                                <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}"
+                                                     style="width: 80%; height: 100%"/><br />
+                                            </a>
+                                            <div id="boxes">
+                                                <div style="margin: 0 auto;" id="dialog_${screenshot.id}" class="window">
+                                                    <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}"/>
+                                                    <span><a href="#" class="close">X</a></span>
+                                                    </div>
+                                            </div>
+                                            <span class="time-count">${screenshot.minute} Min</span>
+                                        </div>
 
-                                <div id="boxes">
-                                    <div style="margin: 0 auto;" id="dialog_${screenshot.id}" class="window">
-                                        <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}"/>
-                                        <span><a href="#" class="close">X</a></span>
-                                    </div>
-                                    <div id="mask"></div>
-                                </div>
-                            </div>
-                        </td>
-                    </py:if>
-
-                </py:for>
+                                    </td>
+                                </py:otherwise>
+                            </py:choose>
+                        </py:if>
+                    </py:for>
             </tr>
         </py:for>
 
