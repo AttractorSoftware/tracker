@@ -11,7 +11,7 @@ class TicketTable(object):
         for ticket_id in tickets:
             ticket = Ticket(env, str(ticket_id[0]))
             calculate_tracked_time = TicketTable.calculate_tracked_time_for_ticket(env, str(ticket_id[0]))
-            if ticket['tracked_time'] != calculate_tracked_time:
+            if str(ticket['tracked_time']) != str(calculate_tracked_time):
                 ticket['tracked_time'] = str(calculate_tracked_time)
                 ticket.save_changes(author="system", comment="Automaticaly update tracked_time by saved screenshots")
 
