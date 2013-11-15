@@ -10,7 +10,7 @@ VERSION = '1.0dev.'
 
 setup(name=PACKAGE,
       version=VERSION,
-      packages=['tracker', 'tracker.db'],
+      packages=['tracker', 'tracker.db', 'tracker.lib'],
       entry_points={'trac.plugins': [
           'TracTracker.db_install = tracker.db_install',
           'TracTracker.comment = tracker.comment',
@@ -19,7 +19,8 @@ setup(name=PACKAGE,
           'TracTracker.active_tickets = tracker.active_tickets',
           'TracTracker.authorization = tracker.authorization',
           'TracTracker.screenshot_marker = tracker.screenshot_marker',
-          'TracTracker.admin = tracker.admin'
+          'TracTracker.admin = tracker.admin',
+          'TracTracker.update_tracked_time = tracker.update_tracked_time'
       ]},
       package_data={
       'tracker': ['templates/*.html', 'templates/*.xml', 'htdocs/css/*.css', 'htdocs/img/*.png', 'client/*.zip', 'htdocs/js/*.js']},

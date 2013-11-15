@@ -13,6 +13,7 @@ from trac.web import IRequestHandler, RequestDone
 from trac.web.chrome import INavigationContributor
 from trac.util.datefmt import to_utimestamp
 from trac.util.compat import sha1
+from tracker.lib.TicketTable import TicketTable
 from tracker.utils import calculate_client_package_path
 
 
