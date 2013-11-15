@@ -68,7 +68,7 @@
             width : 100%;
             text-align: center;
             float: left;
-            font-size: 1.5  cem;
+            font-size: 1.5em;
             padding: 0 0 15px 0;
         }
         #date-switcher .btn-prev {
@@ -193,7 +193,31 @@ $('#date-switcher').find('.btn-prev').click(function () {
     </div>
 
     <table border="3px" width="100%">
+        <tr>
+                <td>
+                  <span style="font-size: 10px"><b>Time Interval</b></span>
+                </td>
+                <td>
+                  <span class="time-count">0 Min</span>
+                </td>
+                <td>
+                  <span class="time-count">10 Min</span>
+                </td>
+                <td>
+                   <span class="time-count">20 Min</span>
+                </td>
+                <td>
+                  <span class="time-count">30 Min</span>
+                </td>
+                <td>
+                  <span class="time-count">40 Min</span>
+                </td>
+                <td>
+                  <span class="time-count">50 Min</span>
+                </td>
+            </tr>
         <py:for each="hourse in template_hourse">
+
             <tr>
                 <td style="vertical-align:middle;text-align:center"  width="5%">
                         <b>${hourse}:00-${hourse + time_separate}:00 Hours</b>
@@ -203,7 +227,6 @@ $('#date-switcher').find('.btn-prev').click(function () {
                             <py:choose test="">
                                 <py:when test = 'screenshot.screen==None'>
                                     <td width="15%">
-                                       <span class="time-count">${screenshot.minute} Min</span>
                                     </td>
                                 </py:when>
                                 <py:otherwise>
@@ -221,7 +244,6 @@ $('#date-switcher').find('.btn-prev').click(function () {
                                                     <span><a href="#" class="close">X</a></span>
                                                     </div>
                                             </div>
-                                            <span class="time-count">${screenshot.minute} Min</span>
                                         </div>
 
                                     </td>
