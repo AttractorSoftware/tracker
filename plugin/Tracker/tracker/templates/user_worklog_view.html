@@ -9,7 +9,7 @@
 <head>
     <title>Tracker</title>
     <style type="text/css">
-        #mask {
+  #mask {
             position: fixed;
             left: 0;
             top: 0;
@@ -64,6 +64,27 @@
             vertical-align:bottom;
             text-align:center;
         }
+        #date-switcher {
+            width : 100%;
+            text-align: center;
+            float: left;
+            font-size: 1.5  cem;
+            padding: 0 0 15px 0;
+        }
+        #date-switcher .btn-prev {
+            display: inline;
+            cursor: pointer;
+            color: rgba(187, 0, 0, 1);
+        }
+        #date-switcher .btn-next {
+            display: inline;
+            cursor: pointer;
+            color: rgba(187 ,0, 0, 1);
+        }
+        #date-switcher .date-display {
+            display: inline;
+            margin: 0 10px;
+        }
     </style>
     <script type="text/javascript">
         jQuery(document).ready(function () {
@@ -96,6 +117,25 @@
                     }
                 });
             });
+            // Next Day Link
+$('#date-switcher').find('.btn-next').click(function () {
+    var picker = $("#tracker-date");
+    var date=new Date(picker.datepicker('getDate'));
+    date.setDate(date.getDate()+1);
+    picker.datepicker('setDate', date);
+    $("#tracker-filter").find('input[type="submit"]').trigger('click');
+    return false;
+});
+
+// Previous Day Link
+$('#date-switcher').find('.btn-prev').click(function () {
+    var picker = $("#tracker-date");
+    var date=new Date(picker.datepicker('getDate'));
+    date.setDate(date.getDate()-1);
+    picker.datepicker('setDate', date);
+    $("#tracker-filter").find('input[type="submit"]').trigger('click');
+    return false;
+});
 
             $('a[name=modal]').click(function (e) {
                 e.preventDefault();
@@ -138,11 +178,19 @@
             <br/>
         </div>
         <div class="buttons">
+
             <input type="submit" name="update" value="${_('Update')}"/>
+
         </div>
     </form>
 
     <h2>${_("Username")}: <em>${username if username else None}</em></h2>
+
+    <div id="date-switcher">
+        <div class="btn-prev">&lt;&lt;</div>
+        <div class="date-display">${format_date(fromdate)}</div>
+        <div class="btn-next">&gt;&gt;</div>
+    </div>
 
     <table border="3px" width="100%">
         <py:for each="hourse in template_hourse">
