@@ -103,11 +103,12 @@ table.user-screenshots tbody td {
     background: url('../img/keyboard-ico.png') no-repeat;
 }
 
-.tracker-image .time-count {
+.time-count {
     float: left;
     height: 18px;
-    padding: 13px 0 0 38px;
+    padding: 2px 0 0 20px;
     background: url('../img/time-ico.png') no-repeat;
+    margin-left: 4em;
 }
 
 .tracker {

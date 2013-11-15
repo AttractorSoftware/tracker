@@ -203,9 +203,7 @@ $('#date-switcher').find('.btn-prev').click(function () {
                             <py:choose test="">
                                 <py:when test = 'screenshot.screen==None'>
                                     <td width="15%">
-                                        <div class="tracker-image" author="${screenshot.author}">
-                                            <span class="time-count">${screenshot.minute} Min</span>
-                                        </div>
+                                       <span class="time-count">${screenshot.minute} Min</span>
                                     </td>
                                 </py:when>
                                 <py:otherwise>
