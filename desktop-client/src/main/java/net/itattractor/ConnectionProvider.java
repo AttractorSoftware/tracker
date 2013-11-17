@@ -34,11 +34,7 @@ public class ConnectionProvider {
 
     }
 
-    public static ConnectionProvider getInstance() throws Exception {
-
-        if (instance == null) {
-            throw new Exception("You must create instance!");
-        }
+    public static ConnectionProvider getInstance(){
         return instance;
     }
 

@@ -52,7 +52,7 @@
           <text value="&amp;remind me again in"/>
         </properties>
       </component>
-      <component id="209d0" class="javax.swing.JSpinner" binding="periodTimeSpinner" custom-create="true">
+      <component id="209d0" class="javax.swing.JSpinner" binding="periodTimeSpinner">
         <constraints>
           <grid row="8" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
           <forms defaultalign-horz="false"/>
@@ -130,7 +130,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="25756" class="javax.swing.JTextPane" binding="currentTaskPane" custom-create="true">
+          <component id="25756" class="javax.swing.JTextPane" binding="currentTaskPane">
             <constraints/>
             <properties>
               <editable value="false"/>

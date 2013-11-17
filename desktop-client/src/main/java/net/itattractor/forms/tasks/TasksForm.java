@@ -18,7 +18,7 @@ public class TasksForm {
     private JButton refreshButton;
     private TasksFormActionListener actionListener;
     private ConnectionProvider connectionProvider;
-    public TasksForm() throws Exception {
+    public TasksForm(){
 
         connectionProvider = ConnectionProvider.getInstance();
         startButton.addActionListener(new ActionListener() {

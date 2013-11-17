@@ -109,6 +109,10 @@ public class RecordForm {
         });
     }
 
+    public RecordForm() {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
     public JPanel getContentPanel() {
         return contentPanel;
     }

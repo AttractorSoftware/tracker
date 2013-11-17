@@ -19,15 +19,11 @@ public class TaskReader {
     private static final String activeTicketsUrl = "/tracker/tickets/";
     private Document document;
 
-    public TaskReader() throws Exception {
+    private void readTasks() {
         connectionProvider = ConnectionProvider.getInstance();
         document = null;
         login = new HttpGet(connectionProvider.getHost() + loginUrlPart);
         httpGet = new HttpGet(connectionProvider.getHost() + activeTicketsUrl + connectionProvider.getUsername());
-        readTasks();
-    }
-
-    private void readTasks() {
         try {
             DefaultHttpClient httpClient = connectionProvider.getHttpClient();
             httpClient.execute(login);
@@ -46,6 +42,8 @@ public class TaskReader {
     }
 
     public Ticket[] getTickets() {
+        if(ConnectionProvider.getInstance() != null)
+            readTasks();
         NodeList nodeList = document.getElementsByTagName("ticket");
         Ticket tickets[] = new Ticket[nodeList.getLength()];
         for (int i = 0; i < tickets.length; i++) {
