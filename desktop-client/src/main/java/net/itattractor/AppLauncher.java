@@ -48,6 +48,14 @@ public class AppLauncher {
 
         LoginFormController loginFormController = new LoginFormController(loginForm, manager);
         tasksFormController = new TasksFormController(tasksForm, manager);
+        if (!Boolean.parseBoolean(Config.getValue("testMode"))) {
+            Config.setValue("screenshotPeriod", "60000");
+            tasksFormController.setTimeProvider(new SystemTimeProvider());
+        } else {
+            Config.setValue("screenshotPeriod", "10000");
+            tasksFormController.setTimeProvider(new FakeTimeProvider());
+        }
+
         RecordFormController recordFormController = new RecordFormController(recordForm, manager);
         recordFormController.setCommentSender(new CommentSender());
         loginFormController.start();

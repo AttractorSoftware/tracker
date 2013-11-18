@@ -22,7 +22,8 @@ public class Timer extends Thread {
         while (!getFinished()) {
             try {
                 Thread.sleep(this.checkCreatePeriod);
-                if(this.shouldExecute()) {
+                if(shouldExecute()) {
+                    System.out.println("Timer.run");
                     for(Map.Entry<Integer,Command> entry : commandList.entrySet()){
                         entry.getValue().execute();
                     }
@@ -35,7 +36,7 @@ public class Timer extends Thread {
 
     public boolean shouldExecute() {
         Calendar sentDate = Calendar.getInstance();
-        sentDate.setTimeInMillis(this.timeProvider.getTimeInMilliseconds());
+        sentDate.setTimeInMillis(timeProvider.getTimeInMilliseconds());
         int minutes = sentDate.get(Calendar.MINUTE);
         return ((minutes % 10) == 0);
     }

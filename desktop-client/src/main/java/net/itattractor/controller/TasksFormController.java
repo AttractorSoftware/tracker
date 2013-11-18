@@ -12,14 +12,15 @@ public class TasksFormController implements TasksFormActionListener {
     private final WindowManager manager;
     private LogWriter logWriter;
     private Timer screenshotTimer;
+
     private TimeProvider timeProvider;
 
+    private Thread screnshotThread;
     public TasksFormController(TasksForm tasksForm, WindowManager manager) {
         this.tasksForm = tasksForm;
         this.manager = manager;
         this.tasksForm.setActionListener(this);
     }
-
 
     @Override
     public void startPressed(Ticket ticket) {
@@ -27,13 +28,6 @@ public class TasksFormController implements TasksFormActionListener {
         logWriter.saveStart();
         EventCounter.ActivateEvent();
         screenshotTimer = new net.itattractor.screenshot.Timer();
-        if (!Boolean.parseBoolean(Config.getValue("testMode"))) {
-            timeProvider = new SystemTimeProvider();
-            Config.setValue("screenshotPeriod", "60000");
-        } else {
-            timeProvider = new FakeTimeProvider();
-            Config.setValue("screenshotPeriod", "10000");
-        }
         screenshotTimer.setTimeProvider(timeProvider);
 
         Creator creator = new Creator(ticket);
@@ -42,7 +36,8 @@ public class TasksFormController implements TasksFormActionListener {
 
         screenshotTimer.addCommand(1, creator);
         screenshotTimer.addCommand(2, sender);
-        new Thread(screenshotTimer).start();
+        screnshotThread = new Thread(screenshotTimer);
+        screnshotThread.start();
 
         manager.hide();
         manager.getRecordFormState().setTicket(ticket);
@@ -50,8 +45,13 @@ public class TasksFormController implements TasksFormActionListener {
         manager.show();
     }
 
+
     public Timer getScreenshotTimer() {
         return screenshotTimer;
+    }
+
+    public void setTimeProvider(TimeProvider timeProvider) {
+        this.timeProvider = timeProvider;
     }
 
 }

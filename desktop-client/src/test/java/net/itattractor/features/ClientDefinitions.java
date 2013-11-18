@@ -144,11 +144,6 @@ public class ClientDefinitions {
     @Before
     public void closeClient(){
         Config.init();
-        try {
-            Driver.reset();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        Driver.reset();
     }
 }
