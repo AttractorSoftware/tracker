@@ -17,10 +17,8 @@ public class TasksForm {
     private JButton startButton;
     private JButton refreshButton;
     private TasksFormActionListener actionListener;
-    private ConnectionProvider connectionProvider;
     public TasksForm(){
 
-        connectionProvider = ConnectionProvider.getInstance();
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

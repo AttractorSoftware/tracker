@@ -1,35 +1,44 @@
 package net.itattractor.states;
 
 import net.itattractor.forms.record.RecordForm;
-import net.itattractor.forms.tasks.TasksForm;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class RecordFormState implements State {
-    private JFrame recordFrame;
-    private RecordForm recordForm;
+    private JFrame frame;
+    private RecordForm form;
 
     @Override
 
     public void show() {
-        recordFrame = new JFrame("record");
-        recordFrame.add(recordForm.getContentPanel());
-        recordFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        recordFrame.setSize(500, 300);
-        recordFrame.setVisible(true);
+        frame = new JFrame("record");
+        frame.add(form.getContentPanel());
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.setSize(500, 300);
+        frame.setVisible(true);
 
-        recordFrame.addWindowListener(new WindowAdapter() {
+        frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                recordFrame.setVisible(false);
+                frame.setVisible(false);
             }
         });
 
     }
 
-    public void setRecordForm(RecordForm recordForm) {
-        this.recordForm = recordForm;
+    public void setForm(RecordForm form) {
+        this.form = form;
+    }
+
+    @Override
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    @Override
+    public void hide() {
+        frame.setVisible(false);
     }
 }

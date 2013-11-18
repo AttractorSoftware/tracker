@@ -7,27 +7,37 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 
 public class LoginFormState implements State {
-    private JFrame loginFrame;
-    private LoginForm loginForm;
+    private JFrame frame;
+    private LoginForm form;
 
     @Override
     public void show() {
-        loginFrame = new JFrame("login");
-        loginFrame.add(loginForm.getContentPanel());
-        loginFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        loginFrame.setSize(320, 240);
-        loginFrame.setLocationRelativeTo(null);
-        loginFrame.setVisible(true);
-        loginFrame.addWindowStateListener(new WindowStateListener() {
+        frame = new JFrame("login");
+        frame.add(form.getContentPanel());
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setSize(320, 240);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        frame.addWindowStateListener(new WindowStateListener() {
             @Override
             public void windowStateChanged(WindowEvent e) {
-                loginFrame.isVisible();
+                frame.isVisible();
             }
         });
 
     }
 
-    public void setLoginForm(LoginForm loginForm) {
-        this.loginForm = loginForm;
+    public void setForm(LoginForm form) {
+        this.form = form;
+    }
+
+    @Override
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    @Override
+    public void hide() {
+        frame.setVisible(false);
     }
 }

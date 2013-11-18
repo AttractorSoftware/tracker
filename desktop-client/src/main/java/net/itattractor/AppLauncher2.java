@@ -23,17 +23,17 @@ public class AppLauncher2 {
         WindowManager manager = new WindowManager();
 
         LoginFormState loginWindowState = new LoginFormState();
-        loginWindowState.setLoginForm(loginForm);
+        loginWindowState.setForm(loginForm);
         manager.setLoginWindowState(loginWindowState);
 
         TasksFormState tasksFormState = new TasksFormState();
         TasksForm tasksForm = new TasksForm();
-        tasksFormState.setTasksForm(tasksForm);
+        tasksFormState.setForm(tasksForm);
         manager.setTasksWindowState(tasksFormState);
 
         RecordFormState recordFormState = new RecordFormState();
         RecordForm recordForm = new RecordForm();
-        recordFormState.setRecordForm(recordForm);
+        recordFormState.setForm(recordForm);
 
         manager.init();
 

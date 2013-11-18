@@ -5,6 +5,8 @@ import net.itattractor.states.RecordFormState;
 import net.itattractor.states.State;
 import net.itattractor.states.TasksFormState;
 
+import javax.swing.*;
+
 public class WindowManager {
     private LoginFormState loginWindowState;
     private State state;
@@ -15,12 +17,20 @@ public class WindowManager {
         state.show();
     }
 
+    public void init() {
+        state = loginWindowState;
+    }
+
     public State getLoginWindowState() {
         return loginWindowState;
     }
 
-    public State getTaskWindowState() {
+    public State getTasksWindowState() {
         return tasksWindowState;
+    }
+
+    public State getRecordWindowState() {
+        return recordWindowState;
     }
 
     public void setState(State state) {
@@ -31,15 +41,15 @@ public class WindowManager {
         this.loginWindowState = loginWindowState;
     }
 
-    public void init() {
-        state = loginWindowState;
-    }
-
     public void setTasksWindowState(TasksFormState tasksWindowState) {
         this.tasksWindowState = tasksWindowState;
     }
 
-    public State getRecordWindowState() {
-        return recordWindowState;
+    public JFrame getFrame() {
+        return state.getFrame();
+    }
+
+    public void hide() {
+        state.hide();
     }
 }
