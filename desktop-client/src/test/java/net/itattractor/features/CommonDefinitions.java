@@ -1,7 +1,6 @@
 package net.itattractor.features;
 
 import cucumber.api.java.ru.Допустим;
-import net.itattractor.Config;
 import net.itattractor.features.helper.Driver;
 import org.uispec4j.Window;
 

@@ -21,7 +21,7 @@ public class CommentSender {
     public CommentSender() {
     }
 
-    public boolean sendComment(int ticketId, String comment) throws Exception {
+    public boolean sendComment(int ticketId, String comment) {
 
         connectionProvider = ConnectionProvider.getInstance();
 

@@ -1,7 +1,8 @@
 package net.itattractor.forms.tasks;
 
-import net.itattractor.ConnectionProvider;
 import net.itattractor.TaskReader;
+import net.itattractor.TaskReaderImpl;
+import net.itattractor.TaskReaderProxyImpl;
 import net.itattractor.Ticket;
 
 import javax.swing.*;
@@ -17,12 +18,14 @@ public class TasksForm {
     private JButton startButton;
     private JButton refreshButton;
     private TasksFormActionListener actionListener;
-    public TasksForm(){
+    private TaskReader taskReader;
+
+    public TasksForm() {
 
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(actionListener != null){
+                if (actionListener != null) {
                     Ticket currentTicket = new Ticket(tasksComboBox.getSelectedItem().toString());
                     actionListener.startPressed(currentTicket);
                 }
@@ -31,17 +34,7 @@ public class TasksForm {
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tasksComboBox.removeAllItems();
-                TaskReader taskReader = null;
-                try {
-                    taskReader = new TaskReader();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
-                Ticket[] tiket = taskReader.getTickets();
-                for (Ticket aTiket : tiket) {
-                    tasksComboBox.addItem(aTiket);
-                }
+                fillComboBox();
             }
         });
 
@@ -49,12 +42,8 @@ public class TasksForm {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    try {
-                        Ticket currentTicket = new Ticket(tasksComboBox.getSelectedItem().toString());
-                        actionListener.startPressed(currentTicket);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
+                    Ticket currentTicket = new Ticket(tasksComboBox.getSelectedItem().toString());
+                    actionListener.startPressed(currentTicket);
                 }
             }
         });
@@ -63,12 +52,8 @@ public class TasksForm {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    try {
-                        Ticket currentTicket = new Ticket(tasksComboBox.getSelectedItem().toString());
-                        actionListener.startPressed(currentTicket);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
+                    Ticket currentTicket = new Ticket(tasksComboBox.getSelectedItem().toString());
+                    actionListener.startPressed(currentTicket);
                 }
             }
         });
@@ -77,15 +62,20 @@ public class TasksForm {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    try {
-                        Ticket currentTicket = new Ticket(tasksComboBox.getSelectedItem().toString());
-                        actionListener.startPressed(currentTicket);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
+                    Ticket currentTicket = new Ticket(tasksComboBox.getSelectedItem().toString());
+                    actionListener.startPressed(currentTicket);
                 }
             }
         });
+    }
+
+    public void fillComboBox() {
+        tasksComboBox.removeAllItems();
+        taskReader = new TaskReaderImpl();
+        Ticket[] tickets = taskReader.getTickets();
+        for (Ticket ticket : tickets) {
+            tasksComboBox.addItem(ticket);
+        }
     }
 
     public JPanel getContentPanel() {
@@ -94,10 +84,5 @@ public class TasksForm {
 
     public void setActionListener(TasksFormActionListener actionListener) {
         this.actionListener = actionListener;
-    }
-
-    private void createUIComponents() throws Exception {
-        TaskReader taskReader = new TaskReader();
-        tasksComboBox = new JComboBox<Object>(taskReader.getTickets());
     }
 }

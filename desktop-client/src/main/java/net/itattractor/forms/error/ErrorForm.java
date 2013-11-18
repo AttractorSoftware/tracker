@@ -1,4 +1,4 @@
-package net.itattractor.forms.Error;
+package net.itattractor.forms.error;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -2,39 +2,27 @@ package net.itattractor.features;
 
 import net.itattractor.AppLauncher;
 import net.itattractor.Config;
+import net.itattractor.screenshot.Timer;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
-
-import java.awt.*;
 
 public class Adapter implements UISpecAdapter {
 
     private AppLauncher appLauncher;
+    private Timer screenshotTimer;
 
     public Adapter(){
         appLauncher = new AppLauncher();
         Config.setValue("testMode","true");
-        appLauncher.start();
+        appLauncher.init();
     }
 
     @Override
     public Window getMainWindow() {
-        return new Window(appLauncher.getLoginFrame());
+        return new Window(appLauncher.getMainFrame());
     }
 
-    public Window getTasksWindow(){
-        return new Window(appLauncher.getTasksFrame());
-    }
-
-    public Window getRecordWindow(){
-        return new Window(appLauncher.getRecordFrame());
-    }
-
-    public TrayIcon getTrayIcon() {
-        return appLauncher.getTrayIcon();
-    }
-
-    public AppLauncher getAppLauncher(){
-        return appLauncher;
+    public Timer getScreenshotTimer() {
+        return appLauncher.getScreenshotTimer();
     }
 }

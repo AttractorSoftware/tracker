@@ -35,7 +35,7 @@ public class LoginFormController implements LoginFormActionListener {
 
             if (provider.isAuthenticated()) {
                 manager.hide();
-                manager.setState(manager.getTasksWindowState());
+                manager.setState(manager.getTasksFormState());
                 manager.show();
             } else
                 showDialog("Wrong username or password. Try again!");

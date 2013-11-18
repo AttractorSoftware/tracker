@@ -3,14 +3,14 @@ package net.itattractor.forms.record;
 import net.itattractor.Ticket;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class RecordForm {
-    private Ticket currentTicket;
+    private Ticket ticket;
+
     private JPanel contentPanel;
     private JLabel currentTaskLabel;
     private JTextArea descriptionTextArea;
@@ -20,24 +20,19 @@ public class RecordForm {
     private JTextPane currentTaskPane;
     private RecordFormActionListener actionListener;
 
-    public RecordForm(final Ticket currentTicket) {
-        this.currentTicket = currentTicket;
+    public RecordForm() {
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(actionListener != null) {
-                    try {
-                        actionListener.okPressed(currentTicket);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
+                if (actionListener != null) {
+                    actionListener.okPressed(ticket);
                 }
             }
         });
         switchTaskButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(actionListener != null){
+                if (actionListener != null) {
                     actionListener.switchPressed();
                 }
             }
@@ -48,7 +43,7 @@ public class RecordForm {
             public void keyPressed(KeyEvent e) {
                 if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyCode() == KeyEvent.VK_ENTER) {
                     try {
-                        actionListener.okPressed(currentTicket);
+                        actionListener.okPressed(ticket);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -61,7 +56,7 @@ public class RecordForm {
             public void keyPressed(KeyEvent e) {
                 if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyCode() == KeyEvent.VK_ENTER) {
                     try {
-                        actionListener.okPressed(currentTicket);
+                        actionListener.okPressed(ticket);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -74,7 +69,7 @@ public class RecordForm {
             public void keyPressed(KeyEvent e) {
                 if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyCode() == KeyEvent.VK_ENTER) {
                     try {
-                        actionListener.okPressed(currentTicket);
+                        actionListener.okPressed(ticket);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -87,7 +82,7 @@ public class RecordForm {
             public void keyPressed(KeyEvent e) {
                 if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyCode() == KeyEvent.VK_ENTER) {
                     try {
-                        actionListener.okPressed(currentTicket);
+                        actionListener.okPressed(ticket);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -100,7 +95,7 @@ public class RecordForm {
             public void keyPressed(KeyEvent e) {
                 if (e.getModifiers() == KeyEvent.CTRL_MASK && e.getKeyCode() == KeyEvent.VK_ENTER) {
                     try {
-                        actionListener.okPressed(currentTicket);
+                        actionListener.okPressed(ticket);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -109,9 +104,10 @@ public class RecordForm {
         });
     }
 
-    public RecordForm() {
+    public RecordForm(Ticket ticket) {
         //To change body of created methods use File | Settings | File Templates.
     }
+
 
     public JPanel getContentPanel() {
         return contentPanel;
@@ -130,8 +126,14 @@ public class RecordForm {
     }
 
     private void createUIComponents() {
-        currentTaskPane = new JTextPane();
-        currentTaskPane.setText(currentTicket.toString());
         periodTimeSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 60, 1));
+    }
+
+    public void setTicketText() {
+        currentTaskPane.setText(ticket.toString());
+    }
+
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
     }
 }

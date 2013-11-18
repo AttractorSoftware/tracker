@@ -33,7 +33,7 @@ public class Driver {
 
     public static void reset() {
        if(clientInstance != null) {
-           Timer screenshotTimer = (Timer) clientInstance.getAppLauncher().getScreenshotTimer();
+           Timer screenshotTimer = (Timer) clientInstance.getScreenshotTimer();
            if(screenshotTimer != null){
                screenshotTimer.setFinished(true);
            }

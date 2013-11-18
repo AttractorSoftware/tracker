@@ -54,6 +54,10 @@ public class LogWriter {
         }
     }
 
+    public LogWriter() {
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
     public void saveStart() {
         if (doc != null) {
             Node tasks = doc.getFirstChild();

@@ -4,7 +4,7 @@ public class Main {
     public static void main(String args[])
     {
         AppLauncher appLauncher = new AppLauncher();
-        appLauncher.start();
+        appLauncher.init();
 
         Thread.setDefaultUncaughtExceptionHandler(new Handler());
     }

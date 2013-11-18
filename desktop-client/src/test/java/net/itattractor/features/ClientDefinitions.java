@@ -3,6 +3,7 @@ package net.itattractor.features;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.И;
 import cucumber.api.java.ru.Тогда;
+import net.itattractor.Config;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.uispec4j.Window;
@@ -30,7 +31,7 @@ public class ClientDefinitions {
 
     @И("^выбираю первую в списке задачу$")
     public void выбираю_первую_в_списке_задачу() throws Throwable {
-        tasksWindow = Driver.getClientInstance().getTasksWindow();
+        tasksWindow = Driver.getClientInstance().getMainWindow();
         String selectedTicket = tasksWindow.getComboBox().getAwtComponent().getSelectedItem().toString();
         tasksWindow.getComboBox().select(selectedTicket);
         ticketId = selectedTicket.substring(1, selectedTicket.indexOf(':'));
@@ -42,7 +43,7 @@ public class ClientDefinitions {
     @И("^пишу \"([^\"]*)\" и начинаю отслеживание$")
     public void пишу_и_начинаю_отслеживание(String comment) throws Throwable {
         CommonData.comment = comment;
-        recordWindow = Driver.getClientInstance().getRecordWindow();
+        recordWindow = Driver.getClientInstance().getMainWindow();
         recordWindow.getInputTextBox("descriptionTextArea").setText(comment);
         recordWindow.getButton("okButton").click();
     }
@@ -104,21 +105,21 @@ public class ClientDefinitions {
     @И("^нажимаю кнопку обновить список тикетов$")
     public void нажимаю_кнопку_обновить_список_тикетов() throws Throwable {
 
-        Driver.getClientInstance().getTasksWindow().getButton("Refresh").click();
+        Driver.getClientInstance().getMainWindow().getButton("Refresh").click();
 
     }
 
     @Тогда("^не вижу в списке последний добавленный тикет$")
     public void не_вижу_в_списке_последний_добавленный_тикет() throws Throwable {
 
-        Assertion contains = Driver.getClientInstance().getTasksWindow().getComboBox().contains(
+        Assertion contains = Driver.getClientInstance().getMainWindow().getComboBox().contains(
                 CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         Assert.assertEquals(false, contains.isTrue());
     }
 
     @Тогда("^вижу в списке последний добавленный тикет$")
     public void вижу_в_списке_последний_добавленный_тикет() throws Throwable {
-        Assertion contains = Driver.getClientInstance().getTasksWindow().getComboBox().contains(
+        Assertion contains = Driver.getClientInstance().getMainWindow().getComboBox().contains(
                 CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         Assert.assertEquals(true, contains.isTrue());
     }
@@ -134,7 +135,7 @@ public class ClientDefinitions {
     @И("^выбираю последний созданный тикет$")
     public void выбираю_последний_созданный_тикет() throws Throwable {
 
-        tasksWindow = Driver.getClientInstance().getTasksWindow();
+        tasksWindow = Driver.getClientInstance().getMainWindow();
         tasksWindow.getComboBox().select(CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         tasksWindow.getButton("start").click();
 
@@ -142,6 +143,7 @@ public class ClientDefinitions {
 
     @Before
     public void closeClient(){
+        Config.init();
         try {
             Driver.reset();
         }

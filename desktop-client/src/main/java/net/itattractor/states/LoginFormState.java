@@ -1,6 +1,7 @@
 package net.itattractor.states;
 
 import net.itattractor.forms.login.LoginForm;
+import net.itattractor.manager.WindowManager;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
@@ -9,6 +10,7 @@ import java.awt.event.WindowStateListener;
 public class LoginFormState implements State {
     private JFrame frame;
     private LoginForm form;
+    private WindowManager manager;
 
     @Override
     public void show() {
@@ -39,5 +41,9 @@ public class LoginFormState implements State {
     @Override
     public void hide() {
         frame.setVisible(false);
+    }
+
+    public void setManager(WindowManager manager) {
+        this.manager = manager;
     }
 }
