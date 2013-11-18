@@ -23,7 +23,6 @@ public class Timer extends Thread {
             try {
                 Thread.sleep(this.checkCreatePeriod);
                 if(shouldExecute()) {
-                    System.out.println("Timer.run");
                     for(Map.Entry<Integer,Command> entry : commandList.entrySet()){
                         entry.getValue().execute();
                     }
