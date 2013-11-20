@@ -2,14 +2,13 @@ package net.itattractor.features;
 
 import net.itattractor.AppLauncher;
 import net.itattractor.Config;
-import net.itattractor.screenshot.Timer;
+import net.itattractor.screenshot.TimerTaskImpl;
 import org.uispec4j.UISpecAdapter;
 import org.uispec4j.Window;
 
 public class Adapter implements UISpecAdapter {
 
     private AppLauncher appLauncher;
-    private Timer screenshotTimer;
 
     public Adapter(){
         appLauncher = new AppLauncher();
@@ -22,7 +21,7 @@ public class Adapter implements UISpecAdapter {
         return new Window(appLauncher.getMainFrame());
     }
 
-    public Timer getScreenshotTimer() {
-        return appLauncher.getScreenshotTimer();
+    public TimerTaskImpl getTimerTask() {
+        return appLauncher.getTimerTask();
     }
 }

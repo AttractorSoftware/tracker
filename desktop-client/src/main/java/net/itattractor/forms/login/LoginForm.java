@@ -1,7 +1,12 @@
 package net.itattractor.forms.login;
 
+import net.itattractor.Config;
+
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class LoginForm {
     private JPanel contentPanel;
@@ -115,5 +120,10 @@ public class LoginForm {
 
     public JPasswordField getPasswordField() {
         return passwordField;
+    }
+
+    private void createUIComponents() {
+        urlField = new JTextField(Config.getValue("url"));
+        usernameField = new JTextField(Config.getValue("username"));
     }
 }

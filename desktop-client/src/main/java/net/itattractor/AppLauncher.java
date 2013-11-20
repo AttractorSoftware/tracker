@@ -7,7 +7,7 @@ import net.itattractor.forms.login.LoginForm;
 import net.itattractor.forms.record.RecordForm;
 import net.itattractor.forms.tasks.TasksForm;
 import net.itattractor.manager.WindowManager;
-import net.itattractor.screenshot.Timer;
+import net.itattractor.screenshot.TimerTaskImpl;
 import net.itattractor.states.LoginFormState;
 import net.itattractor.states.RecordFormState;
 import net.itattractor.states.TasksFormState;
@@ -16,7 +16,6 @@ import javax.swing.*;
 
 public class AppLauncher {
     private WindowManager manager;
-    private Timer screenshotTimer;
     private TasksFormController tasksFormController;
 
     public static void main(String[] args) {
@@ -47,7 +46,8 @@ public class AppLauncher {
         manager.init();
 
         LoginFormController loginFormController = new LoginFormController(loginForm, manager);
-        tasksFormController = new TasksFormController(tasksForm, manager);
+        tasksFormController = new TasksFormController(manager);
+        tasksForm.setActionListener(tasksFormController);
         if (!Boolean.parseBoolean(Config.getValue("testMode"))) {
             Config.setValue("screenshotPeriod", "60000");
             tasksFormController.setTimeProvider(new SystemTimeProvider());
@@ -65,7 +65,7 @@ public class AppLauncher {
         return manager.getFrame();
     }
 
-    public Timer getScreenshotTimer() {
-        return tasksFormController.getScreenshotTimer();
+    public TimerTaskImpl getTimerTask() {
+        return tasksFormController.getTimerTask();
     }
 }

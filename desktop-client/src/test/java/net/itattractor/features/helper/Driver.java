@@ -1,7 +1,7 @@
 package net.itattractor.features.helper;
 
 import net.itattractor.features.Adapter;
-import net.itattractor.screenshot.Timer;
+import net.itattractor.features.UITester;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -33,10 +33,10 @@ public class Driver {
 
     public static void reset() {
        if(clientInstance != null) {
-           Timer screenshotTimer = clientInstance.getScreenshotTimer();
-           if(screenshotTimer != null){
-               screenshotTimer.setFinished(true);
+           if (clientInstance.getTimerTask() != null) {
+               clientInstance.getTimerTask().cancel();
            }
+           UITester.removeAllWindowsFromAwtAppContext();
            clientInstance = null;
        }
     }

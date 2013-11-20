@@ -22,7 +22,6 @@ import java.util.Date;
 
 public class ClientDefinitions {
 
-    private Window loginWindow;
     private Window tasksWindow;
     private Window recordWindow;
     private String ticketId;
@@ -109,16 +108,16 @@ public class ClientDefinitions {
 
     }
 
-    @Тогда("^не вижу в списке последний добавленный тикет$")
-    public void не_вижу_в_списке_последний_добавленный_тикет() throws Throwable {
+    @Тогда("^не вижу в списке последний созданный тикет$")
+    public void не_вижу_в_списке_последний_созданный_тикет() throws Throwable {
 
         Assertion contains = Driver.getClientInstance().getMainWindow().getComboBox().contains(
                 CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         Assert.assertEquals(false, contains.isTrue());
     }
 
-    @Тогда("^вижу в списке последний добавленный тикет$")
-    public void вижу_в_списке_последний_добавленный_тикет() throws Throwable {
+    @Тогда("^вижу в списке последний созданный тикет$")
+    public void вижу_в_списке_последний_созданный_тикет() throws Throwable {
         Assertion contains = Driver.getClientInstance().getMainWindow().getComboBox().contains(
                 CommonData.latestTicketId + ": " + CommonData.latestTicketSummary);
         Assert.assertEquals(true, contains.isTrue());

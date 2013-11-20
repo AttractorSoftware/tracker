@@ -1,25 +1,23 @@
 package net.itattractor.controller;
 
 import net.itattractor.*;
-import net.itattractor.forms.tasks.TasksForm;
 import net.itattractor.forms.tasks.TasksFormActionListener;
 import net.itattractor.manager.WindowManager;
-import net.itattractor.screenshot.*;
-import net.itattractor.screenshot.Timer;
+import net.itattractor.screenshot.Creator;
+import net.itattractor.screenshot.Sender;
+import net.itattractor.screenshot.TimerTaskImpl;
+
+import java.util.Timer;
 
 public class TasksFormController implements TasksFormActionListener {
-    private final TasksForm tasksForm;
     private final WindowManager manager;
     private LogWriter logWriter;
-    private Timer screenshotTimer;
+    private TimerTaskImpl timerTask;
 
     private TimeProvider timeProvider;
 
-    private Thread screnshotThread;
-    public TasksFormController(TasksForm tasksForm, WindowManager manager) {
-        this.tasksForm = tasksForm;
+    public TasksFormController(WindowManager manager) {
         this.manager = manager;
-        this.tasksForm.setActionListener(this);
     }
 
     @Override
@@ -27,17 +25,18 @@ public class TasksFormController implements TasksFormActionListener {
         logWriter = new LogWriter(ticket);
         logWriter.saveStart();
         EventCounter.ActivateEvent();
-        screenshotTimer = new net.itattractor.screenshot.Timer();
-        screenshotTimer.setTimeProvider(timeProvider);
+        timerTask = new TimerTaskImpl();
+        timerTask.setTimeProvider(timeProvider);
 
         Creator creator = new Creator(ticket);
         creator.setTimeProvider(timeProvider);
         Sender sender = new Sender();
 
-        screenshotTimer.addCommand(1, creator);
-        screenshotTimer.addCommand(2, sender);
-        screnshotThread = new Thread(screenshotTimer);
-        screnshotThread.start();
+        timerTask.addCommand(1, creator);
+        timerTask.addCommand(2, sender);
+
+        Timer timer = new Timer();
+        timer.schedule(timerTask, 0, Integer.parseInt(Config.getValue("screenshotCheckCreatePeriod")));
 
         manager.hide();
         manager.getRecordFormState().setTicket(ticket);
@@ -46,8 +45,8 @@ public class TasksFormController implements TasksFormActionListener {
     }
 
 
-    public Timer getScreenshotTimer() {
-        return screenshotTimer;
+    public TimerTaskImpl getTimerTask() {
+        return timerTask;
     }
 
     public void setTimeProvider(TimeProvider timeProvider) {

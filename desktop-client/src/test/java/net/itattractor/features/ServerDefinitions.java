@@ -27,8 +27,8 @@ public class ServerDefinitions {
         Driver.getServerInstance().findElement(By.xpath("//a[text()='" + tab + "']")).click();
     }
 
-    @То("^вижу скриншот юзера \"([^\"]*)\" с количеством кликаний мышью \"([^\"]*)\" и нажатием клавиатуры \"([^\"]*)\" раз$")
-    public void вижу_скриншот_юзера_с_количеством_кликаний_мышью_и_нажатием_клавиатуры_раз(String username, String clickCount, String pressCount) throws Throwable {
+    @То("^вижу скриншот юзера с количеством кликаний мышью \"([^\"]*)\" и нажатием клавиатуры \"([^\"]*)\" раз$")
+    public void вижу_скриншот_юзера_с_количеством_кликаний_мышью_и_нажатием_клавиатуры_раз(String clickCount, String pressCount) throws Throwable {
         List<WebElement> elements = Driver.getServerInstance().findElements(By.className("tracker-image"));
         WebElement element = elements.get(elements.size() - 1);
 
@@ -115,7 +115,7 @@ public class ServerDefinitions {
 
     @Тогда("^вижу у последнего созданного тикета \"([^\"]*)\" наработанных минут$")
     public void вижу_у_последнего_созданного_тикета_наработанных_минут(String mins) throws Throwable {
-        Thread.sleep(5000);
+//        Thread.sleep(5000);
         WebElement element = elementWaitByXpath("//div[@id='content']//div[@id='" + CommonData.latestTicketSummary + "']//b[@id='min']");
         Assert.assertEquals(element.getText(), mins);
     }

@@ -1,11 +1,9 @@
 package net.itattractor.screenshot;
 
 import java.io.File;
-import java.util.Date;
 
 public class Screenshot {
 
-    private Integer id = null;
     private Integer ticketId = null;
     private Integer mouseEventCount = 0;
     private Integer keyboardEventCount = 0;
@@ -38,10 +36,6 @@ public class Screenshot {
         this.keyboardEventCount = keyboardEventCount;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
@@ -54,19 +48,16 @@ public class Screenshot {
         this.time = time;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public File getFileBody() {
         return fileBody;
     }
 
     public void setFileBody(File fileBody) {
         this.fileBody = fileBody;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s : %s : %s : %s ", ticketId, mouseEventCount, keyboardEventCount, time);
     }
 }
