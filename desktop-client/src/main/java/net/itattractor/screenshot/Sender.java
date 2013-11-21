@@ -60,7 +60,6 @@ public class Sender implements Command {
                 entity.addPart("keyboard_event_count", new StringBody(Integer.toString(screenshot.getKeyboardEventCount())));
                 httpPost.setEntity(entity);
                 httpClient.execute(httpPost);
-                System.out.println(screenshot.toString());
 
             } catch (Exception e) {
                 e.printStackTrace();
