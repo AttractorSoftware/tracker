@@ -1,9 +1,9 @@
 package net.itattractor.controller;
 
-import net.itattractor.CommentSender;
 import net.itattractor.Config;
 import net.itattractor.LogWriter;
 import net.itattractor.Ticket;
+import net.itattractor.WorkLogSender;
 import net.itattractor.forms.record.RecordForm;
 import net.itattractor.forms.record.RecordFormActionListener;
 import net.itattractor.manager.WindowManager;
@@ -16,7 +16,7 @@ public class RecordFormController implements RecordFormActionListener {
     private final RecordForm recordForm;
     private final WindowManager manager;
     private String lastComment = "";
-    private CommentSender commentSender;
+    private WorkLogSender workLogSender;
     private LogWriter logWriter;
     private Timer timer;
 
@@ -34,7 +34,7 @@ public class RecordFormController implements RecordFormActionListener {
         if (hasDescriptionChanged(descriptionTextArea))
         {
             logWriter.saveDescription(descriptionTextArea.getText());
-            commentSender.sendComment(currentTicket.getTicketId(), descriptionTextArea.getText());
+            workLogSender.sendWorkLog(currentTicket.getTicketId(), descriptionTextArea.getText());
         }
         pause();
         lastComment = descriptionTextArea.getText();
@@ -64,7 +64,7 @@ public class RecordFormController implements RecordFormActionListener {
         manager.show();
     }
 
-    public void setCommentSender(CommentSender commentSender) {
-        this.commentSender = commentSender;
+    public void setWorkLogSender(WorkLogSender workLogSender) {
+        this.workLogSender = workLogSender;
     }
 }

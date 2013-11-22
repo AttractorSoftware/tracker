@@ -18,14 +18,7 @@ public class AppLauncher {
     private WindowManager manager;
     private TasksFormController tasksFormController;
 
-    public static void main(String[] args) {
-        AppLauncher launcher2 = new AppLauncher();
-        launcher2.init();
-
-    }
-
     public void init(){
-        Config.init();
         manager = new WindowManager();
 
         LoginForm  loginForm = new LoginForm();
@@ -57,7 +50,7 @@ public class AppLauncher {
         }
 
         RecordFormController recordFormController = new RecordFormController(recordForm, manager);
-        recordFormController.setCommentSender(new CommentSender());
+        recordFormController.setWorkLogSender(new WorkLogSender());
         loginFormController.start();
     }
 

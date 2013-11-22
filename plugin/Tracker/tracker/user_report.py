@@ -94,7 +94,7 @@ class TrackerUserReportModule(Component):
         screenshots = []
         query = "SELECT s.id, t.id as ticketId, t.summary, s.interval, s.mouse_event_count, " \
                 "s.keyboard_event_count, s.filename, s.author, s.path, s.time " \
-                "FROM tracker_screenshots s " \
+                "FROM time_slot s " \
                 "INNER JOIN ticket t ON t.id = s.ticket_id " \
                 "WHERE s.author = '" + username + "' AND s.time > '" + fromDMY + "' AND s.time < '" + toDMY + "'"
         for id, ticketId, summary, interval, mouse_event_count, keyboard_event_count, filename, author, path, time in self.env.db_query(query):

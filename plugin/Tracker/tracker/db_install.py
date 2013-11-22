@@ -4,7 +4,7 @@ from trac.core import *
 
 from trac.env import IEnvironmentSetupParticipant
 
-last_db_version = 1
+last_db_version = 2
 
 
 class TrackerInit(Component):

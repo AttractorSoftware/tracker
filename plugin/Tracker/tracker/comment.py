@@ -39,7 +39,7 @@ class Screenshot(object):
         with targetfile:
             with self.env.db_transaction as db:
                 db(
-                    "INSERT INTO tracker_screenshots(filename, author, path, time, mouse_event_count, keyboard_event_count, ticket_id, interval) VALUES(%s, %s, %s, %s, %s, %s, %s, %s )",
+                    "INSERT INTO time_slot(filename, author, path, time, mouse_event_count, keyboard_event_count, ticket_id, interval) VALUES(%s, %s, %s, %s, %s, %s, %s, %s )",
                     (filename, author, file_dir, str(long(time) / 1000), mouse_event_count, keyboard_event_count,
                      ticket_id, interval))
                 shutil.copyfileobj(fileobject, targetfile)
@@ -91,12 +91,11 @@ class TrackerUploaderAndCommentAdderModule(Component):
     def _add_comment(self, req):
         timeNow = datetime.now(utc)
         with self.env.db_transaction as db:
-            if (db("""INSERT INTO ticket_change (ticket, time, author, field, newvalue)
-                          VALUES (%s, %s, %s, %s, %s)
+            if (db("""INSERT INTO work_log (ticket_id, time, author, content)
+                          VALUES (%s, %s, %s, %s)
                           """, (req.args['ticketId'],
                                 to_utimestamp(timeNow),
                                 req.args['author'],
-                                "comment",
                                 req.args['comment']))):
                 return True
             else:

@@ -70,7 +70,7 @@ class TrackerScreenshotMarkerModule(Component):
     def at_this_date_there_are_screenshots(self, date, user_name):
 
         if self.env.db_query(
-                                                "SELECT strftime('%d/%m/%Y', datetime(time, 'unixepoch')) AS countScreenshots FROM tracker_screenshots WHERE countScreenshots = \"" + date + "\" AND author = \"" + user_name + "\""):
+                                                "SELECT strftime('%d/%m/%Y', datetime(time, 'unixepoch')) AS countScreenshots FROM time_slot WHERE countScreenshots = \"" + date + "\" AND author = \"" + user_name + "\""):
             return True
         else:
             return False

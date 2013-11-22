@@ -21,7 +21,7 @@ class TicketTable(object):
     def calculate_tracked_time_for_ticket(cls, env, ticket_id):
         with env.db_transaction as db:
             screenshots = db("""
-                SELECT * FROM tracker_screenshots
+                SELECT * FROM time_slot
                 WHERE  ticket_id = """ + str(ticket_id))
 
         return len(screenshots) * 10

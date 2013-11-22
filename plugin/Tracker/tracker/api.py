@@ -41,7 +41,7 @@ class TrackerApi(object):
         return self._get_items(
             context,
             date,
-            'tracker_screenshots',
+            'time_slot',
             ('id',
              'filename',
              'author',
@@ -55,14 +55,14 @@ class TrackerApi(object):
             'author = %s', (username,))
 
     def get_screenshot(self, context, id):
-        screenshot = self._get_items(context, None, 'tracker_screenshots', ('id', 'filename', 'author', 'path', 'time'),
+        screenshot = self._get_items(context, None, 'time_slot', ('id', 'filename', 'author', 'path', 'time'),
                                      False,
                                      'id = %s', (id,))
 
         return screenshot if screenshot else None
 
     def get_users(self, context):
-        users = self._get_items(context, None, 'tracker_screenshots', ('author',), True, '')
+        users = self._get_items(context, None, 'time_slot', ('author',), True, '')
         return users if users else None
 
     def get_screenshot_by_time(self):

@@ -13,8 +13,8 @@ public class CommentSenderTest {
 
     @Test
     public void testSendComment() throws Exception {
-        CommentSender commentSender = new CommentSender();
+        WorkLogSender workLogSender = new WorkLogSender();
 
-        Assert.assertTrue(commentSender.sendComment(4, "test87 test2 test2"));
+        Assert.assertTrue(workLogSender.sendWorkLog(4, "test87 test2 test2"));
     }
 }

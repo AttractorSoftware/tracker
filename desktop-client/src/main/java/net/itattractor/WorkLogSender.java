@@ -13,15 +13,15 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommentSender {
+public class WorkLogSender {
     private static final String LOGIN_URL_PART = "/login/";
     private static final String TRACKER_URL_PART = "/tracker";
     private ConnectionProvider connectionProvider;
 
-    public CommentSender() {
+    public WorkLogSender() {
     }
 
-    public boolean sendComment(int ticketId, String comment) {
+    public boolean sendWorkLog(int ticketId, String comment) {
 
         connectionProvider = ConnectionProvider.getInstance();
 
