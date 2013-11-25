@@ -13,12 +13,16 @@ import net.itattractor.states.RecordFormState;
 import net.itattractor.states.TasksFormState;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class AppLauncher {
     private WindowManager manager;
     private TasksFormController tasksFormController;
+    private static Tray tray;
 
     public void init(){
+
+        Config.init();
         manager = new WindowManager();
 
         LoginForm  loginForm = new LoginForm();
@@ -52,6 +56,14 @@ public class AppLauncher {
         RecordFormController recordFormController = new RecordFormController(recordForm, manager);
         recordFormController.setWorkLogSender(new WorkLogSender());
         loginFormController.start();
+
+        tray = new Tray();
+        tray.setManager(manager);
+        tray.init();
+    }
+
+    public static Tray getTray() {
+        return tray;
     }
 
     public JFrame getMainFrame() {
