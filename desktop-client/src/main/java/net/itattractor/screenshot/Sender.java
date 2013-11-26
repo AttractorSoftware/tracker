@@ -14,9 +14,6 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 public class Sender implements Command {
@@ -41,7 +38,6 @@ public class Sender implements Command {
                 HttpResponse response;
 
                 response = httpClient.execute(httpGet);
-                logger(response);
                 EntityUtils.consume(response.getEntity());
 
                 List<Cookie> cookieList =  httpClient.getCookieStore().getCookies();
@@ -54,7 +50,7 @@ public class Sender implements Command {
                 entity.addPart("username", new StringBody(connectionProvider.getUsername()));
                 entity.addPart("action", new StringBody("addScreenshot"));
                 entity.addPart("ticket_id", new StringBody(String.valueOf(screenshot.getTicketId())));
-                entity.addPart("interval", new StringBody(Config.getValue("screenshotPeriod")));
+                entity.addPart("interval", new StringBody(Config.getValue("timeSlotPeriod")));
                 entity.addPart("time", new StringBody(screenshot.getTime()));
                 entity.addPart("mouse_event_count", new StringBody(Integer.toString(screenshot.getMouseEventCount())));
                 entity.addPart("keyboard_event_count", new StringBody(Integer.toString(screenshot.getKeyboardEventCount())));
@@ -79,15 +75,4 @@ public class Sender implements Command {
         return null;
     }
 
-    private static void logger(HttpResponse httpResponse) throws IOException {
-
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-        StringBuffer stringBuffer = new StringBuffer();
-        String line;
-
-        while ((line = bufferedReader.readLine()) != null) {
-            stringBuffer.append("\n" + line);
-        }
-
-    }
 }

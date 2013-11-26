@@ -1,7 +1,5 @@
 package net.itattractor.states;
 
-import net.itattractor.manager.WindowManager;
-
 import javax.swing.*;
 
 public interface State {
@@ -11,5 +9,4 @@ public interface State {
 
     void hide();
 
-    void setManager(WindowManager windowManager);
 }

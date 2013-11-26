@@ -3,9 +3,11 @@ package net.itattractor;
 import net.itattractor.controller.LoginFormController;
 import net.itattractor.controller.RecordFormController;
 import net.itattractor.controller.TasksFormController;
+import net.itattractor.controller.TrayController;
 import net.itattractor.forms.login.LoginForm;
 import net.itattractor.forms.record.RecordForm;
 import net.itattractor.forms.tasks.TasksForm;
+import net.itattractor.forms.tray.Tray;
 import net.itattractor.manager.WindowManager;
 import net.itattractor.screenshot.TimerTaskImpl;
 import net.itattractor.states.LoginFormState;
@@ -13,16 +15,12 @@ import net.itattractor.states.RecordFormState;
 import net.itattractor.states.TasksFormState;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class AppLauncher {
     private WindowManager manager;
     private TasksFormController tasksFormController;
-    private static Tray tray;
 
     public void init(){
-
-        Config.init();
         manager = new WindowManager();
 
         LoginForm  loginForm = new LoginForm();
@@ -39,31 +37,25 @@ public class AppLauncher {
         RecordForm recordForm = new RecordForm();
         recordFormState.setForm(recordForm);
         manager.setRecordFormState(recordFormState);
+        recordFormState.setManager(manager);
 
         manager.init();
 
         LoginFormController loginFormController = new LoginFormController(loginForm, manager);
         tasksFormController = new TasksFormController(manager);
         tasksForm.setActionListener(tasksFormController);
-        if (!Boolean.parseBoolean(Config.getValue("testMode"))) {
-            Config.setValue("screenshotPeriod", "60000");
-            tasksFormController.setTimeProvider(new SystemTimeProvider());
-        } else {
-            Config.setValue("screenshotPeriod", "10000");
-            tasksFormController.setTimeProvider(new FakeTimeProvider());
-        }
+        tasksFormController.setTimeProvider(createTimeProvider());
 
         RecordFormController recordFormController = new RecordFormController(recordForm, manager);
         recordFormController.setWorkLogSender(new WorkLogSender());
         loginFormController.start();
 
-        tray = new Tray();
-        tray.setManager(manager);
-        tray.init();
+        Tray tray = new Tray();
+        new TrayController(manager, tray);
     }
 
-    public static Tray getTray() {
-        return tray;
+    private TimeProvider createTimeProvider() {
+        return Boolean.parseBoolean(Config.getValue("testMode")) ?  new FakeTimeProvider() : new SystemTimeProvider();
     }
 
     public JFrame getMainFrame() {

@@ -25,10 +25,6 @@ public class WindowManager {
         state = loginFormState;
     }
 
-    public LoginFormState getLoginFormState() {
-        return loginFormState;
-    }
-
     public TasksFormState getTasksFormState() {
         return tasksFormState;
     }
@@ -43,17 +39,14 @@ public class WindowManager {
 
     public void setLoginFormState(LoginFormState loginFormState) {
         this.loginFormState = loginFormState;
-        loginFormState.setManager(this);
     }
 
     public void setTasksFormState(TasksFormState tasksFormState) {
         this.tasksFormState = tasksFormState;
-        tasksFormState.setManager(this);
     }
 
     public void setRecordFormState(RecordFormState recordFormState) {
         this.recordFormState = recordFormState;
-        recordFormState.setManager(this);
     }
 
     public JFrame getFrame() {

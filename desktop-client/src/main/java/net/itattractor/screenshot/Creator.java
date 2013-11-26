@@ -1,12 +1,14 @@
 package net.itattractor.screenshot;
 
-import net.itattractor.*;
+import net.itattractor.Config;
+import net.itattractor.EventCounter;
+import net.itattractor.Ticket;
+import net.itattractor.TimeProvider;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 public class Creator implements Command {
 
@@ -19,36 +21,39 @@ public class Creator implements Command {
 
     @Override
     public void execute() {
+        Queue.append(createScreenshot());
+        EventCounter.reset();
+    }
 
-        Robot robot = null;
-
+    private Screenshot createScreenshot() {
+        Screenshot screenshot = null;
         try {
-            robot = new Robot();
-        } catch (AWTException e) { e.printStackTrace(); }
-
-        try {
-
+            Robot robot = new Robot();
             BufferedImage screenshotImage = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-            String screenshotFileName = timeProvider.getDate() + "." + Config.getValue("screenshotExtension");
-            String screenshotFilePath = System.getProperty("user.home") + Config.getValue("screenshotDirectory") + screenshotFileName;
+            String screenshotFileName = screenShotFileName();
+            String screenshotFilePath = screenShotPath(screenshotFileName);
             File screenshotFile = new File(screenshotFilePath);
             ImageIO.write(screenshotImage, Config.getValue("screenshotExtension"), screenshotFile);
 
-            Screenshot screenshot = new Screenshot();
+            screenshot = new Screenshot();
             screenshot.setTicketId(this.ticket.getTicketId());
             screenshot.setFileBody(screenshotFile);
             screenshot.setFileName(screenshotFileName);
             screenshot.setTime(Long.toString(timeProvider.getTimeInMilliseconds()));
             screenshot.setKeyboardEventCount(EventCounter.keyCounter);
             screenshot.setMouseEventCount(EventCounter.mouseCounter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return screenshot;
+    }
 
-            Queue.append(screenshot);
+    private String screenShotPath(String screenshotFileName) {
+        return System.getProperty("user.home") + Config.getValue("screenshotDirectory") + screenshotFileName;
+    }
 
-            EventCounter.keyCounter = 0;
-            EventCounter.mouseCounter = 0;
-
-        } catch (IOException e) { e.printStackTrace(); }
-
+    private String screenShotFileName() {
+        return timeProvider.getDate() + "." + Config.getValue("screenshotExtension");
     }
 
     public void setTicket(Ticket ticket) {

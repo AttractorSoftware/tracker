@@ -14,18 +14,11 @@ public class RecordFormState implements State {
     private Ticket ticket;
     private WindowManager manager;
 
-    @Override
-
-    public void show() {
+    public RecordFormState() {
         frame = new JFrame("record");
-        form.setTicket(ticket);
-        form.setTicketText();
-        frame.add(form.getContentPanel());
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setSize(500, 300);
-        frame.setVisible(true);
-
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -34,7 +27,14 @@ public class RecordFormState implements State {
                 manager.show();
             }
         });
+    }
 
+    @Override
+    public void show() {
+        form.setTicket(ticket);
+        form.setTicketText();
+        frame.add(form.getContentPanel());
+        frame.setVisible(true);
     }
 
     @Override
@@ -42,7 +42,6 @@ public class RecordFormState implements State {
         frame.setVisible(false);
     }
 
-    @Override
     public void setManager(WindowManager windowManager) {
         this.manager = windowManager;
     }

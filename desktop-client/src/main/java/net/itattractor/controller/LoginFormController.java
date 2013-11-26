@@ -10,7 +10,6 @@ import javax.swing.*;
 public class LoginFormController implements LoginFormActionListener {
     private LoginForm loginForm;
     private ConnectionProvider provider;
-    private JFrame loginFrame;
     private WindowManager manager;
 
     public LoginFormController(LoginForm loginForm, WindowManager manager) {

@@ -21,6 +21,11 @@ public class EventCounter implements NativeKeyListener {
     public void nativeKeyTyped(NativeKeyEvent e) {
     }
 
+    public static void reset() {
+        keyCounter = 0;
+        mouseCounter = 0;
+    }
+
 
     public static class GlobalMouseListenerExample implements NativeMouseInputListener {
         public void nativeMouseClicked(NativeMouseEvent e) {

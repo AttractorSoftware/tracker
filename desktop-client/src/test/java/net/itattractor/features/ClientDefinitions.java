@@ -142,7 +142,7 @@ public class ClientDefinitions {
 
     @Before
     public void closeClient(){
-        Config.init();
+        Config.init("test");
         Driver.reset();
     }
 }

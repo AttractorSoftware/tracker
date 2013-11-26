@@ -10,8 +10,8 @@ public class Config {
     private Config() {
     }
 
-    public static void init() {
-        InputStream inputStream = Config.class.getClassLoader().getResourceAsStream("tracker.properties");
+    public static void init(String mode) {
+        InputStream inputStream = Config.class.getClassLoader().getResourceAsStream(String.format("%s.properties", mode));
         properties = new Properties();
         try {
             properties.load(inputStream);
@@ -22,8 +22,5 @@ public class Config {
 
     public static String getValue(String key) {
         return properties.getProperty(key);
-    }
-    public static void setValue(String key,String value) {
-        properties.setProperty(key,value);
     }
 }

@@ -7,7 +7,7 @@ import org.junit.Test;
 public class CommentSenderTest {
     @Before
     public void setUp() throws Exception {
-        Config.init();
+        Config.init("test");
         ConnectionProvider.createInstance("http://127.0.0.1:8000/trac-env", "tester", "tester");
     }
 

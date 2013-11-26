@@ -1,23 +1,24 @@
 package net.itattractor.states;
 
 import net.itattractor.forms.tasks.TasksForm;
-import net.itattractor.manager.WindowManager;
 
 import javax.swing.*;
 
 public class TasksFormState implements State {
     private JFrame frame;
     private TasksForm form;
-    private WindowManager manager;
 
-    @Override
-    public void show() {
+    public TasksFormState() {
         frame = new JFrame("tasks form");
-        form.fillComboBox();
-        frame.add(form.getContentPanel());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setSize(500, 200);
+    }
+
+    @Override
+    public void show() {
+        form.fillComboBox();
+        frame.add(form.getContentPanel());
         frame.setVisible(true);
     }
 
@@ -35,8 +36,4 @@ public class TasksFormState implements State {
         frame.setVisible(false);
     }
 
-    @Override
-    public void setManager(WindowManager windowManager) {
-        this.manager = windowManager;
-    }
 }

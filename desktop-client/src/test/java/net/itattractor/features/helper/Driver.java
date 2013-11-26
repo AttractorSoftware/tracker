@@ -1,6 +1,5 @@
 package net.itattractor.features.helper;
 
-import net.itattractor.AppLauncher;
 import net.itattractor.features.Adapter;
 import net.itattractor.features.UITester;
 import org.openqa.selenium.WebDriver;
@@ -38,7 +37,6 @@ public class Driver {
                clientInstance.getTimerTask().cancel();
            }
            UITester.removeAllWindowsFromAwtAppContext();
-           AppLauncher.getTray().removeTrayIcon();
            clientInstance = null;
        }
     }
