@@ -94,7 +94,7 @@ class TrackerUploaderAndCommentAdderModule(Component):
             if (db("""INSERT INTO work_log (ticket_id, time, author, content)
                           VALUES (%s, %s, %s, %s)
                           """, (req.args['ticketId'],
-                                to_utimestamp(timeNow),
+                                req.args['time'],
                                 req.args['author'],
                                 req.args['comment']))):
                 return True

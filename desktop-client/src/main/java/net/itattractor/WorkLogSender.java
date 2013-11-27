@@ -18,8 +18,11 @@ public class WorkLogSender {
     private static final String TRACKER_URL_PART = "/tracker";
     private ConnectionProvider connectionProvider;
 
+    private TimeProvider timeProvider;
+
     public WorkLogSender() {
     }
+
 
     public boolean sendWorkLog(int ticketId, String comment) {
 
@@ -43,6 +46,7 @@ public class WorkLogSender {
         List<NameValuePair> formParameters = new ArrayList<NameValuePair>();
         formParameters.add(new BasicNameValuePair("__FORM_TOKEN", getToken(cookies)));
         formParameters.add(new BasicNameValuePair("comment", comment));
+        formParameters.add(new BasicNameValuePair("time", Long.toString(timeProvider.getTimeInMilliseconds()/1000)));
         formParameters.add(new BasicNameValuePair("author", this.connectionProvider.getUsername()));
         formParameters.add(new BasicNameValuePair("action", "addComment"));
         formParameters.add(new BasicNameValuePair("ticketId", Integer.toString(ticketId)));
@@ -70,4 +74,7 @@ public class WorkLogSender {
         return null;
     }
 
+    public void setTimeProvider(TimeProvider timeProvider) {
+        this.timeProvider = timeProvider;
+    }
 }

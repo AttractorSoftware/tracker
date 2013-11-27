@@ -22,7 +22,8 @@
                 <li class="user-list" author="${user.author}">
                     <h1>${user.author}</h1>
                     <a href="users/${user.author}" class="daily_report">Ежедневный отчет</a><br/>
-                    <a href="user_report/${user.author}" class="report">Отчет за период</a>
+                    <a href="user_report/${user.author}" class="report">Отчет за период</a><br/>
+                    <a href="timeline/${user.author}" class="timeline">Tracker Timeline</a>
                 </li>
             </py:for>
         </py:otherwise>

@@ -1,0 +1,45 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="layout.html" />
+  <head>
+    <title>Tracker</title>
+      <style type="text/css">
+        p {display:none}
+        .button {cursor: pointer;}
+        </style>
+  </head>
+
+  <body>
+    <div id="ctxtnav" class="nav"></div>
+
+    <div id="content" class="tracker">
+        <h1>Tracker Timeline</h1>
+        <h2>${_("Username")}: <em style="color: darkred">${username}</em></h2>
+        <div class="tickets">
+            <ul>
+            <py:for each="ticket in tickets">
+                <div class="button">
+                    <li><b>#${ticket.id} ${ticket.name} </b></li>
+                    <py:for each="worklog in worklogs">
+                        <py:if test="worklog.id == ticket.id and worklog.time_spent!=0">
+                            <p>${worklog.content}: ${worklog.time_spent} минут</p>
+                         </py:if>
+                    </py:for>
+                </div>
+            </py:for>
+             </ul>
+        </div>
+    </div>
+   <script type="text/javascript">
+        jQuery(document).ready(function () {
+            $( ".button" ).click(function() {
+                $( "p",this).slideToggle( "fast" );
+            });
+        });
+    </script>
+  </body>
+</html>

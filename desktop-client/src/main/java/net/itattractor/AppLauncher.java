@@ -44,10 +44,13 @@ public class AppLauncher {
         LoginFormController loginFormController = new LoginFormController(loginForm, manager);
         tasksFormController = new TasksFormController(manager);
         tasksForm.setActionListener(tasksFormController);
-        tasksFormController.setTimeProvider(createTimeProvider());
+        TimeProvider timeProvider = createTimeProvider();
+        tasksFormController.setTimeProvider(timeProvider);
 
         RecordFormController recordFormController = new RecordFormController(recordForm, manager);
-        recordFormController.setWorkLogSender(new WorkLogSender());
+        WorkLogSender workLogSender = new WorkLogSender();
+        workLogSender.setTimeProvider(timeProvider);
+        recordFormController.setWorkLogSender(workLogSender);
         loginFormController.start();
 
         Tray tray = new Tray();
