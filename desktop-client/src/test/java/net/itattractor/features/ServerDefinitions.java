@@ -2,6 +2,7 @@ package net.itattractor.features;
 
 import cucumber.api.java.After;
 import cucumber.api.java.ru.*;
+import cucumber.runtime.PendingException;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -171,5 +172,17 @@ public class ServerDefinitions {
         WebDriverWait wait = new WebDriverWait(Driver.getServerInstance(), 10);
 
         return wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(expression)));
+    }
+
+    @И("^обновляю страницу$")
+    public void обновляю_страницу() throws Throwable {
+        Driver.getServerInstance().navigate().refresh();
+    }
+
+    @Тогда("^вижу в списке work-log последнию запись с комментарием \"([^\"]*)\"$")
+    public void вижу_в_списке_work_log_запись_с_комментарием(String comment_text) throws Throwable {
+
+        WebElement item = elementWaitByXpath("//*[@id=\"work-log\"]/ul/li[last()]");
+        Assert.assertEquals(comment_text, item.findElement(By.cssSelector(".comment")).getText());
     }
 }
