@@ -14,7 +14,8 @@ public class CommentSenderTest {
     @Test
     public void testSendComment() throws Exception {
         WorkLogSender workLogSender = new WorkLogSender();
-
+        TimeProvider timeProvider=new FakeTimeProvider();
+        workLogSender.setTimeProvider(timeProvider);
         Assert.assertTrue(workLogSender.sendWorkLog(4, "test87 test2 test2"));
     }
 }

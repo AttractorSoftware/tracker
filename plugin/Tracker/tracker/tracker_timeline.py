@@ -1,11 +1,9 @@
 import re
 import time
 
-from trac.core import Component, implements, TracError
-from trac.web import IRequestHandler, Href
-from trac.web.chrome import ITemplateProvider, add_stylesheet, add_script
-from trac.mimeview import Context
-from tracker.api import TrackerApi
+from trac.core import Component, implements
+from trac.web import IRequestHandler
+from trac.web.chrome import ITemplateProvider
 
 class TrackerTimelineModule(Component):
 
@@ -26,17 +24,12 @@ class TrackerTimelineModule(Component):
         return match
 
     def process_request(self, req):
-        api = TrackerApi
-        context = Context.from_request(req)
-        db = self.env.get_db_cnx()
-        context.cursor = db.cursor()
-
         if req.args.get('username'):
             username = req.args.get('username')
-            comments = self._get_users_comments(username)
-            ticketId,tickets = self._get_ticket_id(comments)
+            allWorklogs = self._get_users_allWorklogs(username)
+            ticketId,tickets = self._get_tickets(allWorklogs)
             timeslots=self._get_timeslots(username)
-            worklogs=self._get_worklogs(ticketId,comments,timeslots)
+            worklogs=self._get_worklogs(allWorklogs,timeslots)
         req.data = {
                 'tickets': tickets,
                 'worklogs':worklogs,
@@ -45,8 +38,8 @@ class TrackerTimelineModule(Component):
 
         return "tracker_timeline.html", req.data, None
 
-    def _get_users_comments(self, username):
-        comments = []
+    def _get_users_allWorklogs(self, username):
+        allWorklogs = []
         query = "SELECT work_log.id, ticket.id as ticketId, owner, summary, work_log.time, content " \
                 "FROM ticket " \
                 "INNER JOIN work_log ON ticket.id = ticket_id AND owner = author " \
@@ -61,16 +54,16 @@ class TrackerTimelineModule(Component):
                 'time': time,
                 'content': content
             }
-            comments.append(comment)
-        return comments
+            allWorklogs.append(comment)
+        return allWorklogs
 
-    def _get_worklogs(self,ticketId,comments,timeslots):
+    def _get_worklogs(self,allWorklogs,timeslots):
         number=0
         worklogs=[]
-        for worklog in comments:
-            if (comments.index(worklog)+1<len(comments)):
+        for worklog in allWorklogs:
+            if (allWorklogs.index(worklog)+1<len(allWorklogs)):
                 start_time=worklog['time']
-                end_time=comments[comments.index(worklog)+1]['time']
+                end_time=allWorklogs[allWorklogs.index(worklog)+1]['time']
             else:
                 start_time=worklog['time']
                 end_time=timeslots[-1]['time']
@@ -88,10 +81,10 @@ class TrackerTimelineModule(Component):
         return worklogs
 
 
-    def _get_ticket_id(self,comments):
+    def _get_tickets(self,allWorklogs):
         ticketId=[]
         tickets=[]
-        for ticket in comments:
+        for ticket in allWorklogs:
             if ticket['ticketId'] not in ticketId:
                 ticketId.append(ticket['ticketId'])
                 task = {
