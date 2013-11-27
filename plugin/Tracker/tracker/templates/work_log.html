@@ -1,4 +1,4 @@
-<div id="work-log" xmlns:py="http://genshi.edgewall.org/"  py:if="logs" class="collapsed">
+<div id="work-log" xmlns:py="http://genshi.edgewall.org/"  py:if="logs">
     <h3 class="foldable"><a id="no1" href="#no1">Work Log<span class="trac-count">(${len(logs)})</span></a></h3>
     <ul class="list">
         <li class="headline">
@@ -10,7 +10,7 @@
         <li class="item" py:for="log in logs">
             <div class="author">$log.author</div>
             <div class="comment">$log.comment</div>
-            <div class="time-spent">2h 15m</div>
+            <div class="time-spent">$log.time_spent min</div>
             <div class="time">$log.time</div>
         </li>
     </ul>

@@ -21,7 +21,7 @@ setup(name=PACKAGE,
           'TracTracker.screenshot_marker = tracker.screenshot_marker',
           'TracTracker.admin = tracker.admin',
           'TracTracker.update_tracked_time = tracker.update_tracked_time',
-          'TracTracker.tracker_timeline = tracker.tracker_timeline'
+          'TracTracker.tracker_timeline = tracker.tracker_timeline',
           'TracTracker.work_log = tracker.work_log'
       ]},
       package_data={
