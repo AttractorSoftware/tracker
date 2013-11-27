@@ -89,7 +89,6 @@ class TrackerUploaderAndCommentAdderModule(Component):
             return True
 
     def _add_comment(self, req):
-        timeNow = datetime.now(utc)
         with self.env.db_transaction as db:
             if (db("""INSERT INTO work_log (ticket_id, time, author, content)
                           VALUES (%s, %s, %s, %s)

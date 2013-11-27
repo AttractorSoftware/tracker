@@ -25,9 +25,16 @@
                 <div class="button">
                     <li><b>#${ticket.id} ${ticket.name} </b></li>
                     <py:for each="worklog in worklogs">
-                        <py:if test="worklog.id == ticket.id and worklog.time_spent!=0">
-                            <p>${worklog.content}: ${worklog.time_spent} минут</p>
-                         </py:if>
+                        <py:if test="worklog.id == ticket.id">
+                        <py:choose test="">
+                                <py:when test = 'worklog.time_spent!=0'>
+                                     <p>${worklog.content}: ${worklog.time_spent} минут</p>
+                                </py:when>
+                                <py:otherwise>
+                                    <p>${worklog.content}: в процессе</p>
+                                </py:otherwise>
+                        </py:choose>
+                        </py:if>
                     </py:for>
                 </div>
             </py:for>
