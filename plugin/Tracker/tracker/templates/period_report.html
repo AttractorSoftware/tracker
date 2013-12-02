@@ -1,0 +1,113 @@
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+        >
+<xi:include href="layout.html"/>
+  <head>
+    <title>Tracker</title>
+    <style type="text/css">
+        ul,p {display:none}
+        .tickets {cursor: pointer;
+            margin-left: 1em;
+            font-size: 15px;
+        }
+
+        #work-log .list {
+            margin: 20px 0;
+            padding: 0;
+            font-size: 13px;
+        }
+
+        #work-log .list li {
+            border-bottom: 1px solid #F1F1F1;
+            overflow: hidden;
+            padding: 10px 20px 10px 0;
+        }
+
+        #work-log .list .author {
+            float: left;
+            width: 15%;
+            text-align: center;
+        }
+
+        #work-log .list .headline {
+            font-weight: bold;
+            border-bottom: 1px solid #dedede;
+        }
+
+        #work-log .list .comment {
+            float: left;
+            width: 50%;
+            height: 15px;
+            overflow: hidden;
+            padding: 0 3% 0 0;
+        }
+
+        .item:hover .comment:before {
+            content: attr(data-title);
+            position: absolute;
+            left: 30%;
+            z-index: 1;
+            background: rgba(255,255,230,0.9);
+            border: 1px solid #333;
+        }
+
+        #work-log .list .time-spent {
+            float: left;
+            width: 15%;
+            color: #333;
+            text-align: center;
+        }
+
+        #work-log .list .headline .time {
+            color: #000;
+        }
+
+        #work-log .list .time {
+            float: left;
+            width: 17%;
+            text-align: center;
+            color: #555;
+        }
+        </style>
+</head>
+<body>
+    <div id="ctxtnav" class="nav"></div>
+
+    <div>
+        <h1>Отчет за период с $fromDMY по $toDMY</h1>
+        <h2>Всего проработано:<b>$total_time_hours</b>ч <b>$total_time_minutes</b>мин </h2>
+        <py:for each="ticket in tickets_with_worklogs">
+            <div class="work-log-class" id="work-log">
+                <li class="tickets"><b>$ticket.summary</b><span>(${len(ticket.worklogs)})</span></li>
+                <p>Проработано по тикету: <b>$ticket.worked_time_hours</b>ч <b>$ticket.worked_time_minutes</b>мин </p>
+                <ul class="list">
+                    <li class="headline">
+                        <div class="author">author</div>
+                        <div class="comment">comment</div>
+                        <div class="time-spent">time spent</div>
+                        <div class="time">created at</div>
+                    </li>
+                    <li class="item" py:for="worklog in ticket['worklogs']">
+                        <div class="author">$worklog.author</div>
+                        <div class="comment" data-title="${worklog.comment}">$worklog.comment</div>
+                        <div class="time-spent">$worklog.time_spent min</div>
+                        <div class="time">$worklog.time</div>
+                    </li>
+                </ul>
+            </div>
+        </py:for>
+    </div>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            $( ".work-log-class" ).click(function() {
+                $("p,ul,",this).slideToggle( "fast" );
+            });
+        });
+    </script>
+
+</body>
+</html>

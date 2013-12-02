@@ -22,7 +22,7 @@
         <script type="text/javascript">
             function checkReportForm()
             {
-                if ($('#reporting_user:checked').val() == '' || $('#fromDMY').val() == '' || $('#toDMY').val() == '') {
+                if ($('#fromDMY').val() == '' || $('#toDMY').val() == '') {
                     alert('Заполните все требуемые поля')
                 } else {
                     window.location = window.location + '/' + $('#fromDMY').val() + '/' + $('#toDMY').val()
