@@ -14,6 +14,7 @@ public class Creator implements Command {
 
     private Ticket ticket;
     private TimeProvider timeProvider;
+    private EventCounter eventCounter;
 
     public Creator(Ticket ticket) {
         this.setTicket(ticket);
@@ -22,7 +23,7 @@ public class Creator implements Command {
     @Override
     public void execute() {
         Queue.append(createScreenshot());
-        EventCounter.reset();
+        eventCounter.reset();
     }
 
     private Screenshot createScreenshot() {
@@ -40,8 +41,8 @@ public class Creator implements Command {
             screenshot.setFileBody(screenshotFile);
             screenshot.setFileName(screenshotFileName);
             screenshot.setTime(Long.toString(timeProvider.getTimeInMilliseconds()));
-            screenshot.setKeyboardEventCount(EventCounter.keyCounter);
-            screenshot.setMouseEventCount(EventCounter.mouseCounter);
+            screenshot.setKeyboardEventCount(eventCounter.getKeyCounter());
+            screenshot.setMouseEventCount(eventCounter.getMouseCounter());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,5 +63,9 @@ public class Creator implements Command {
 
     public void setTimeProvider(TimeProvider timeProvider) {
         this.timeProvider = timeProvider;
+    }
+
+    public void setEventCounter(EventCounter eventCounter) {
+        this.eventCounter = eventCounter;
     }
 }

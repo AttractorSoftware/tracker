@@ -43,6 +43,8 @@ public class AppLauncher {
 
         LoginFormController loginFormController = new LoginFormController(loginForm, manager);
         tasksFormController = new TasksFormController(manager);
+        EventCounter eventCounter = new EventCounter();
+        tasksFormController.setEventCounter(eventCounter);
         tasksForm.setActionListener(tasksFormController);
         TimeProvider timeProvider = createTimeProvider();
         tasksFormController.setTimeProvider(timeProvider);

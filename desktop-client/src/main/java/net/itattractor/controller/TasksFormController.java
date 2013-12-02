@@ -15,6 +15,7 @@ public class TasksFormController implements TasksFormActionListener {
     private TimerTaskImpl timerTask;
 
     private TimeProvider timeProvider;
+    private EventCounter eventCounter;
 
     public TasksFormController(WindowManager manager) {
         this.manager = manager;
@@ -24,12 +25,13 @@ public class TasksFormController implements TasksFormActionListener {
     public void startPressed(Ticket ticket) {
         logWriter = new LogWriter(ticket);
         logWriter.saveStart();
-        EventCounter.ActivateEvent();
+        eventCounter.init();
         timerTask = new TimerTaskImpl();
         timerTask.setTimeProvider(timeProvider);
 
         Creator creator = new Creator(ticket);
         creator.setTimeProvider(timeProvider);
+        creator.setEventCounter(eventCounter);
         Sender sender = new Sender();
 
         timerTask.addCommand(1, creator);
@@ -44,13 +46,16 @@ public class TasksFormController implements TasksFormActionListener {
         manager.show();
     }
 
-
     public TimerTaskImpl getTimerTask() {
         return timerTask;
     }
 
     public void setTimeProvider(TimeProvider timeProvider) {
         this.timeProvider = timeProvider;
+    }
+
+    public void setEventCounter(EventCounter eventCounter) {
+        this.eventCounter = eventCounter;
     }
 
 }
