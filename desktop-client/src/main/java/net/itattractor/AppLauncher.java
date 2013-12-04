@@ -41,6 +41,9 @@ public class AppLauncher {
 
         manager.init();
 
+        Tray tray = new Tray();
+        new TrayController(manager, tray);
+
         LoginFormController loginFormController = new LoginFormController(loginForm, manager);
         tasksFormController = new TasksFormController(manager);
         EventCounter eventCounter = new EventCounter();
@@ -54,9 +57,6 @@ public class AppLauncher {
         workLogSender.setTimeProvider(timeProvider);
         recordFormController.setWorkLogSender(workLogSender);
         loginFormController.start();
-
-        Tray tray = new Tray();
-        new TrayController(manager, tray);
     }
 
     private TimeProvider createTimeProvider() {
