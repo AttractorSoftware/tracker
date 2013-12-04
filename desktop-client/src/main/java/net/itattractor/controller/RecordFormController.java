@@ -28,6 +28,10 @@ public class RecordFormController implements RecordFormActionListener {
 
     @Override
     public void okPressed(Ticket currentTicket) {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
         if(logWriter == null)
             logWriter = new LogWriter(currentTicket);
         JTextArea descriptionTextArea = recordForm.getDescriptionTextArea();
