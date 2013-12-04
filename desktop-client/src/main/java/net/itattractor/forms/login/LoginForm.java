@@ -121,9 +121,4 @@ public class LoginForm {
     public JPasswordField getPasswordField() {
         return passwordField;
     }
-
-    private void createUIComponents() {
-        urlField = new JTextField(Config.getValue("url"));
-        usernameField = new JTextField(Config.getValue("username"));
-    }
 }

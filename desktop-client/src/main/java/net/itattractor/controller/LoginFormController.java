@@ -4,6 +4,7 @@ import net.itattractor.ConnectionProvider;
 import net.itattractor.forms.login.LoginForm;
 import net.itattractor.forms.login.LoginFormActionListener;
 import net.itattractor.manager.WindowManager;
+import net.itattractor.utils.StringUtils;
 
 import javax.swing.*;
 
@@ -20,7 +21,7 @@ public class LoginFormController implements LoginFormActionListener {
 
     @Override
     public void submitPressed() throws Exception {
-        String url = loginForm.getUrlField().getText();
+        String url = StringUtils.trim(loginForm.getUrlField().getText(), "/");
         String username = loginForm.getUsernameField().getText();
         String password = new String(loginForm.getPasswordField().getPassword());
 

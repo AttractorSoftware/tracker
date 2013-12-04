@@ -1,11 +1,21 @@
 package net.itattractor.utils;
 
 public class StringUtils {
-    public static String trim(String str, String subStr) {
-        String destination = str;
-        if (str.endsWith(subStr)) {
-            destination = str.substring(0, str.length() - 1);
+    public static String trim(String text, String sub) {
+        String result = "";
+        char[] textChar = text.toCharArray();
+        for (char c : textChar) {
+            if (c != ' ') {
+                result += c;
+            }
         }
-        return destination;
+
+        if (result.startsWith(sub)) {
+            result = result.substring(sub.length());
+        }
+        if (result.endsWith(sub)) {
+            result = result.substring(0, result.length() - sub.length());
+        }
+        return result;
     }
 }
