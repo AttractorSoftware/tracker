@@ -1,5 +1,6 @@
 package net.itattractor;
 
+import net.itattractor.config.Config;
 import net.itattractor.controller.LoginFormController;
 import net.itattractor.controller.RecordFormController;
 import net.itattractor.controller.TasksFormController;
@@ -19,8 +20,10 @@ import javax.swing.*;
 public class AppLauncher {
     private WindowManager manager;
     private TasksFormController tasksFormController;
+    private Config config;
 
     public void init(){
+
         manager = new WindowManager();
 
         LoginForm  loginForm = new LoginForm();
@@ -48,19 +51,22 @@ public class AppLauncher {
         tasksFormController = new TasksFormController(manager);
         EventCounter eventCounter = new EventCounter();
         tasksFormController.setEventCounter(eventCounter);
+        tasksFormController.setConfig(config);
         tasksForm.setActionListener(tasksFormController);
         TimeProvider timeProvider = createTimeProvider();
         tasksFormController.setTimeProvider(timeProvider);
 
         RecordFormController recordFormController = new RecordFormController(recordForm, manager);
+        recordFormController.setConfig(config);
         WorkLogSender workLogSender = new WorkLogSender();
         workLogSender.setTimeProvider(timeProvider);
+        workLogSender.setConfig(config);
         recordFormController.setWorkLogSender(workLogSender);
         loginFormController.start();
     }
 
     private TimeProvider createTimeProvider() {
-        return Boolean.parseBoolean(Config.getValue("testMode")) ?  new FakeTimeProvider() : new SystemTimeProvider();
+        return Boolean.parseBoolean(config.getValue("testMode")) ?  new FakeTimeProvider() : new SystemTimeProvider();
     }
 
     public JFrame getMainFrame() {
@@ -69,5 +75,9 @@ public class AppLauncher {
 
     public TimerTaskImpl getTimerTask() {
         return tasksFormController.getTimerTask();
+    }
+
+    public void setConfig(Config config) {
+        this.config = config;
     }
 }

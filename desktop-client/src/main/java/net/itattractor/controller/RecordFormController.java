@@ -1,9 +1,9 @@
 package net.itattractor.controller;
 
-import net.itattractor.Config;
 import net.itattractor.LogWriter;
 import net.itattractor.Ticket;
 import net.itattractor.WorkLogSender;
+import net.itattractor.config.Config;
 import net.itattractor.forms.record.RecordForm;
 import net.itattractor.forms.record.RecordFormActionListener;
 import net.itattractor.manager.WindowManager;
@@ -19,6 +19,12 @@ public class RecordFormController implements RecordFormActionListener {
     private WorkLogSender workLogSender;
     private LogWriter logWriter;
     private Timer timer;
+
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
+    private Config config;
 
     public RecordFormController(RecordForm recordForm, WindowManager manager) {
         this.recordForm = recordForm;
@@ -49,7 +55,7 @@ public class RecordFormController implements RecordFormActionListener {
     }
 
     private void pause() {
-        int remindAgainIn = Integer.parseInt(Config.getValue("remindAgainInMinutes"));
+        int remindAgainIn = Integer.parseInt(config.getValue("remindAgainInMinutes"));
         manager.hide();
         timer = new Timer();
         timer.schedule(new TimerTask() {

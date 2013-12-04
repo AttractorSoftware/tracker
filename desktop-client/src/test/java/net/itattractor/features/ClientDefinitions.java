@@ -3,7 +3,7 @@ package net.itattractor.features;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.И;
 import cucumber.api.java.ru.Тогда;
-import net.itattractor.Config;
+import net.itattractor.config.TestConfigProvider;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.uispec4j.Window;
@@ -142,7 +142,6 @@ public class ClientDefinitions {
 
     @Before
     public void closeClient(){
-        Config.init("test");
         Driver.reset();
     }
 }

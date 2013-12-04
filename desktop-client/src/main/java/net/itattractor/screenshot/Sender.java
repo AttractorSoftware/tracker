@@ -1,7 +1,7 @@
 package net.itattractor.screenshot;
 
-import net.itattractor.Config;
 import net.itattractor.ConnectionProvider;
+import net.itattractor.config.Config;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -20,7 +20,13 @@ public class Sender implements Command {
 
     private static final String TRACKER_URL_PART = "/tracker";
     private static final String LOGIN_URL_PART = "/login/";
-    ConnectionProvider connectionProvider;
+    private ConnectionProvider connectionProvider;
+
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
+    private Config config;
 
     @Override
     public void execute() {
@@ -28,8 +34,8 @@ public class Sender implements Command {
         Screenshot screenshot = Queue.getLatest();
 
         if(
-          screenshot.getMouseEventCount() > Integer.parseInt(Config.getValue("mouseEventCountForSendScreenshot")) &&
-          screenshot.getKeyboardEventCount() > Integer.parseInt(Config.getValue("keyEventCountForSendScreenshot"))
+          screenshot.getMouseEventCount() > Integer.parseInt(config.getValue("mouseEventCountForSendScreenshot")) &&
+          screenshot.getKeyboardEventCount() > Integer.parseInt(config.getValue("keyEventCountForSendScreenshot"))
          ) {
             try {
                 connectionProvider = ConnectionProvider.getInstance();
@@ -43,14 +49,14 @@ public class Sender implements Command {
                 List<Cookie> cookieList =  httpClient.getCookieStore().getCookies();
 
                 HttpPost httpPost = new HttpPost(connectionProvider.getHost() + TRACKER_URL_PART);
-                ContentBody body = new FileBody(screenshot.getFileBody(), Config.getValue("sendingScreenshotExtension"));
+                ContentBody body = new FileBody(screenshot.getFileBody(), config.getValue("sendingScreenshotExtension"));
                 MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
                 entity.addPart("screenshot", body);
                 entity.addPart("__FORM_TOKEN", new StringBody(getToken(cookieList)));
                 entity.addPart("username", new StringBody(connectionProvider.getUsername()));
                 entity.addPart("action", new StringBody("addScreenshot"));
                 entity.addPart("ticket_id", new StringBody(String.valueOf(screenshot.getTicketId())));
-                entity.addPart("interval", new StringBody(Config.getValue("timeSlotPeriod")));
+                entity.addPart("interval", new StringBody(config.getValue("timeSlotPeriod")));
                 entity.addPart("time", new StringBody(screenshot.getTime()));
                 entity.addPart("mouse_event_count", new StringBody(Integer.toString(screenshot.getMouseEventCount())));
                 entity.addPart("keyboard_event_count", new StringBody(Integer.toString(screenshot.getKeyboardEventCount())));
@@ -67,7 +73,7 @@ public class Sender implements Command {
     {
         for (Cookie cookie : cookies)
         {
-            if (cookie.getName().equals(Config.getValue("tracFormToken")))
+            if (cookie.getName().equals(config.getValue("tracFormToken")))
             {
                 return cookie.getValue();
             }

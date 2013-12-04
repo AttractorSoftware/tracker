@@ -8,7 +8,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public class Driver {
     private  static WebDriver serverInstance;
 
-    public static Adapter getClientInstance() throws Exception{
+    public static Adapter getClientInstance() {
         if (clientInstance == null) {
             clientInstance = new Adapter();
         }

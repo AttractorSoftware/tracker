@@ -1,6 +1,7 @@
 package net.itattractor.screenshot;
 
-import net.itattractor.Config;
+import net.itattractor.config.Config;
+import net.itattractor.config.ProductionConfigProvider;
 import net.itattractor.EventCounter;
 import net.itattractor.Ticket;
 import net.itattractor.TimeProvider;
@@ -15,6 +16,8 @@ public class Creator implements Command {
     private Ticket ticket;
     private TimeProvider timeProvider;
     private EventCounter eventCounter;
+
+    private Config config;
 
     public Creator(Ticket ticket) {
         this.setTicket(ticket);
@@ -34,7 +37,7 @@ public class Creator implements Command {
             String screenshotFileName = screenShotFileName();
             String screenshotFilePath = screenShotPath(screenshotFileName);
             File screenshotFile = new File(screenshotFilePath);
-            ImageIO.write(screenshotImage, Config.getValue("screenshotExtension"), screenshotFile);
+            ImageIO.write(screenshotImage, config.getValue("screenshotExtension"), screenshotFile);
 
             screenshot = new Screenshot();
             screenshot.setTicketId(this.ticket.getTicketId());
@@ -50,11 +53,11 @@ public class Creator implements Command {
     }
 
     private String screenShotPath(String screenshotFileName) {
-        return System.getProperty("user.home") + Config.getValue("screenshotDirectory") + screenshotFileName;
+        return System.getProperty("user.home") + config.getValue("screenshotDirectory") + screenshotFileName;
     }
 
     private String screenShotFileName() {
-        return timeProvider.getDate() + "." + Config.getValue("screenshotExtension");
+        return timeProvider.getDate() + "." + config.getValue("screenshotExtension");
     }
 
     public void setTicket(Ticket ticket) {
@@ -67,5 +70,9 @@ public class Creator implements Command {
 
     public void setEventCounter(EventCounter eventCounter) {
         this.eventCounter = eventCounter;
+    }
+
+    public void setConfig(Config config) {
+        this.config = config;
     }
 }

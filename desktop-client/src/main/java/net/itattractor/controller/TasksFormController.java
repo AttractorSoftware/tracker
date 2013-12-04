@@ -1,6 +1,10 @@
 package net.itattractor.controller;
 
-import net.itattractor.*;
+import net.itattractor.EventCounter;
+import net.itattractor.LogWriter;
+import net.itattractor.Ticket;
+import net.itattractor.TimeProvider;
+import net.itattractor.config.Config;
 import net.itattractor.forms.tasks.TasksFormActionListener;
 import net.itattractor.manager.WindowManager;
 import net.itattractor.screenshot.Creator;
@@ -17,6 +21,8 @@ public class TasksFormController implements TasksFormActionListener {
     private TimeProvider timeProvider;
     private EventCounter eventCounter;
 
+    private Config config;
+
     public TasksFormController(WindowManager manager) {
         this.manager = manager;
     }
@@ -32,13 +38,15 @@ public class TasksFormController implements TasksFormActionListener {
         Creator creator = new Creator(ticket);
         creator.setTimeProvider(timeProvider);
         creator.setEventCounter(eventCounter);
+        creator.setConfig(config);
         Sender sender = new Sender();
+        sender.setConfig(config);
 
         timerTask.addCommand(1, creator);
         timerTask.addCommand(2, sender);
 
         Timer timer = new Timer();
-        timer.schedule(timerTask, 0, Integer.parseInt(Config.getValue("screenshotCheckCreatePeriod")));
+        timer.schedule(timerTask, 0, Integer.parseInt(config.getValue("screenshotCheckCreatePeriod")));
 
         manager.hide();
         manager.getRecordFormState().setTicket(ticket);
@@ -56,6 +64,10 @@ public class TasksFormController implements TasksFormActionListener {
 
     public void setEventCounter(EventCounter eventCounter) {
         this.eventCounter = eventCounter;
+    }
+
+    public void setConfig(Config config) {
+        this.config = config;
     }
 
 }

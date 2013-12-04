@@ -1,5 +1,6 @@
 package net.itattractor;
 
+import net.itattractor.config.Config;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -17,6 +18,12 @@ public class WorkLogSender {
     private static final String LOGIN_URL_PART = "/login/";
     private static final String TRACKER_URL_PART = "/tracker";
     private ConnectionProvider connectionProvider;
+
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
+    private Config config;
 
     private TimeProvider timeProvider;
 
@@ -65,9 +72,9 @@ public class WorkLogSender {
         return true;
     }
 
-    private static String getToken(List<Cookie> cookies) {
+    private String getToken(List<Cookie> cookies) {
         for (Cookie cookie : cookies) {
-            if (cookie.getName().equals(Config.getValue("tracFormToken"))) {
+            if (cookie.getName().equals(config.getValue("tracFormToken"))) {
                 return cookie.getValue();
             }
         }
