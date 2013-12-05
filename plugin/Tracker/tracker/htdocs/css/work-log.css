@@ -1,43 +1,28 @@
-#work-log * {
-    transition: all 1s ease;
-    -webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-}
 
-#work-log .list {
+.list {
     margin: 20px 0;
     padding: 0;
     font-size: 13px;
 }
 
-#work-log .list li {
+ .list li {
     border-bottom: 1px solid #F1F1F1;
     overflow: hidden;
     padding: 10px 20px 10px 0;
 }
 
-#work-log .list li:hover {
-    border-bottom: 1px solid #dedede;
-    cursor: default;
-    background: #f9f9f9;
-}
-
-#work-log .list li.headline:hover {
-    background: #fff;
-}
-
-#work-log .list .author {
+ .list .author {
     float: left;
     width: 15%;
     text-align: center;
 }
 
-#work-log .list .headline {
+ .list .headline {
     font-weight: bold;
     border-bottom: 1px solid #dedede;
 }
 
-#work-log .list .comment {
+ .list .comment {
     float: left;
     width: 50%;
     height: 15px;
@@ -45,28 +30,27 @@
     padding: 0 3% 0 0;
 }
 
-#work-log .list li:hover .comment {
-    height: auto;
-    padding-top: 0;
+ .item:hover .comment:before {
+    content: attr(data-title);
+    position: absolute;
+    left: 30%;
+    z-index: 1;
+    background: rgba(255,255,230,0.9);
+    border: 1px solid #333;
 }
 
-#work-log .list li.headline:hover .comment {
-    height: auto;
-    font-size: 13px;
-}
-
-#work-log .list .time-spent {
+ .list .time-spent {
     float: left;
     width: 15%;
     color: #333;
     text-align: center;
 }
 
-#work-log .list .headline .time {
+ .list .headline .time {
     color: #000;
 }
 
-#work-log .list .time {
+ .list .time {
     float: left;
     width: 17%;
     text-align: center;

@@ -9,7 +9,7 @@
         </li>
         <li class="item" py:for="log in logs">
             <div class="author">$log.author</div>
-            <div class="comment">$log.comment</div>
+            <div class="comment" data-title="${log.comment}">$log.comment</div>
             <div class="time-spent">$log.time_spent min</div>
             <div class="time">$log.time</div>
         </li>

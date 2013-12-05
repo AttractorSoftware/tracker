@@ -40,9 +40,9 @@ public class ServerDefinitions {
         Assert.assertEquals(keyboard_count_cont.getText(), pressCount);
     }
 
-    @Если("^открою отчет с ссылкой \"([^\"]*)\" пользователя \"([^\"]*)\"$")
-    public void открою_отчет_с_ссылкой_пользователя(String report_name, String author) throws Throwable {
-        elementWaitByXpath("//li[contains(@author,'" + author + "')]/a[text()='" + report_name + "']").click();
+    @Если("^открою отчет с ссылкой \"([^\"]*)\"$")
+    public void открою_отчет_с_ссылкой(String report_name) throws Throwable {
+        elementWaitByXpath("//a[text()='" + report_name + "']").click();
     }
 
     @Тогда("^вижу в меню вкладку \"([^\"]*)\"$")
@@ -106,9 +106,9 @@ public class ServerDefinitions {
 
     @Тогда("^вижу у последнего созданного тикета \"([^\"]*)\" наработанных минут$")
     public void вижу_у_последнего_созданного_тикета_наработанных_минут(String mins) throws Throwable {
-//        Thread.sleep(5000);
+        кликаю_на_последний_тикет();
         WebElement element = elementWaitByXpath("//div[@id='content']//div[@id='" + CommonData.latestTicketSummary + "']//b[@id='min']");
-        Assert.assertEquals(element.getText(), mins);
+        Assert.assertEquals(mins,element.getText());
     }
 
     @Если("^кликаю по первому скриншоту$")
@@ -144,6 +144,16 @@ public class ServerDefinitions {
         clientDefinitions.работаю_над_последним_созданым_тикетом();
     }
 
+    @Допустим("^начинаю работать над новым тикетом с видом деятельности \"([^\"]*)\"$")
+    public void начинаю_работать_над_новым_тикетом_с_видом_деятельности(String worklog) throws Throwable {
+        создаю_новый_тикет_со_статусом("accept");
+        commonDefinitions.запускаю_клиентское_приложение();
+        clientDefinitions.выбираю_последний_созданный_тикет();
+        clientDefinitions.пишу_и_начинаю_отслеживание(worklog);
+        clientDefinitions.кликаю_мышью_раз_и_нажимаю_клавишу_раз(13, 15);
+        clientDefinitions.жду_секунд(11);
+    }
+
     @Допустим("^создаю новый тикет$")
     public void создаю_новый_тикет() throws Throwable {
         commonDefinitions.открываю_главную_страницу_тракера();
@@ -158,8 +168,14 @@ public class ServerDefinitions {
     }
     @То("^вижу ссылку \"([^\"]*)\" пользователя \"([^\"]*)\"$")
     public void вижу_ссылку_пользователя(String link,String username) throws Throwable {
-        WebElement report = elementWaitByXpath("//li[contains(@author,'" + username + "')]/a[@class=\"daily_report\"]");
-        Assert.assertEquals(link, report.getText());
+        List<WebElement> items = Driver.getServerInstance().findElements(By.xpath("//ul[@id='nav-user-list']/li[contains(@author,'" + username + "')]/a"));
+        boolean contains = false;
+        for (WebElement item : items) {
+            if (link.equals(item.getText())) {
+                contains = true;
+            }
+        }
+        Assert.assertTrue(contains);
     }
 
     private WebElement elementWaitByXpath(String xpathExpression) throws Exception {
@@ -185,4 +201,20 @@ public class ServerDefinitions {
         WebElement item = elementWaitByXpath("//*[@id=\"work-log\"]/ul/li[last()]");
         Assert.assertEquals(comment_text, item.findElement(By.cssSelector(".comment")).getText());
     }
+
+    @То("^вижу последний тикет с видом деятельности \"([^\"]*)\" и затраченным временем \"([^\"]*)\" минут$")
+    public void вижу_последний_тикет_с_видом_деятельности_и_затраченным_временем(String worklog,String mins) throws Throwable {
+        кликаю_на_последний_тикет();
+        WebElement element = elementWaitByXpath("//div[@id='content']//div[@id='" + CommonData.latestTicketSummary + "']//li[@class='item']//div[@class='comment']");
+        Assert.assertEquals(worklog, element.getText());
+        WebElement item = elementWaitByXpath("//div[@id='content']//div[@id='" + CommonData.latestTicketSummary + "']//span[@id='minutes']");
+        Assert.assertEquals(mins, item.getText());
+    }
+
+    public void кликаю_на_последний_тикет() throws Throwable {
+        WebElement ticket = elementWaitByXpath("//div[@id='content']//div[@id='" + CommonData.latestTicketSummary + "']");
+        ticket.click();
+    }
+
+
 }

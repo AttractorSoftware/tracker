@@ -68,6 +68,7 @@ class TrackerUserReportModule(Component):
             }
 
             add_stylesheet(req, 'trac/css/tracker.css')
+            add_stylesheet(req, 'trac/css/work-log.css')
             return "period_report.html", req.data, None
 
         else:
@@ -82,7 +83,7 @@ class TrackerUserReportModule(Component):
 
     def _get_tickets_for_period(self, fromDMY, toDMY):
         tickets = []
-        query = "SELECT s.id as ticketId, t.summary " \
+        query = "SELECT s.ticket_id as ticketId, t.summary " \
                 "FROM time_slot s " \
                 "INNER JOIN ticket t ON t.id = s.ticket_id " \
                 "WHERE s.time > '" + fromDMY + "' AND s.time < '" + toDMY + "'"
