@@ -32,10 +32,8 @@ public class Sender implements Command {
     public void execute() {
 
         Screenshot screenshot = Queue.getLatest();
-        System.out.println("Sender.execute - before");
 
         if (activityLimitIsSatisfied(screenshot)) {
-            System.out.println("Sender.execute - after");
             try {
                 connectionProvider = ConnectionProvider.getInstance();
                 HttpGet httpGet = new HttpGet(connectionProvider.getHost() + LOGIN_URL_PART);

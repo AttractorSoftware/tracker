@@ -37,10 +37,6 @@ public class Creator implements Command {
             String screenshotFilePath = screenShotPath(screenshotFileName);
             File screenshotFile = new File(screenshotFilePath);
             ImageIO.write(screenshotImage, config.getValue("screenshotExtension"), screenshotFile);
-
-            System.out.println("eventCounter.getKeyCounter" + eventCounter.getKeyCounter());
-            System.out.println("eventCounter.getMouseCounter" + eventCounter.getMouseCounter());
-
             screenshot = new Screenshot();
             screenshot.setTicketId(this.ticket.getTicketId());
             screenshot.setFileBody(screenshotFile);
