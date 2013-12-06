@@ -68,7 +68,11 @@ public class RecordFormController implements RecordFormActionListener {
 
     @Override
     public void switchPressed() {
-        logWriter.close();
+        if (logWriter != null) {
+            logWriter.close();
+            logWriter = null;
+        }
+        recordForm.getDescriptionTextArea().setText("");
         manager.hide();
         manager.setState(manager.getTasksFormState());
         manager.show();
