@@ -9,7 +9,8 @@ public class SystemTimeProvider implements TimeProvider {
     }
 
     @Override
-    public String getDate() {
+    public String getDateInString() {
         return new Date().toString();
     }
+
 }

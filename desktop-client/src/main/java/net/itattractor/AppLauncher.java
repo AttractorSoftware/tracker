@@ -21,10 +21,12 @@ public class AppLauncher {
     private WindowManager manager;
     private TasksFormController tasksFormController;
     private Config config;
+    private TimeProvider timeProvider;
 
     public void init(){
 
         manager = new WindowManager();
+        timeProvider = createTimeProvider();
 
         LoginForm  loginForm = new LoginForm();
         LoginFormState loginFormState = new LoginFormState();
@@ -53,7 +55,6 @@ public class AppLauncher {
         tasksFormController.setEventCounter(eventCounter);
         tasksFormController.setConfig(config);
         tasksForm.setActionListener(tasksFormController);
-        TimeProvider timeProvider = createTimeProvider();
         tasksFormController.setTimeProvider(timeProvider);
 
         RecordFormController recordFormController = new RecordFormController(recordForm, manager);
@@ -79,5 +80,9 @@ public class AppLauncher {
 
     public void setConfig(Config config) {
         this.config = config;
+    }
+
+    public TimeProvider getTimeProvider() {
+        return timeProvider;
     }
 }

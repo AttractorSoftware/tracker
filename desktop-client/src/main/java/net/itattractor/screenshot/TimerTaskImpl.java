@@ -18,6 +18,7 @@ public class TimerTaskImpl extends TimerTask {
     @Override
     public void run() {
         if(shouldExecute()) {
+            System.out.println("TimerTaskImpl.run");
             for(Map.Entry<Integer,Command> entry : commandList.entrySet()){
                 entry.getValue().execute();
             }

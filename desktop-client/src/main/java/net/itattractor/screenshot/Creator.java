@@ -1,7 +1,6 @@
 package net.itattractor.screenshot;
 
 import net.itattractor.config.Config;
-import net.itattractor.config.ProductionConfigProvider;
 import net.itattractor.EventCounter;
 import net.itattractor.Ticket;
 import net.itattractor.TimeProvider;
@@ -20,7 +19,7 @@ public class Creator implements Command {
     private Config config;
 
     public Creator(Ticket ticket) {
-        this.setTicket(ticket);
+        this.ticket = ticket;
     }
 
     @Override
@@ -39,6 +38,9 @@ public class Creator implements Command {
             File screenshotFile = new File(screenshotFilePath);
             ImageIO.write(screenshotImage, config.getValue("screenshotExtension"), screenshotFile);
 
+            System.out.println("eventCounter.getKeyCounter" + eventCounter.getKeyCounter());
+            System.out.println("eventCounter.getMouseCounter" + eventCounter.getMouseCounter());
+
             screenshot = new Screenshot();
             screenshot.setTicketId(this.ticket.getTicketId());
             screenshot.setFileBody(screenshotFile);
@@ -46,6 +48,7 @@ public class Creator implements Command {
             screenshot.setTime(Long.toString(timeProvider.getTimeInMilliseconds()));
             screenshot.setKeyboardEventCount(eventCounter.getKeyCounter());
             screenshot.setMouseEventCount(eventCounter.getMouseCounter());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -57,7 +60,7 @@ public class Creator implements Command {
     }
 
     private String screenShotFileName() {
-        return timeProvider.getDate() + "." + config.getValue("screenshotExtension");
+        return timeProvider.getDateInString() + "." + config.getValue("screenshotExtension");
     }
 
     public void setTicket(Ticket ticket) {

@@ -197,9 +197,20 @@ public class ServerDefinitions {
 
     @Тогда("^вижу в списке work-log последнию запись с комментарием \"([^\"]*)\"$")
     public void вижу_в_списке_work_log_запись_с_комментарием(String comment_text) throws Throwable {
-
         WebElement item = elementWaitByXpath("//*[@id=\"work-log\"]/ul/li[last()]");
         Assert.assertEquals(comment_text, item.findElement(By.cssSelector(".comment")).getText());
+    }
+
+    @Тогда("^вижу в списке work-log записи с time-spent \"([^\"]*)\"$")
+    public void вижу_в_списке_work_log_запись_с_комментариями(String time_spent_text) throws Throwable {
+
+        WebElement item = elementWaitByXpath("//*[@id=\"work-log\"]/ul/li[last()]");
+        List timeSpentWebElement =  item.findElements(By.cssSelector(".time-spent"));
+        String[] timeSpentText = time_spent_text.split(",");
+        for (int i = 0; i < timeSpentWebElement.size(); i++) {
+            WebElement weComment = (WebElement) timeSpentWebElement.get(i);
+            Assert.assertEquals(timeSpentText[i], weComment.getText());
+        }
     }
 
     @То("^вижу последний тикет с видом деятельности \"([^\"]*)\" и затраченным временем \"([^\"]*)\" минут$")
@@ -216,5 +227,33 @@ public class ServerDefinitions {
         ticket.click();
     }
 
+
+    @Если("^открываю тикет$")
+    public void открываю_тикет() throws Throwable {
+        Driver.getServerInstance().findElement(new By.ByXPath("//*[@id=\"proj-search\"]")).sendKeys(CommonData.latestTicketId);
+        Driver.getServerInstance().findElement(new By.ByXPath("//*[@id=\"search\"]/div/input[2]")).click();
+    }
+
+
+    @Допустим("^я начал трекать время в \"([^\"]*)\"$")
+    public void я_начал_трекать_время_в(String dateTime) throws Throwable {
+        commonDefinitions.открываю_главную_страницу_тракера();
+        создаю_новый_тикет_со_статусом("accept");
+        Driver.getClientInstance().getTimeProvider().setDateTime(dateTime);
+        commonDefinitions.запускаю_клиентское_приложение();
+        clientDefinitions.выбираю_последний_созданный_тикет();
+    }
+
+    @И("^сделал рабочую запись \"([^\"]*)\" в \"([^\"]*)\"$")
+    public void сделал_рабочую_запись_в(String record, String dateTime) throws Throwable {
+        Driver.getClientInstance().getTimeProvider().setDateTime(dateTime);
+        clientDefinitions.пишу_и_начинаю_отслеживание(record);
+    }
+
+    @И("^перестал трекать время в \"([^\"]*)\"$")
+    public void перестал_трекать_время_в(String dateTime) throws Throwable {
+        Driver.getClientInstance().getTimeProvider().setDateTime(dateTime);
+        clientDefinitions.жду_секунд(5);
+    }
 
 }

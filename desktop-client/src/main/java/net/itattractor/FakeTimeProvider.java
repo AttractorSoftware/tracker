@@ -2,37 +2,53 @@ package net.itattractor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FakeTimeProvider implements TimeProvider {
-    private SimpleDateFormat date;
-    private String dateInString="13.09.2013 18:20:10";
+    public static final long MILISECONDS_IN_MINUTE = 60000l;
+    private static final long MILISECONDS_IN_HOUR = 60 * MILISECONDS_IN_MINUTE;
+    public static final String DEFAULT_DATE = "13.09.2013 18:20:10";
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+    private long currentTimeInMilis;
+    private String dateTime;
 
     public FakeTimeProvider() {
-        this.date = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+        currentTimeInMilis = convertToMiliseconds(DEFAULT_DATE);
+    }
+
+    public FakeTimeProvider(String dateInString) {
+        this.currentTimeInMilis = convertToMiliseconds(dateInString);
     }
 
     @Override
     public long getTimeInMilliseconds() {
+        return currentTimeInMilis;
+    }
+
+    private long convertToMiliseconds(String dateInString) {
         try {
-            date.parse(dateInString).toString();
+            dateFormat.parse(dateInString).toString();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return date.getCalendar().getTimeInMillis();
+        return dateFormat.getCalendar().getTimeInMillis();
     }
 
     @Override
-    public String getDate() {
-        String localDate = "";
-        try {
-            localDate = date.parse(dateInString).toString();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return localDate;
+    public String getDateInString() {
+        return new Date(currentTimeInMilis).toString();
     }
 
-    public void setDateInString(String dateInString) {
-        this.dateInString = dateInString;
+    public void forwardRewind(int i, int dimension) {
+        long timeInMilis = 0;
+        if (dimension == TimeProvider.MINUTES)
+            timeInMilis = i * MILISECONDS_IN_MINUTE;
+        if(dimension == TimeProvider.HOURS)
+            timeInMilis = i * MILISECONDS_IN_HOUR;
+        currentTimeInMilis += timeInMilis;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.currentTimeInMilis = convertToMiliseconds(dateTime);
     }
 }

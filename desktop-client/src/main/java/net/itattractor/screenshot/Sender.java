@@ -32,11 +32,10 @@ public class Sender implements Command {
     public void execute() {
 
         Screenshot screenshot = Queue.getLatest();
+        System.out.println("Sender.execute - before");
 
-        if(
-          screenshot.getMouseEventCount() > Integer.parseInt(config.getValue("mouseEventCountForSendScreenshot")) &&
-          screenshot.getKeyboardEventCount() > Integer.parseInt(config.getValue("keyEventCountForSendScreenshot"))
-         ) {
+        if (activityLimitIsSatisfied(screenshot)) {
+            System.out.println("Sender.execute - after");
             try {
                 connectionProvider = ConnectionProvider.getInstance();
                 HttpGet httpGet = new HttpGet(connectionProvider.getHost() + LOGIN_URL_PART);
@@ -46,7 +45,7 @@ public class Sender implements Command {
                 response = httpClient.execute(httpGet);
                 EntityUtils.consume(response.getEntity());
 
-                List<Cookie> cookieList =  httpClient.getCookieStore().getCookies();
+                List<Cookie> cookieList = httpClient.getCookieStore().getCookies();
 
                 HttpPost httpPost = new HttpPost(connectionProvider.getHost() + TRACKER_URL_PART);
                 ContentBody body = new FileBody(screenshot.getFileBody(), config.getValue("sendingScreenshotExtension"));
@@ -69,12 +68,14 @@ public class Sender implements Command {
         }
     }
 
-    private String getToken(List<Cookie> cookies)
-    {
-        for (Cookie cookie : cookies)
-        {
-            if (cookie.getName().equals(config.getValue("tracFormToken")))
-            {
+    private boolean activityLimitIsSatisfied(Screenshot screenshot) {
+        return screenshot.getMouseEventCount() > Integer.parseInt(config.getValue("mouseEventCountForSendScreenshot")) &&
+                screenshot.getKeyboardEventCount() > Integer.parseInt(config.getValue("keyEventCountForSendScreenshot"));
+    }
+
+    private String getToken(List<Cookie> cookies) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(config.getValue("tracFormToken"))) {
                 return cookie.getValue();
             }
         }

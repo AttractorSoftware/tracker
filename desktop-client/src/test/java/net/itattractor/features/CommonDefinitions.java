@@ -10,9 +10,9 @@ public class CommonDefinitions {
     private Window loginWindow;
 
     private String url = "http://127.0.0.1:8000/trac-env";
+
     private String username = "tester";
     private String password = "tester";
-
     @Допустим("^запускаю клиентское приложение$")
     public void запускаю_клиентское_приложение() throws Throwable {
         loginWindow = Driver.getClientInstance().getMainWindow();
@@ -25,6 +25,18 @@ public class CommonDefinitions {
     @Допустим("^открываю главную страницу тракера$")
     public void открываю_главную_страницу_тракера() throws Throwable {
         Driver.getServerInstance().navigate().to("http://" + username + ":" + password + "@" + url.substring("http://".length()) + "/login");
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
 }

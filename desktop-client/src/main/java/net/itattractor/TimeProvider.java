@@ -1,7 +1,9 @@
 package net.itattractor;
 
 public interface TimeProvider {
-    long getTimeInMilliseconds();
+    int MINUTES = 0;
+    int HOURS = 1;
 
-    String getDate();
+    long getTimeInMilliseconds();
+    String getDateInString();
 }
