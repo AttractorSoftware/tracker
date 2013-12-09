@@ -73,8 +73,12 @@ public class TasksForm {
         tasksComboBox.removeAllItems();
         taskReader = new TaskReaderImpl();
         Ticket[] tickets = taskReader.getTickets();
-        for (Ticket ticket : tickets) {
-            tasksComboBox.addItem(ticket);
+        if (tickets.length == 0) {
+            startButton.setEnabled(false);
+        } else {
+            for (Ticket ticket : tickets) {
+                tasksComboBox.addItem(ticket);
+            }
         }
     }
 
