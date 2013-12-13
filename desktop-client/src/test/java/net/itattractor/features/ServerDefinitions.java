@@ -2,7 +2,6 @@ package net.itattractor.features;
 
 import cucumber.api.java.After;
 import cucumber.api.java.ru.*;
-import cucumber.runtime.PendingException;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -25,7 +24,7 @@ public class ServerDefinitions {
 
     @И("^перехожу во вкладку \"([^\"]*)\"$")
     public void перехожу_во_вкладку(String tab) throws Throwable {
-        Driver.getServerInstance().findElement(By.xpath("//a[text()='" + tab + "']")).click();
+        elementWaitByXpath("//a[text()='" + tab + "']").click();
     }
 
     @То("^вижу скриншот юзера с количеством кликаний мышью \"([^\"]*)\" и нажатием клавиатуры \"([^\"]*)\" раз$")
@@ -197,20 +196,13 @@ public class ServerDefinitions {
 
     @Тогда("^вижу в списке work-log последнию запись с комментарием \"([^\"]*)\"$")
     public void вижу_в_списке_work_log_запись_с_комментарием(String comment_text) throws Throwable {
-        WebElement item = elementWaitByXpath("//*[@id=\"work-log\"]/ul/li[last()]");
-        Assert.assertEquals(comment_text, item.findElement(By.cssSelector(".comment")).getText());
+        commentIsInWorklog(comment_text);
     }
 
     @Тогда("^вижу в списке work-log записи с time-spent \"([^\"]*)\"$")
     public void вижу_в_списке_work_log_запись_с_комментариями(String time_spent_text) throws Throwable {
 
-        WebElement item = elementWaitByXpath("//*[@id=\"work-log\"]/ul/li[last()]");
-        List timeSpentWebElement =  item.findElements(By.cssSelector(".time-spent"));
-        String[] timeSpentText = time_spent_text.split(",");
-        for (int i = 0; i < timeSpentWebElement.size(); i++) {
-            WebElement weComment = (WebElement) timeSpentWebElement.get(i);
-            Assert.assertEquals(timeSpentText[i], weComment.getText());
-        }
+        timeSpentIsTrue(time_spent_text);
     }
 
     @То("^вижу последний тикет с видом деятельности \"([^\"]*)\" и затраченным временем \"([^\"]*)\" минут$")
@@ -244,16 +236,37 @@ public class ServerDefinitions {
         clientDefinitions.выбираю_последний_созданный_тикет();
     }
 
-    @И("^сделал рабочую запись \"([^\"]*)\" в \"([^\"]*)\"$")
-    public void сделал_рабочую_запись_в(String record, String dateTime) throws Throwable {
-        Driver.getClientInstance().getTimeProvider().setDateTime(dateTime);
-        clientDefinitions.пишу_и_начинаю_отслеживание(record);
-    }
-
     @И("^перестал трекать время в \"([^\"]*)\"$")
     public void перестал_трекать_время_в(String dateTime) throws Throwable {
         Driver.getClientInstance().getTimeProvider().setDateTime(dateTime);
         clientDefinitions.жду_секунд(5);
     }
 
+
+    @То("^в журнале работ вижу запись \"([^\"]*)\" и потраченное время на него \"([^\"]*)\"$")
+    public void в_журнале_работ_вижу_запись_и_потраченное_время_на_него(String workLog, String timeSpent) throws Throwable {
+        WebElement webElement = elementWaitByXpath("//*[@id=\"work-log\"]/ul//div[@class=\"comment\"][text()=\"" + workLog + "\"]/..//*[@class=\"time-spent\"]");
+        Assert.assertEquals(timeSpent, webElement.getText());
+    }
+
+    private void commentIsInWorklog(String workLog) throws Exception {
+        WebElement commentElement = elementWaitByXpath("//*[@id=\"work-log\"]/ul/li[last()]");
+        Assert.assertEquals(workLog, commentElement.findElement(By.cssSelector(".comment")).getText());
+    }
+
+    private void timeSpentIsTrue(String timeSpent) throws Exception {
+        WebElement timeSpentElement = elementWaitByXpath("//*[@id=\"work-log\"]/ul/li[last()]");
+        List timeSpentWebElement =  timeSpentElement.findElements(By.cssSelector(".time-spent"));
+        String[] timeSpentText = timeSpent.split(",");
+        for (int i = 0; i < timeSpentWebElement.size(); i++) {
+            WebElement weComment = (WebElement) timeSpentWebElement.get(i);
+            Assert.assertEquals(timeSpentText[i], weComment.getText());
+        }
+    }
+
+    @Допустим("^я создал и принял задачу на себя$")
+    public void я_создал_и_принял_задачу_на_себя() throws Throwable {
+        commonDefinitions.открываю_главную_страницу_тракера();
+        создаю_новый_тикет_со_статусом("accept");
+    }
 }

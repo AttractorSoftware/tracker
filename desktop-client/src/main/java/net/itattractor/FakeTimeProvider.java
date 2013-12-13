@@ -5,12 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FakeTimeProvider implements TimeProvider {
-    public static final long MILISECONDS_IN_MINUTE = 60000l;
-    private static final long MILISECONDS_IN_HOUR = 60 * MILISECONDS_IN_MINUTE;
     public static final String DEFAULT_DATE = "13.09.2013 18:20:10";
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
     private long currentTimeInMilis;
-    private String dateTime;
 
     public FakeTimeProvider() {
         currentTimeInMilis = convertToMiliseconds(DEFAULT_DATE);
@@ -39,13 +36,8 @@ public class FakeTimeProvider implements TimeProvider {
         return new Date(currentTimeInMilis).toString();
     }
 
-    public void forwardRewind(int i, int dimension) {
-        long timeInMilis = 0;
-        if (dimension == TimeProvider.MINUTES)
-            timeInMilis = i * MILISECONDS_IN_MINUTE;
-        if(dimension == TimeProvider.HOURS)
-            timeInMilis = i * MILISECONDS_IN_HOUR;
-        currentTimeInMilis += timeInMilis;
+    public String getFormattedDate(){
+        return dateFormat.format(new Date(currentTimeInMilis));
     }
 
     public void setDateTime(String dateTime) {

@@ -8,7 +8,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public class Driver {
     private  static WebDriver serverInstance;
 
-    public static Adapter getClientInstance() {
+    public static synchronized Adapter getClientInstance() {
         if (clientInstance == null) {
             clientInstance = new Adapter();
         }
@@ -31,7 +31,7 @@ public class Driver {
         }
     }
 
-    public static void reset() {
+    public static synchronized void reset() {
        if(clientInstance != null) {
            if (clientInstance.getTimerTask() != null) {
                clientInstance.getTimerTask().cancel();

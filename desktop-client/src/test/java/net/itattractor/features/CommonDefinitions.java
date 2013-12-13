@@ -39,5 +39,9 @@ public class CommonDefinitions {
         return password;
     }
 
+    void waitForScreenshotToBeSended() throws InterruptedException {
+        int milisecondsToWait = 2000;
+        Thread.sleep(milisecondsToWait);
+    }
 }
 

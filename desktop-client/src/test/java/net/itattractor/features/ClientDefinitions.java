@@ -4,9 +4,8 @@ import cucumber.api.java.Before;
 import cucumber.api.java.ru.Допустим;
 import cucumber.api.java.ru.И;
 import cucumber.api.java.ru.Тогда;
-import cucumber.runtime.PendingException;
-import net.itattractor.TimeProvider;
 import net.itattractor.features.helper.Driver;
+import net.itattractor.time.Calculator;
 import org.junit.Assert;
 import org.uispec4j.Window;
 import org.uispec4j.assertion.Assertion;
@@ -20,14 +19,19 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ClientDefinitions {
 
     private Window tasksWindow;
-    private Window recordWindow;
     private String ticketId;
     private String ticketSummary;
+    private CommonDefinitions commonDefinitions;
+
+    public ClientDefinitions(CommonDefinitions commonDefinitions) {
+        this.commonDefinitions = commonDefinitions;
+    }
 
 
     @И("^выбираю первую в списке задачу$")
@@ -44,26 +48,14 @@ public class ClientDefinitions {
     @И("^пишу \"([^\"]*)\" и начинаю отслеживание$")
     public void пишу_и_начинаю_отслеживание(String comment) throws Throwable {
         CommonData.comment = comment;
-        recordWindow = Driver.getClientInstance().getMainWindow();
+        Window recordWindow = Driver.getClientInstance().getMainWindow();
         recordWindow.getInputTextBox("descriptionTextArea").setText(comment);
         recordWindow.getButton("okButton").click();
     }
 
     @И("^кликаю мышью \"([^\"]*)\" раз и нажимаю клавишу 1 \"([^\"]*)\" раз$")
-    public void кликаю_мышью_раз_и_нажимаю_клавишу_раз(Integer clickCount, Integer pressCount) throws Throwable {
-        Robot robot = new Robot();
-
-        for (int i = 0; i < clickCount; i++) {
-            robot.mousePress(InputEvent.BUTTON1_MASK);
-            robot.mouseRelease(InputEvent.BUTTON1_MASK);
-        }
-
-        for (int j = 0; j < pressCount; j++) {
-
-            robot.keyPress(KeyEvent.VK_1);
-            robot.keyRelease(KeyEvent.VK_1);
-
-        }
+    public void кликаю_мышью_раз_и_нажимаю_клавишу_раз(Integer clickCount, Integer pressCount) {
+        makeActivity(clickCount, pressCount);
     }
 
     @И("^жду \"([^\"]*)\" секунд$")
@@ -142,8 +134,70 @@ public class ClientDefinitions {
 
     }
 
+    @И("^переключился на задачу \"([^\"]*)\" в \"([^\"]*)\"$")
+    public void переключился_на_задачу_в(String comment, String dateInString) throws Throwable {
+        сделал_рабочую_запись_в(comment, dateInString);
+    }
+
+    @И("^активно работал над ней до \"([^\"]*)\"$")
+    public void активно_работал_над_ней_до(String dateInString) throws Throwable {
+        workedActiveFromTo(Driver.getClientInstance().getTimeProvider().getFormattedDate(), dateInString);
+    }
+
+    @Допустим("^запустил клиент$")
+    public void запустил_клиент() throws Throwable {
+        commonDefinitions.запускаю_клиентское_приложение();
+    }
+
+    @И("^выбрал последнюю задачу$")
+    public void выбрал_последнюю_задачу() throws Throwable {
+        выбираю_последний_созданный_тикет();
+    }
+
     @Before
     public void closeClient() {
         Driver.reset();
+    }
+
+    public void workedActiveFromTo(String from, String to) throws Throwable {
+        Calculator calculator = new Calculator();
+        ArrayList<String> calculate = calculator.calculate(from, to);
+        for (int i = 0; i < calculate.size(); i++) {
+            Driver.getClientInstance().getTimeProvider().setDateTime(calculate.get(i));
+            makeActivityMoreThanInConfig();
+            Thread.sleep(2000);
+        }
+    }
+
+    private void makeActivityMoreThanInConfig() {
+        makeActivity(11, 11);
+    }
+
+    private void makeActivity(Integer clickCount, Integer pressCount) {
+        Robot robot;
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            throw new RuntimeException(e);
+        }
+
+        for (int i = 0; i < clickCount; i++) {
+            robot.mousePress(InputEvent.BUTTON1_MASK);
+            robot.mouseRelease(InputEvent.BUTTON1_MASK);
+        }
+
+        for (int j = 0; j < pressCount; j++) {
+
+            robot.keyPress(KeyEvent.VK_1);
+            robot.keyRelease(KeyEvent.VK_1);
+
+        }
+    }
+
+    @И("^сделал рабочую запись \"([^\"]*)\" в \"([^\"]*)\"$")
+    public void сделал_рабочую_запись_в(String record, String dateTime) throws Throwable {
+        Driver.getClientInstance().getTimeProvider().setDateTime(dateTime);
+        commonDefinitions.waitForScreenshotToBeSended();
+        пишу_и_начинаю_отслеживание(record);
     }
 }
