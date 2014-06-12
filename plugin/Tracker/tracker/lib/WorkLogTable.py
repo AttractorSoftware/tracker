@@ -21,13 +21,11 @@ class WorkLogTable(object):
                 "author": log[2],
                 "time": datetime.fromtimestamp(int(log[3])).strftime("%d.%m.%Y %H:%M:%S"),
                 "comment": log[4]}
+
             for slot in slots:
-                if key+1 < len(work_logs):
-                    if slot[8] >= log[3] | slot[8] <= work_logs[key+1][3]:
-                        time_spent += 10
-                else:
-                    if slot[8] >= log[3]:
-                        time_spent += 10
+                if log[0] == slot[9]:
+                    time_spent += 10
+
             append_log["time_spent"] = time_spent
             return_logs.append(append_log)
 
