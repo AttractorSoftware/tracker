@@ -10,7 +10,8 @@ tables = [
         Column('filename'),
         Column('author'),
         Column('path'),
-        Column('time', type='int')
+        Column('time', type='int'),
+        Column('comment_id', type='int')
     ]
 ]
 

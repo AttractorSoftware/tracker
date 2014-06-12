@@ -36,12 +36,16 @@ class Screenshot(object):
         )
         file_dir = "screenshots" + "/" + author + "/" + screenshot_hashed_name
 
+        with self.env.db_transaction as db:
+            last_comment = db("SELECT id FROM work_log WHERE ticket_id=%s AND author=%s ORDER BY time DESC LIMIT 1",(str(ticket_id),str(author)))
+            comment_id = last_comment[0][0]
+
         with targetfile:
             with self.env.db_transaction as db:
                 db(
-                    "INSERT INTO time_slot(filename, author, path, time, mouse_event_count, keyboard_event_count, ticket_id, interval) VALUES(%s, %s, %s, %s, %s, %s, %s, %s )",
+                    "INSERT INTO time_slot(filename, author, path, time, mouse_event_count, keyboard_event_count, ticket_id, interval, comment_id) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)",
                     (filename, author, file_dir, str(long(time) / 1000), mouse_event_count, keyboard_event_count,
-                     ticket_id, interval))
+                     ticket_id, interval, comment_id))
                 shutil.copyfileobj(fileobject, targetfile)
 
     def _create_unique_screenshot(self, dir, filename, extension):
