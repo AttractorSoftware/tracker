@@ -9,7 +9,7 @@ public class CommonDefinitions {
 
     private Window loginWindow;
 
-    private String url = "http://127.0.0.1:8000/trac-env";
+    private String url = "http://127.0.0.1:8000";
 
     private String username = "tester";
     private String password = "tester";
