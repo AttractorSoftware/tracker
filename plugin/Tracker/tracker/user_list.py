@@ -102,6 +102,9 @@ class TrackerUserListModule(Component):
         min_hourse = 0
         max_hourse = 0
         allScreenshots=[]
+        total_time=0
+        hours_text = "hs"
+        minutes_text = "mins"
 
         for action in actions:
             if action == 'view':
@@ -169,6 +172,17 @@ class TrackerUserListModule(Component):
                         allScreenshots.append({"hourse":hourse,"screen":None,"minute":minutes_interval})
                         minutes_interval+=10
                     minutes_interval=0
+
+                for screenshot in screenshots:
+                    total_time += 10
+
+                hours = total_time/60
+                minutes = total_time%60
+
+                context.req.data['hours'] = hours
+                context.req.data['h_unit'] = hours_text
+                context.req.data['minutes'] = minutes
+                context.req.data['m_unit'] = minutes_text
 
                 context.req.data['allScreenshots'] = allScreenshots
                 context.req.data['template_hourse'] = range(int(min_hourse), int(max_hourse)+time_separate)
