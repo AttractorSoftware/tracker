@@ -169,6 +169,16 @@ public class ClientDefinitions {
         }
     }
 
+    public void workedActivelyFromToClickPress(String from, String to, Integer click, Integer press) throws Throwable {
+        Calculator calculator = new Calculator();
+        ArrayList<String> calculate = calculator.calculate(from, to);
+        for (int i = 0; i < calculate.size(); i++) {
+            Driver.getClientInstance().getTimeProvider().setDateTime(calculate.get(i));
+            makeActivity(click,press);
+            Thread.sleep(2000);
+        }
+    }
+
     private void makeActivityMoreThanInConfig() {
         makeActivity(11, 11);
     }
@@ -199,5 +209,19 @@ public class ClientDefinitions {
         Driver.getClientInstance().getTimeProvider().setDateTime(dateTime);
         commonDefinitions.waitForScreenshotToBeSended();
         пишу_и_начинаю_отслеживание(record);
+    }
+
+    @И("^через клиент сделал рабочую запись \"([^\"]*)\" в \"([^\"]*)\"$")
+    public void через_клиент_сделал_рабочую_запись_в(String record, String dateTime) throws Throwable {
+        запустил_клиент();
+        выбрал_последнюю_задачу();
+        Driver.getClientInstance().getTimeProvider().setDateTime(dateTime);
+        commonDefinitions.waitForScreenshotToBeSended();
+        пишу_и_начинаю_отслеживание(record);
+    }
+
+    @И("^работал над ней до \"([^\"]*)\" с активностью мыши \"([^\"]*)\" и клавиатуры \"([^\"]*)\"$")
+    public void работал_над_ней_до(String dateInString, Integer click, Integer press) throws Throwable {
+        workedActivelyFromToClickPress(Driver.getClientInstance().getTimeProvider().getFormattedDate(),dateInString, click, press);
     }
 }

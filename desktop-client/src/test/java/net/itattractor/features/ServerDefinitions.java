@@ -29,14 +29,16 @@ public class ServerDefinitions {
 
     @То("^вижу скриншот юзера с количеством кликаний мышью \"([^\"]*)\" и нажатием клавиатуры \"([^\"]*)\" раз$")
     public void вижу_скриншот_юзера_с_количеством_кликаний_мышью_и_нажатием_клавиатуры_раз(String clickCount, String pressCount) throws Throwable {
-        List<WebElement> elements = Driver.getServerInstance().findElements(By.className("tracker-image"));
-        WebElement element = elements.get(elements.size() - 1);
-
-        WebElement mouse_count_cont = element.findElement(By.cssSelector(".mouse-event-count"));
-        WebElement keyboard_count_cont = element.findElement(By.cssSelector(".keyboard-event-count"));
+        WebElement mouse_count_cont = Driver.getServerInstance().findElement(By.xpath("//*[@class='mouse-event-count'][contains(., '"+clickCount+"')]"));
+        WebElement keyboard_count_cont = Driver.getServerInstance().findElement(By.xpath("//*[@class='keyboard-event-count'][contains(., '"+pressCount+"')]"));
 
         Assert.assertEquals(mouse_count_cont.getText(), clickCount);
         Assert.assertEquals(keyboard_count_cont.getText(), pressCount);
+    }
+
+    @И("^вижу скриншот с количеством кликаний мышью \"([^\"]*)\" и нажатий клавиатуры \"([^\"]*)\" раз$")
+    public void вижу_скриншот_с_количеством_кликаний_мышью_и_нажатий_клавиатуры_раз(String clickCount, String pressCount) throws Throwable {
+        вижу_скриншот_юзера_с_количеством_кликаний_мышью_и_нажатием_клавиатуры_раз(clickCount,pressCount);
     }
 
     @Если("^открою отчет с ссылкой \"([^\"]*)\"$")
@@ -268,5 +270,16 @@ public class ServerDefinitions {
     public void я_создал_и_принял_задачу_на_себя() throws Throwable {
         commonDefinitions.открываю_главную_страницу_тракера();
         создаю_новый_тикет_со_статусом("accept");
+    }
+
+    @И("^в окне \"([^\"]*)\" вижу затраченное время в часах \"([^\"]*)\" в минутах \"([^\"]*)\"$")
+    public void в_окне_вижу_затраченное_время_в_часах_в_минутах(String window_name, String hours, String mins) throws Throwable {
+        WebElement foundName = elementWaitByXpath("//*[@class='tt-header']");
+        WebElement foundHours = elementWaitByCss(".tt-hours");
+        WebElement foundMinutes = elementWaitByCss(".tt-minutes");
+
+        Assert.assertEquals(window_name, foundName.getText());
+        Assert.assertEquals(hours, foundHours.getText());
+        Assert.assertEquals(mins, foundMinutes.getText());
     }
 }
