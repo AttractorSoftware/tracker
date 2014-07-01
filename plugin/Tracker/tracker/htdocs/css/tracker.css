@@ -13,6 +13,48 @@ h2 {
     border-radius: .1em;
 }
 
+.total-time {
+    background: #3f413e;
+    border: 1px outset #eee;
+    border-radius: .5em .5em 0em 0em;
+    box-shadow: 1px 1px .5em 0 #cccccc;
+    float: left;
+    font-size: 12px;
+    padding: .5em 3em .5em 3em;
+    position: absolute;
+    margin: .5em 1em 1em;
+}
+
+.tt-header{
+    color: #ffffff;
+}
+
+h3 {
+    background: #f3f3f3;
+    border-bottom: 1px solid #fcfcfc;
+    font-size: 105%;
+    margin: 2.5em 0 .5em 1em;
+    padding: .4em;
+    box-shadow: 1px 1px .5em 0 #cccccc;
+    border-radius: .1em;
+    float: left;
+    position: relative;
+    width: 117px;
+    height: 26px;
+    text-align: center;
+    color: #424441;
+}
+
+.tt-hours{
+   color: #A72E2E;
+   font-size: 160%;
+}
+
+.tt-minutes{
+   color: #1d8e19;
+   font-size: 160%;
+}
+
 #tracker-filter {
     background: #f7f7f0;
     border: 1px outset #eee;

@@ -186,6 +186,13 @@ $('#date-switcher').find('.btn-prev').click(function () {
 
     <h2>${_("Username")}: <em>${username if username else None}</em></h2>
 
+    <div id="time-report">
+        <div class="total-time">
+            <span class="tt-header">Total Time</span>
+        </div>
+            <h3><span class="tt-hours">${hours}</span> ${h_unit} <span class="tt-minutes">${minutes}</span> ${m_unit}</h3>
+    </div>
+
     <div id="date-switcher">
         <div class="btn-prev">&lt;&lt;</div>
         <div class="date-display">${format_date(fromdate)}</div>
