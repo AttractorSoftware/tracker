@@ -282,4 +282,48 @@ public class ServerDefinitions {
         Assert.assertEquals(hours, foundHours.getText());
         Assert.assertEquals(mins, foundMinutes.getText());
     }
+
+    @И("^открываю вкладку Tracker$")
+    public void открываю_вкладку_Tracker() throws Throwable {
+        commonDefinitions.открываю_главную_страницу_тракера();
+        перехожу_во_вкладку("Tracker");
+    }
+
+    @То("^вижу на странице количество полос активности \"([^\"]*)\"$")
+    public void вижу_на_странице_количество_полос_активности(Integer feeds) throws Throwable {
+        List<WebElement> foundFeeds = Driver.getServerInstance().findElements(By.xpath("//*[@class='feed']//*[@id='activity-feed']"));
+        Integer countFeeds = foundFeeds.size();
+        Assert.assertEquals(feeds, countFeeds);
+    }
+
+    @И("^внутри полосы активности вижу что номер тикета равен последнему созданному тикету$")
+    public void внутри_полосы_активности_вижу_что_номер_тикета_равен_последнему_созданному_тикету() throws Throwable {
+        WebElement foundId = elementWaitByCss(".ticket-id");
+        String lastId = CommonData.latestTicketId;
+        Assert.assertEquals(lastId, foundId.getText());
+    }
+
+    @И("^внутри полосы активности вижу рабочую запись \"([^\"]*)\"$")
+    public void внутри_полосы_активности_вижу_рабочую_запись(String comment) throws Throwable {
+        WebElement foundComment = elementWaitByCss(".comment-content");
+        Assert.assertEquals(comment, foundComment.getText());
+    }
+
+    @Если("^в полосе активности кликаю по номеру тикета$")
+    public void в_полосе_активности_кликаю_по_номеру_тикета() throws Throwable {
+        WebElement ticketLink = elementWaitByCss(".ticket-link");
+        ticketLink.click();
+    }
+
+    @То("^вижу рабочий журнал \"([^\"]*)\" на открывшейся странице кликаемого тикета$")
+    public void вижу_рабочий_журнал_на_открывшейся_странице_кликаемого_тикета(String WorkLog) throws Throwable {
+        WebElement foundElement = elementWaitByCss("#no1");
+        Assert.assertEquals(WorkLog, foundElement.getText().substring(0,8));
+    }
+
+    @И("^вижу в рабочем журнале запись \"([^\"]*)\"$")
+    public void вижу_в_рабочем_журнале_запись(String comment) throws Throwable {
+        WebElement foundComment = Driver.getServerInstance().findElement(By.xpath("//*[@class='item']//*[@class='comment']"));
+        Assert.assertEquals(comment, foundComment.getText());
+    }
 }
