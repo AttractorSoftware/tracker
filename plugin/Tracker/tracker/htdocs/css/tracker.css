@@ -167,3 +167,30 @@ table.user-screenshots tbody td {
 #nav-user-list {
     overflow: auto;
 }
+
+#activity-feed{
+    background-color: rgba(51, 129, 45, 0.92);
+    border-radius: 0px 15px 15px 0px;
+    max-width: 170px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #f5f5f5;
+    }
+
+.comment-content{
+    color: #f5f5f5;
+}
+
+.ticket-id{
+    color: #FFFF00;
+}
+
+a.ticket-link:hover,a.ticket-link:active {
+    background: rgba(20, 19, 19, 1);;
+}
+
+a.ticket-link:visited, a.ticket-link:link {
+    border-bottom: none;
+}
+

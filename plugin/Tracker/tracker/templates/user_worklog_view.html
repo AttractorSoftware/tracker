@@ -160,6 +160,9 @@ $('#date-switcher').find('.btn-prev').click(function () {
         });
 
     </script>
+
+
+
 </head>
 
 <body>
@@ -237,20 +240,22 @@ $('#date-switcher').find('.btn-prev').click(function () {
                                     </td>
                                 </py:when>
                                 <py:otherwise>
-                                    <td width="15%">
-                                        <div class="tracker-image" author="${screenshot.author}">
-                                            <a name="modal" href="#dialog_${screenshot.id}" title="${screenshot.filename}">
+                                    <td width="15%" style="background-color: #FFF">
+                                        <div class="tracker-image" author="${screenshot['time_slot.author']}">
+                                            <a name="modal" href="#dialog_${screenshot['time_slot.id']}" title="${screenshot.filename}">
                                                 <span class="mouse-event-count">${screenshot.mouse_event_count}</span>
                                                 <span class="keyboard-event-count">${screenshot.keyboard_event_count}</span>
-                                                <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}"
+                                                <img src="${href.users(screenshot['time_slot.author'], screenshot['time_slot.id'], format = 'raw')}"
                                                      style="width: 80%; height: 100%"/><br />
                                             </a>
+
                                             <div id="boxes">
-                                                <div style="margin: 0 auto;" id="dialog_${screenshot.id}" class="window">
-                                                    <img src="${href.users(screenshot.author, screenshot.id, format = 'raw')}"/>
+                                                <div style="margin: 0 auto;" id="dialog_${screenshot['time_slot.id']}" class="window">
+                                                    <img src="${href.users(screenshot['time_slot.author'], screenshot['time_slot.id'], format = 'raw')}"/>
                                                     <span><a href="#" class="close">X</a></span>
                                                     </div>
                                             </div>
+
                                         </div>
 
                                     </td>
@@ -258,6 +263,27 @@ $('#date-switcher').find('.btn-prev').click(function () {
                             </py:choose>
                         </py:if>
                     </py:for>
+            </tr>
+            <tr class="feed">
+                <td width="5%"></td>
+                 <py:for each="screenshot in allScreenshots">
+                    <py:if test="screenshot.hourse == hourse">
+                        <py:choose test="">
+                            <py:when test = 'screenshot.screen==None'>
+                                <td width="15%">
+                                </td>
+                            </py:when>
+                            <py:otherwise>
+                                <td id="activity-feed" width="15%">
+                                    <a class="ticket-link" href="/ticket/${screenshot['time_slot.ticket_id']}#no1">
+                                        <span class="ticket-id">#${screenshot["time_slot.ticket_id"]}</span>
+                                    </a>
+                                    <span class="comment-content">${screenshot.content}</span>
+                                </td>
+                            </py:otherwise>
+                        </py:choose>
+                    </py:if>
+                </py:for>
             </tr>
         </py:for>
 
