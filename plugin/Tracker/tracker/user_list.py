@@ -8,7 +8,7 @@ import os
 from trac.core import Component, implements, TracError
 from trac.util.datefmt import user_time, parse_date, to_datetime, to_timestamp
 from trac.web import IRequestHandler
-from trac.web.chrome import ITemplateProvider, add_stylesheet, Chrome
+from trac.web.chrome import ITemplateProvider, add_stylesheet, add_script, Chrome
 from trac.config import Option
 from genshi.builder import tag
 from trac.core import ExtensionPoint
@@ -131,7 +131,7 @@ class TrackerUserListModule(Component):
 
                 for hourse in range(0, 24):
                     for screenshot in screenshots:
-                        screenshot["hourse"] = datetime.datetime.fromtimestamp(screenshot["time"]).strftime('%H')
+                        screenshot["hourse"] = datetime.datetime.fromtimestamp(screenshot["time_slot.time"]).strftime('%H')
                         if (int(screenshot["hourse"]) == hourse):
                             if min_hourse == 0:
                                 min_hourse = hourse
@@ -146,9 +146,9 @@ class TrackerUserListModule(Component):
 
                         for index in screenshotsAll:
 
-                            screenshotMinute = datetime.datetime.fromtimestamp(float(screenshotsAll[index]["time"])).strftime('%M')
+                            screenshotMinute = datetime.datetime.fromtimestamp(float(screenshotsAll[index]["time_slot.time"])).strftime('%M')
                             if int(screenshotMinute) == minute:
-                                screenshotHourse = datetime.datetime.fromtimestamp(screenshotsAll[index]["time"]).strftime('%H')
+                                screenshotHourse = datetime.datetime.fromtimestamp(screenshotsAll[index]["time_slot.time"]).strftime('%H')
                                 if int(screenshotHourse) not in template_hourse:
                                     template_hourse.append(int(screenshotHourse))
                                 screenshotsAll[index]['hourse'] = int(screenshotHourse)
@@ -185,6 +185,7 @@ class TrackerUserListModule(Component):
                 context.req.data['time_separate'] = time_separate
                 context.req.data['template'] = 'user_worklog_view.html'
                 add_stylesheet(context.req, 'trac/css/tracker.css')
+                add_script(context.req, 'trac/js/activity_feed.js')
                 chrome = Chrome(self.env)
                 chrome.add_jquery_ui(context.req)
 

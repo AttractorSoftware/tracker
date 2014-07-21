@@ -12,13 +12,13 @@ class ITrackerScreenshotsRenderer(Interface):
 
 
 class TrackerApi(object):
-    def _get_items(self, context, date, table, columns, distinct, where='', values=()):
+    def _get_items(self, context, date, tables, columns, distinct, where='', values=()):
         sql_values = {
             'distinct': ' DISTINCT ' if distinct else '',
             'columns': ', '.join(columns),
-            'table': table,
+            'table': ', '.join(tables),
             'where': (' WHERE ' + where) if where else '',
-            'between': (' AND time BETWEEN  ' + str(date['from_date']) + ' AND ' + str(date['to_date'])) if where and date and
+            'between': (' AND time_slot.time BETWEEN  ' + str(date['from_date']) + ' AND ' + str(date['to_date'])) if where and date and
                                 date['from_date'] and date['to_date'] else ''
         }
 
@@ -41,28 +41,29 @@ class TrackerApi(object):
         return self._get_items(
             context,
             date,
-            'time_slot',
-            ('id',
+            ('time_slot','work_log'),
+            ('time_slot.id',
              'filename',
-             'author',
+             'time_slot.author',
              'path',
-             'time',
+             'time_slot.time',
              'mouse_event_count',
              'keyboard_event_count',
              'interval',
-             'ticket_id'),
+             'time_slot.ticket_id',
+             'content'),
             False,
-            'author = %s', (username,))
+            'time_slot.comment_id=work_log.id AND time_slot.author = %s', (username,))
 
     def get_screenshot(self, context, id):
-        screenshot = self._get_items(context, None, 'time_slot', ('id', 'filename', 'author', 'path', 'time'),
+        screenshot = self._get_items(context, None, ('time_slot',), ('id', 'filename', 'author', 'path', 'time'),
                                      False,
                                      'id = %s', (id,))
 
         return screenshot if screenshot else None
 
     def get_users(self, context):
-        users = self._get_items(context, None, 'time_slot', ('author',), True, '')
+        users = self._get_items(context, None, ('time_slot',), ('author',), True, '')
         return users if users else None
 
     def get_screenshot_by_time(self):
