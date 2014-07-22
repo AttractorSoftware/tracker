@@ -9,9 +9,9 @@ function group_activity_feed(){
     var feed = $('.feed');
 
     for(var row = 0; row < feed.length; row ++){
-        var amount = 1;
 
         for(var i = 1; i < feed[row].children.length;){
+            var amount = 1;
 
             if(feed[row].children[i].childElementCount != 0){
                 var nextSlot = i + 1;
