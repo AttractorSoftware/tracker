@@ -194,3 +194,28 @@ a.ticket-link:visited, a.ticket-link:link {
     border-bottom: none;
 }
 
+#date-switcher {
+    width : 100%;
+    text-align: center;
+    float: left;
+    font-size: 1.5em;
+    padding: 0 0 15px 0;
+}
+
+#date-switcher .btn-prev {
+    display: inline;
+    cursor: pointer;
+    color: rgba(187, 0, 0, 1);
+}
+
+#date-switcher .btn-next {
+    display: inline;
+    cursor: pointer;
+    color: rgba(187 ,0, 0, 1);
+}
+
+#date-switcher .date-display {
+    display: inline;
+    margin: 0 10px;
+}
+
