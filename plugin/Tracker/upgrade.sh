@@ -1,3 +1,3 @@
-python setup.py bdist_egg
-cp -i dist/*.egg ~/trac-env/plugins/
-trac-admin ~/trac-env upgrade
+rm ~/trac-env/plugins/TracTracker-1.0dev.-py2.7.egg
+
+
