@@ -5,13 +5,18 @@ import cucumber.api.java.ru.*;
 import net.itattractor.features.helper.Driver;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
 
 public class ServerDefinitions {
     private final CommonDefinitions commonDefinitions;
@@ -41,8 +46,8 @@ public class ServerDefinitions {
         вижу_скриншот_юзера_с_количеством_кликаний_мышью_и_нажатием_клавиатуры_раз(clickCount,pressCount);
     }
 
-    @Если("^открою отчет с ссылкой \"([^\"]*)\"$")
-    public void открою_отчет_с_ссылкой(String report_name) throws Throwable {
+    @Если("^открываю отчет со ссылкой \"([^\"]*)\"$")
+    public void открываю_отчет_со_ссылкой(String report_name) throws Throwable {
         elementWaitByXpath("//a[text()='" + report_name + "']").click();
     }
 
@@ -325,5 +330,125 @@ public class ServerDefinitions {
     public void вижу_в_рабочем_журнале_запись(String comment) throws Throwable {
         WebElement foundComment = Driver.getServerInstance().findElement(By.xpath("//*[@class='item']//*[@class='comment']"));
         Assert.assertEquals(comment, foundComment.getText());
+    }
+
+    @Допустим("^зашел в трак под пользователем \"([^\"]*)\"$")
+    public void зашел_под_пользователем(String user) throws Throwable {
+        commonDefinitions.setUsername(user);
+        commonDefinitions.открываю_главную_страницу_тракера();
+    }
+
+    @И("^создал тикет под названием \"([^\"]*)\" и запустил клиент под пользователем \"([^\"]*)\"$")
+    public void создал_тикет_под_названиеми_запустил_клиент(String ticketName, String user) throws Throwable {
+        создать_новый_тикет_под_названием(ticketName);
+        commonDefinitions.setUsername(user);
+        commonDefinitions.запускаю_клиентское_приложение();
+        clientDefinitions.выбираю_последний_созданный_тикет();
+    }
+
+    @Когда("^через вкладку \"([^\"]*)\" кликаю по ссылке \"([^\"]*)\"$")
+    public void через_вкладку_кликаю_по_ссылке(String tab, String link) throws Throwable {
+        перехожу_во_вкладку(tab);
+        открываю_отчет_со_ссылкой(link);
+    }
+
+    @Тогда("^вижу страницу с названием отчета \"([^\"]*)\" за последний месяц \"([^\"]*)\"$")
+    public void вижу_страницу_с_названием_отчета_за_последний_месяц(String report, String monthYear) throws Throwable {
+        String day_month_year = get_new_format(monthYear);
+        String currentUrl = Driver.getServerInstance().getCurrentUrl();
+        Driver.getServerInstance().navigate().to(""+currentUrl+"?fromDMY="+day_month_year+"");
+        WebElement foundReport = elementWaitByXpath("//*[@class='report-label'][contains(text(), '"+report+"')]");
+        WebElement foundMonthYear = elementWaitByCss(".date-display");
+        Assert.assertEquals(report, foundReport.getText().replaceAll("\\s+\\(.*?\\)",""));
+        Assert.assertEquals(monthYear, foundMonthYear.getText());
+    }
+
+    @То("^вижу страницу с отчетом за месяц \"([^\"]*)\"$")
+    public void вижу_страницу_с_отчетом_за_месяц(String monthYear) throws Throwable {
+        WebElement foundMonthYear = elementWaitByCss(".date-display");
+        Assert.assertEquals(monthYear, foundMonthYear.getText());
+    }
+
+    @То("^вижу страницу с названием отчета за период \"([^\"]*)\"$")
+    public void вижу_страницу_с_названием_отчета_за_период(String reportName) throws Throwable {
+        WebElement foundReport = elementWaitByXpath("//*[@class='report-label']");
+        Assert.assertEquals(reportName, foundReport.getText().replaceAll("\\s+\\(.*?\\)",""));
+    }
+
+    @И("^вижу вкладку для пользователя \"([^\"]*)\"$")
+    public void вижу_вкладку_для_пользователя(String user) throws Throwable {
+        WebElement foundName = elementWaitByXpath("//*[@class='report-result'][contains(text(), '"+user+"')]");
+        Assert.assertEquals(user, foundName.getText().replaceAll("\\s+\\(.*?\\)",""));
+    }
+
+    @Если("^кликаю по вкладке \"([^\"]*)\"$")
+    public void кликаю_по_вкладке(String user) throws Throwable {
+        WebElement foundName = elementWaitByXpath("//*[@class='report-result'][contains(text(), '"+user+"')]");
+        foundName.click();
+    }
+
+    @То("^вижу таблицу с названием тикета \"([^\"]*)\", затраченным временем \"([^\"]*)\" и общим временем \"([^\"]*)\"$")
+    public void вижу_таблицу_с_названием_тикета_и_затраченным_временем(String ticketName, String ticketTime, String totalTime) throws Throwable {
+        WebElement foundName = elementWaitByXpath("//*[@class='summary']//*[contains(text(), '"+ticketName+"')]");
+        Assert.assertEquals(ticketName, foundName.getText());
+        WebElement foundTime = elementWaitByXpath("//*[@class='ticket-time'][contains(text(), '"+ticketTime+"')]");
+        Assert.assertEquals(ticketTime, foundTime.getText());
+        WebElement foundTotal = elementWaitByXpath("//*[@class='tickets-time'][contains(text(), '"+totalTime+"')]");
+        Assert.assertEquals(totalTime, foundTotal.getText());
+    }
+
+    @Если("^на переключателе даты кликаю на стрелку \"([^\"]*)\"$")
+    public void на_переключателе_даты_кликаю_на_стрелку(String arrow) throws Throwable {
+        WebElement foundArrow = elementWaitByXpath("//*[@id='date-switcher']//*[contains(text(), '"+arrow+"')]");
+        foundArrow.click();
+    }
+
+    @Если("^вижу страницу с формой для построения отчета \"([^\"]*)\"$")
+    public void вижу_страницу_с_формой_для_построения_отчета(String formName) throws Throwable {
+        WebElement foundName = elementWaitByXpath("//p[contains(text(), '"+formName+"')]");
+        Assert.assertEquals(formName, foundName.getText());
+    }
+
+    @Если("^указываю период с \"([^\"]*)\" по \"([^\"]*)\"$")
+    public void указываю_период_с(String from,String to) throws Throwable {
+        WebElement fromDate = elementWaitByCss("#fromDMY");
+        fromDate.clear();
+        fromDate.sendKeys(from);
+        fromDate.sendKeys();
+        WebElement toDate = elementWaitByCss("#toDMY");
+        toDate.clear();
+        toDate.sendKeys(to);
+        toDate.sendKeys();
+        WebElement foundReport = elementWaitByXpath("//*[@class='report-label']");
+        foundReport.click();
+    }
+
+    @И("^нажимаю на кнопку \"([^\"]*)\"$")
+    public void нажимаю_на_кнопку(String button) throws Throwable {
+        WebElement trackerCalendarMakeReportButton = elementWaitByXpath("//ul[@id='nav']//input[@value='"+button+"']");
+        trackerCalendarMakeReportButton.click();
+    }
+    public void создать_новый_тикет_под_названием(String ticketName) throws Throwable{
+        перехожу_во_вкладку("New Ticket");
+        Driver.getServerInstance().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        WebElement summary = Driver.getServerInstance().findElement(By.xpath("//*[@id=\"field-summary\"]"))    ;
+        summary.sendKeys(ticketName);
+        Driver.getServerInstance().findElement(By.name("submit")).click();
+        CommonData.latestTicketId = Driver.getServerInstance().findElement(By.className("trac-id")).getText();
+        CommonData.latestTicketSummary = ticketName;
+        указываю_статус_редактируемому_тикету("accept");
+    }
+
+    public String get_new_format(String monthYear){
+        String day_month_year="";
+        SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy");
+        try{
+            Date date = formatter.parse(monthYear);
+            day_month_year = new SimpleDateFormat("dd-MM-yyyy").format(date);
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return day_month_year;
     }
 }
