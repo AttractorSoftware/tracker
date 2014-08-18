@@ -1,0 +1,49 @@
+
+.color3-even:hover{
+    background-color: #F5EFC6 !important;
+}
+
+.users{
+    margin-left: 0.5em;
+    color: #999;
+    font-size: 65%;
+    font-weight: normal;
+}
+
+.report-label{
+    font-size: 19px;
+    margin: 3em 1em 0.5em 0;
+}
+.report-result{
+    margin: 3em 0 0;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.listing{
+    margin-bottom: 4em;
+    display: none;
+
+}
+
+.trac-columns{
+    color: rgb(185, 0, 0);
+}
+
+.number{
+    color: #000000;
+    font-size: 11px;
+}
+
+#footer{
+    bottom: 0 !important;
+    height: 34px !important;
+    position: fixed !important;
+    width: 98.5% !important;
+    overflow: visible !important;
+    z-index: 99 !important;
+    padding-top: 10px !important;
+    padding-bottom: 3px !important;
+    background: white !important;
+    border-top: solid white 2px !important;
+}

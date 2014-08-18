@@ -6,50 +6,92 @@
       xmlns:xi="http://www.w3.org/2001/XInclude"
         >
 <xi:include href="layout.html"/>
-  <head>
+<head>
     <title>Tracker</title>
-    <style type="text/css">
-        ul,p {display:none}
-        .tickets {cursor: pointer;
-            margin-left: 1em;
-            font-size: 15px;
-        }
-        </style>
 </head>
 <body>
-    <div id="ctxtnav" class="nav"></div>
+    <div class="tracker">
+        <ul id="nav">
+            <p>Please choose dates from and to</p>
+            <form action="/period_report" method="get" id="date-form">
+                <label>From <span style="color: #F00">*</span></label><input type="text" name="fromDMY" id="fromDMY"/>
+                <label>To <span style="color: #F00">*</span></label><input type="text" name="toDMY" id="toDMY" />
+                <input id="build-report" type="submit" value="Построить отчет"/>
+                <input type="button" onclick="window.location='/period_report'" value="Сбросить"/>
+            </form>
+        </ul>
+        <h1 class="report-label">
+            <py:choose test="">
+                <py:when test = 'len(date)==1'>
+                   Ежемесячный отчет
+                </py:when>
+                <py:otherwise>
+                    <script type="text/javascript">
+                        jQuery(document).ready(function () {
+                            hideSwitcher();
+                            showInputValues();
+                            checkFields();
+                        })
+                    </script>
+                    Отчет за период с <span id="from" style="color: rgb(206, 1, 1)">${date[0]}</span> по <span id="to" style="color: rgb(206, 1, 1)">${date[1]}</span>
+                </py:otherwise>
+            </py:choose>
 
-    <div id="content">
-        <h1>Отчет за период с $fromDMY по $toDMY</h1>
-        <h2>Всего проработано:<b>$total_time_hours</b>ч <b>$total_time_minutes</b>мин </h2>
-        <py:for each="ticket in tickets_with_worklogs">
-            <div class="work-log" id="${ticket.summary}">
-                <li class="tickets"><b>$ticket.summary</b><span>(${len(ticket.worklogs)})</span></li>
-                <p>Проработано по тикету: <b>$ticket.worked_time_hours</b>ч <b id="min">$ticket.worked_time_minutes</b>мин </p>
-                <ul class="list">
-                    <li class="headline">
-                        <div class="author">author</div>
-                        <div class="comment">comment</div>
-                        <div class="time-spent">time spent</div>
-                        <div class="time">created at</div>
-                    </li>
-                    <li class="item" py:for="worklog in ticket['worklogs']">
-                        <div class="author">$worklog.author</div>
-                        <div class="comment" data-title="${worklog.comment}">$worklog.comment</div>
-                        <div class="time-spent"><span id="minutes">$worklog.time_spent</span> min</div>
-                        <div class="time">$worklog.time</div>
-                    </li>
-                </ul>
-            </div>
-        </py:for>
+            <span class="users">(${len(users) if users else "No"} ${"user" if len(users)==1 else "users"})</span>
+        </h1>
+
+        <div id="date-switcher">
+            <div class="btn-prev">&lt;&lt;</div>
+            <div class="date-display">${date[0] if len(date)==1 else ""}</div>
+            <div class="btn-next">&gt;&gt;</div>
+        </div>
+
+        <py:if test="users">
+            <py:for each="user in users">
+                <h2 class="report-result">
+                  ${user.user} <span class="users">(${len(user.tickets), " tickets" if len(user.tickets)>1 else " ticket"})</span>
+                </h2>
+
+                <table class="listing tickets" id="${user.user}">
+                    <thead>
+                        <tr class="trac-columns">
+                            <th class="number" style="width: 10px">№</th>
+                            <th style="width: 60px; text-align: center">Ticket</th>
+                            <th>Summary</th>
+                            <th style="width: 250px">Milestone</th>
+                            <th style="width: 130px">Component</th>
+                            <th style="width: 80px">Type</th>
+                            <th style="width: 70px">Priority</th>
+                            <th style="width: 90px">Status</th>
+                            <th style="width: 120px; text-align: center">Tracked Time</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    <py:for each="number, ticket in enumerate(user.tickets)">
+                        <tr class="color3-even">
+                            <td class="number" style="vertical-align: middle">${number+1}</td>
+                            <td class="ticket" style="text-align: center">
+                                <a title="View ticket" href="/ticket/${ticket.ticket}">#${ticket.ticket}</a>
+                            </td>
+                            <td class="summary">
+                                <a title="View ticket" style="color: #000000" href="/ticket/${ticket.ticket}">${ticket.summary}</a>
+                            </td>
+                            <td class="milestone">${ticket.milestone}</td>
+                            <td class="component">${ticket.component}</td>
+                            <td class="type">${ticket.type}</td>
+                            <td class="priority">${ticket.priority}</td>
+                            <td class="status">${ticket.status}</td>
+                            <td class="ticket-time" style="text-align: center">${ticket.tracked}</td>
+                        </tr>
+                    </py:for>
+                    <tr class="color3-even">
+                        <td class="tickets-time" style="font-size: 14px; font-weight:bold; text-align: center; background-color: #ffffff" colspan="9">${user.total}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </py:for>
+        </py:if>
     </div>
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-            $( ".work-log" ).click(function() {
-                $("p,ul,",this).slideToggle( "fast" );
-            });
-        });
-    </script>
-
 </body>
 </html>
