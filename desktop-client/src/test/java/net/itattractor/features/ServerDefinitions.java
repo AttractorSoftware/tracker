@@ -110,13 +110,6 @@ public class ServerDefinitions {
         trackerCalendarMakeReportButton.click();
     }
 
-    @Тогда("^вижу у последнего созданного тикета \"([^\"]*)\" наработанных минут$")
-    public void вижу_у_последнего_созданного_тикета_наработанных_минут(String mins) throws Throwable {
-        кликаю_на_последний_тикет();
-        WebElement element = elementWaitByXpath("//div[@id='content']//div[@id='" + CommonData.latestTicketSummary + "']//b[@id='min']");
-        Assert.assertEquals(mins,element.getText());
-    }
-
     @Если("^кликаю по первому скриншоту$")
     public void кликаю_по_первому_скриншоту() throws Throwable {
         WebElement screeningsBlock = elementWaitByCss(".tracker-image");
