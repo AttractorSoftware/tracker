@@ -18,7 +18,7 @@ from trac.mimeview import Context, Mimeview
 
 from tracker.api import ITrackerScreenshotsRenderer, TrackerApi
 from tracker.utils import calculate_client_package_name
-
+import screenshot_manager
 
 class TrackerUserListModule(Component):
     implements(INavigationContributor, ITemplateProvider, IRequestHandler)
@@ -92,18 +92,6 @@ class TrackerUserListModule(Component):
 
         api = TrackerApi()
 
-        time_interval = self.env.config.getint('tracker', 'time_interval', 10)
-        time_separate = 1
-        minutes_interval=0
-        screenshotsWithHourse = []
-        screenshotsWithMinutes = []
-        template_hourse = []
-        minute = 0
-        min_hourse = 0
-        max_hourse = 0
-        allScreenshots=[]
-        total_time=0
-
         for action in actions:
             if action == 'view':
                 date = datetime.datetime.now(context.req.tz)
@@ -118,7 +106,7 @@ class TrackerUserListModule(Component):
 
                 full_date = {
                     'from_date': to_date_timestamp - 86400,
-                    'to_date'  : to_date_timestamp
+                    'to_date': to_date_timestamp
                 }
 
                 context.req.data['fromdate'] = to_date
@@ -129,60 +117,17 @@ class TrackerUserListModule(Component):
 
                 context.req.data['id'] = screenshot_id
 
-                for hourse in range(0, 24):
-                    for screenshot in screenshots:
-                        screenshot["hourse"] = datetime.datetime.fromtimestamp(screenshot["time_slot.time"]).strftime('%H')
-                        if (int(screenshot["hourse"]) == hourse):
-                            if min_hourse == 0:
-                                min_hourse = hourse
-                            elif min_hourse > hourse:
-                                min_hourse = hourse
-                            if max_hourse < hourse:
-                                max_hourse = hourse
-                            screenshotsWithHourse.append({hourse:screenshot})
+                grouped_screenshots = screenshot_manager.group_screenshots(screenshots)
+                grouped_activity_feed = screenshot_manager.grouped_activity_feed
 
-                while (minute <= 59):
-                    for screenshotsAll in screenshotsWithHourse:
+                total_time=len(screenshots)*10
+                total_hours = total_time/60
+                total_minutes = total_time%60
 
-                        for index in screenshotsAll:
-
-                            screenshotMinute = datetime.datetime.fromtimestamp(float(screenshotsAll[index]["time_slot.time"])).strftime('%M')
-                            if int(screenshotMinute) == minute:
-                                screenshotHourse = datetime.datetime.fromtimestamp(screenshotsAll[index]["time_slot.time"]).strftime('%H')
-                                if int(screenshotHourse) not in template_hourse:
-                                    template_hourse.append(int(screenshotHourse))
-                                screenshotsAll[index]['hourse'] = int(screenshotHourse)
-                                screenshotsAll[index]['minute'] = int(screenshotMinute)
-                                if len(screenshotsWithMinutes)>0 and screenshotsWithMinutes[0]['minute']==screenshotsAll[index]['minute']:
-                                    screenshotsWithMinutes.pop()
-                                screenshotsWithMinutes.append(screenshotsAll[index])
-                    minute += 10
-                for hourse in template_hourse:
-                    for screenshot in screenshotsWithMinutes:
-                        if screenshot['hourse']==hourse:
-                            while screenshot['minute']!=minutes_interval:
-                                allScreenshots.append({"hourse":hourse,"screen":None,"minute":minutes_interval})
-                                minutes_interval+=10
-                            screenshot["screen"]=1
-                            allScreenshots.append(screenshot)
-                            minutes_interval+=10
-                    while (minutes_interval!=60):
-                        allScreenshots.append({"hourse":hourse,"screen":None,"minute":minutes_interval})
-                        minutes_interval+=10
-                    minutes_interval=0
-
-                for screenshot in screenshots:
-                    total_time += 10
-
-                hours = total_time/60
-                minutes = total_time%60
-
-                context.req.data['hours'] = hours
-                context.req.data['minutes'] = minutes
-                context.req.data['allScreenshots'] = allScreenshots
-                context.req.data['template_hourse'] = range(int(min_hourse), int(max_hourse)+time_separate)
-                context.req.data['time_interval'] = time_interval
-                context.req.data['time_separate'] = time_separate
+                context.req.data['screenshots'] = grouped_screenshots
+                context.req.data['activityFeed'] = grouped_activity_feed
+                context.req.data['totalHours'] = total_hours
+                context.req.data['totalMinutes'] = total_minutes
                 context.req.data['template'] = 'user_worklog_view.html'
                 add_stylesheet(context.req, 'trac/css/tracker.css')
                 add_script(context.req, 'trac/js/activity_feed.js')
@@ -226,6 +171,3 @@ class TrackerUserListModule(Component):
                 return 'screenshots', None
             else:
                 return 'screenshots', None
-
-    def _get_screenshosts_per_by_hours(self, args_with_hourse_sourse_index):
-        pass

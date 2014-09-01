@@ -1,36 +1,6 @@
 /**
  * Created by ru-d on 7/11/14.
  */
-jQuery(document).ready(function () {
-    group_activity_feed();
-});
-
-function group_activity_feed(){
-    var feed = $('.feed');
-
-    for(var row = 0; row < feed.length; row ++){
-
-        for(var i = 1; i < feed[row].children.length;){
-            var amount = 1;
-
-            if(feed[row].children[i].childElementCount != 0){
-                var nextSlot = i + 1;
-
-                while(nextSlot < feed[row].children.length && feed[row].children[nextSlot].childElementCount != 0 &&
-                      feed[row].children[i].innerText == feed[row].children[nextSlot].innerText){
-                    amount ++;
-                    feed[row].deleteCell(nextSlot);
-                }
-                feed[row].children[i].colSpan = amount;
-                i ++;
-            }
-            else{
-                i ++;
-            }
-        }
-    }
-    highlight_activity_feed();
-}
 
 function highlight_activity_feed(){
     var grouped_feed = $('.feed #activity-feed');
