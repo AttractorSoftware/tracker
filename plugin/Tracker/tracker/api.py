@@ -18,7 +18,7 @@ class TrackerApi(object):
             'columns': ', '.join(columns),
             'table': ', '.join(tables),
             'where': (' WHERE ' + where) if where else '',
-            'between': (' AND time_slot.time BETWEEN  ' + str(date['from_date']) + ' AND ' + str(date['to_date']+86400) + str(orderBy)) if where and date and
+            'between': (' AND time_slot.time BETWEEN  ' + str(date['from_date']) + ' AND ' + str(date['to_date']) + str(orderBy)) if where and date and
                                 date['from_date'] and date['to_date'] else ''
         }
 
@@ -47,11 +47,10 @@ class TrackerApi(object):
              'time_slot.time',
              'mouse_event_count',
              'keyboard_event_count',
-             'interval',
              'time_slot.ticket_id',
              'content'),
             False,
-            'time_slot.comment_id=work_log.id AND time_slot.author = %s', (username,))
+            'time_slot.comment_id = work_log.id AND time_slot.author = %s', (username,))
 
     def get_all_users_for_period(self, context, date):
         return self._get_items(

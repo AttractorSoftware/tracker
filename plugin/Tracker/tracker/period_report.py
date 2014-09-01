@@ -28,7 +28,7 @@ class TrackerUserReportModule(Component):
         db = self.env.get_db_cnx()
         context.cursor = db.cursor()
 
-        queryData = {}
+        sqlData = {}
         users=[]
         period = []
 
@@ -37,14 +37,14 @@ class TrackerUserReportModule(Component):
             toDMY = int(time.mktime(time.strptime(req.args.get('toDMY'), '%d-%m-%Y')))
 
             date = {'from_date': fromDMY,
-                    'to_date': toDMY
+                    'to_date': toDMY+86400
             }
 
             period.append(req.args.get('fromDMY'))
             period.append(req.args.get('toDMY'))
 
-            queryData = TrackerApi().get_all_users_for_period(context, date)
-            users = self.get_users_report(queryData)
+            sqlData = TrackerApi().get_all_users_for_period(context, date)
+            users = self.get_users_report(sqlData)
 
         else:
             if req.args.get('fromDMY'):
@@ -55,11 +55,11 @@ class TrackerUserReportModule(Component):
                 toDMY = int(time.mktime(time.strptime(date_end.__str__(), '%d-%m-%Y')))
 
                 date = {'from_date': fromDMY,
-                        'to_date': toDMY
+                        'to_date': toDMY+86400
                 }
 
-                queryData = TrackerApi().get_all_users_for_period(context, date)
-                users = self.get_users_report(queryData)
+                sqlData = TrackerApi().get_all_users_for_period(context, date)
+                users = self.get_users_report(sqlData)
 
             else:
                 last_date_start = datetime.date.today().replace(day=1, month=datetime.date.today().month-1)
@@ -70,11 +70,11 @@ class TrackerUserReportModule(Component):
 
                 date = {
                     'from_date': fromDMY,
-                    'to_date': toDMY
+                    'to_date': toDMY+86400
                 }
 
-                queryData = TrackerApi().get_all_users_for_period(context, date)
-                users = self.get_users_report(queryData)
+                sqlData = TrackerApi().get_all_users_for_period(context, date)
+                users = self.get_users_report(sqlData)
 
         req.data = {"users": users,
                     "date": period}
@@ -87,22 +87,22 @@ class TrackerUserReportModule(Component):
         add_stylesheet(req, 'trac/css/period-report.css')
         return "period_report.html", req.data, None
 
-    def get_users_report(self, queryData):
+    def get_users_report(self, sqlData):
         tickets = []
         users = []
         i = 0
 
-        while(i<len(queryData)):
+        while i<len(sqlData):
             next=i+1
-            if(next<len(queryData) and queryData[i]['author'] == queryData[next]['author']):
-                ticket = self.get_ticket_info(queryData[i])
+            if next<len(sqlData) and sqlData[i]['author'] == sqlData[next]['author']:
+                ticket = self.get_ticket_info(sqlData[i])
                 tickets.append(ticket)
 
             else:
-                ticket = self.get_ticket_info(queryData[i])
+                ticket = self.get_ticket_info(sqlData[i])
                 tickets.append(ticket)
                 total_time = self.calculate_time(tickets)
-                user={'user': queryData[i]['author'], 'tickets': tickets, 'total':total_time}
+                user={'user': sqlData[i]['author'], 'tickets': tickets, 'total':total_time}
                 users.append(user)
                 tickets = []
             i += 1

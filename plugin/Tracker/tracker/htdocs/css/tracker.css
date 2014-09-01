@@ -103,8 +103,6 @@ table.user-screenshots thead th {
     white-space: nowrap;
     text-align: left;
     background: #f7f7f7;
-
-    background: #f7f7f7;
     border-bottom: 1px solid #d7d7d7;
     margin: 2em 0 .5em;
     padding: .4em;
@@ -127,6 +125,60 @@ table.user-screenshots tbody td {
     vertical-align: top;
 }
 
+#mask {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9000;
+    background-color: #000;
+    display: none;
+    font-family: Georgia;
+    opacity: 0.3;
+    filter: alpha(opacity=30);
+}
+
+#boxes .window {
+    position: fixed;
+    left: 0;
+    top: 5%;
+    width: 100%;
+    display: none;
+    z-index: 9999;
+    text-align: center;
+    font-size: 25px;
+}
+
+#boxes .window  img {
+    border: solid 1px #666;
+    width: 75%;
+    top: 5%;
+}
+
+#boxes #dialog {
+    padding: 4px;
+}
+
+.close {
+    float: right;
+    margin-top: 0;
+    margin: 0;
+    position: relative;
+    left: -11%;
+    border: 0;
+}
+
+table tbody tr {
+    background-color: #fcfcfc;
+}
+
+table tbody td {
+    border: 1px dotted #ddd;
+    padding: .3em .5em;
+    vertical-align:bottom;
+    text-align:center;
+}
 .tracker-image {
     font-size: 12px;
 }
@@ -170,7 +222,7 @@ table.user-screenshots tbody td {
 
 #activity-feed{
     background-color: rgba(47, 111, 42, 0.92);
-    border-radius: 0px 15px 15px 0px;
+    border-radius: 0 15px 15px 0;
     max-width: 170px;
     white-space: nowrap;
     overflow: hidden;
@@ -218,4 +270,3 @@ a.ticket-link:visited, a.ticket-link:link {
     display: inline;
     margin: 0 10px;
 }
-
