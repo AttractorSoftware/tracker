@@ -6,267 +6,196 @@
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:i18n="http://genshi.edgewall.org/i18n">
 <xi:include href="layout.html"/>
-<head>
-    <title>Tracker</title>
-    <style type="text/css">
-        #mask {
-            position: fixed;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 100%;
-            z-index: 9000;
-            background-color: #000;
-            display: none;
-            font-family: Georgia;
-            opacity: 0.3;
-            filter: alpha(opacity=30);
-        }
+    <head>
+        <title>Tracker</title>
+        <script type="text/javascript">
+            jQuery(document).ready(function () {
+                $("#tracker-date").datepicker();
+                var datepickerNextOrPrev = $("#ui-datepicker-div");
 
-        #boxes .window {
-            position: fixed;
-            left: 0;
-            top: 5%;
-            width: 100%;
-            display: none;
-            z-index: 9999;
-            text-align: center;
-            font-size: 25px;
-        }
+                $("#tracker-date").focus(function () {
+                    datepickerNextOrPrev.trigger("click");
+                });
 
-        #boxes .window  img {
-            border: solid 1px #666;
-            width: 75%;
-            top: 5%;
-        }
+                datepickerNextOrPrev.click(function () {
+                    var thisMonthValue = $("#ui-datepicker-div .ui-datepicker-month").text();
+                    var thisYearValue = $("#ui-datepicker-div .ui-datepicker-year").text();
+                    var thereUrlScreenshot = $("#thereUrlScreenshot").val();
+                    var userName = $("#userName").val();
+                    $.ajax({
+                        type: "GET",
+                        url: thereUrlScreenshot,
+                        data: {"thisMonth": thisMonthValue, "thisYear": thisYearValue, 'userName':userName},
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (index) {
+                                $.each($("#ui-datepicker-div .ui-state-default"), function (key) {
+                                    if (++key == index) {
+                                        $(this).css({'border': '2px solid #66FF66'});
+                                    }
+                                });
 
-        #boxes #dialog {
-            padding: 4px;
-        }
-
-        .close {
-            float: right;
-            margin-top: 0px;
-            margin: 0px;
-            position: relative;
-            left: -11%;
-            border: 0;
-        }
-
-        table tbody tr {
-            background-color: #fcfcfc;
-        }
-
-        table tbody td {
-            border: 1px dotted #ddd;
-            padding: .3em .5em;
-            vertical-align: middle;
-            vertical-align:bottom;
-            text-align:center;
-        }
-    </style>
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-            $("#tracker-date").datepicker();
-            var datepickerNextOrPrev = $("#ui-datepicker-div");
-
-            $("#tracker-date").focus(function () {
-                datepickerNextOrPrev.trigger("click");
-            });
-
-            datepickerNextOrPrev.click(function () {
-                var thisMonthValue = $("#ui-datepicker-div .ui-datepicker-month").text();
-                var thisYearValue = $("#ui-datepicker-div .ui-datepicker-year").text();
-                var thereUrlScreenshot = $("#thereUrlScreenshot").val();
-                var userName = $("#userName").val();
-                $.ajax({
-                    type: "GET",
-                    url: thereUrlScreenshot,
-                    data: {"thisMonth": thisMonthValue, "thisYear": thisYearValue, 'userName':userName},
-                    dataType: "json",
-                    success: function (data) {
-                        $.each(data, function (index) {
-                            $.each($("#ui-datepicker-div .ui-state-default"), function (key) {
-                                if (++key == index) {
-                                    $(this).css({'border': '2px solid #66FF66'});
-                                }
                             });
+                        }
+                    });
+                });
+                // Next Day Link
+                $('#date-switcher').find('.btn-next').click(function () {
+                    var picker = $("#tracker-date");
+                    var date=new Date(picker.datepicker('getDate'));
+                    date.setDate(date.getDate()+1);
+                    picker.datepicker('setDate', date);
+                    $("#tracker-filter").find('input[type="submit"]').trigger('click');
+                    return false;
+                });
 
-                        });
-                    }
+                // Previous Day Link
+                $('#date-switcher').find('.btn-prev').click(function () {
+                    var picker = $("#tracker-date");
+                    var date=new Date(picker.datepicker('getDate'));
+                    date.setDate(date.getDate()-1);
+                    picker.datepicker('setDate', date);
+                    $("#tracker-filter").find('input[type="submit"]').trigger('click');
+                    return false;
+                });
+
+                $('a[name=modal]').click(function (e) {
+                    e.preventDefault();
+                    var id = $(this).attr('href');
+
+                    $('#mask').fadeIn();
+                    $(id).fadeIn();
+                });
+                $('.window .close').click(function (e) {
+                    e.preventDefault();
+                    $('#mask, .window').hide();
+                });
+                $('#mask').click(function () {
+                    $(this).hide();
+                    $('.window').hide();
                 });
             });
-            // Next Day Link
-$('#date-switcher').find('.btn-next').click(function () {
-    var picker = $("#tracker-date");
-    var date=new Date(picker.datepicker('getDate'));
-    date.setDate(date.getDate()+1);
-    picker.datepicker('setDate', date);
-    $("#tracker-filter").find('input[type="submit"]').trigger('click');
-    return false;
-});
 
-// Previous Day Link
-$('#date-switcher').find('.btn-prev').click(function () {
-    var picker = $("#tracker-date");
-    var date=new Date(picker.datepicker('getDate'));
-    date.setDate(date.getDate()-1);
-    picker.datepicker('setDate', date);
-    $("#tracker-filter").find('input[type="submit"]').trigger('click');
-    return false;
-});
+        </script>
+    </head>
 
-            $('a[name=modal]').click(function (e) {
-                e.preventDefault();
-                var id = $(this).attr('href');
+    <body>
 
-                $('#mask').fadeIn();
+        <div id="content" class="tracker">
+            <py>
+                <input value="${href.thereScreenshot()}" id="thereUrlScreenshot" type="hidden" />
+                <input value="${username}" id="userName" type="hidden" />
+            </py>
+            <form id="tracker-filter" method="get" action="">
+                <div i18n:msg="">
+                    <label>
+                        Select date
+                        <input type="text" id="tracker-date" size="10" name="date" value="${format_date(fromdate)}"/>
+                    </label>
+                    <br/>
+                </div>
+                <div class="buttons">
 
-//                var winH = $(window).height();
-//                var winW = $(window).width();
-//                $(id).css('top', winH / 2 - $(id).height() / 2);
-//                $(id).css('left', winW / 2 - $(id).width() / 2);
-                $(id).fadeIn();
-            });
-            $('.window .close').click(function (e) {
-                e.preventDefault();
-                $('#mask, .window').hide();
-            });
-            $('#mask').click(function () {
-                $(this).hide();
-                $('.window').hide();
-            });
-        });
+                    <input type="submit" name="update" value="${_('Update')}"/>
 
-    </script>
+                </div>
+            </form>
 
+            <h2>${_("Username")}: <em>${username if username else None}</em></h2>
 
+            <div id="time-report">
+                <div class="total-time">
+                    <span class="tt-header">Total Time</span>
+                </div>
+                    <h3><span class="tt-hours">${totalHours}</span> hs <span class="tt-minutes">${totalMinutes}</span> mins</h3>
+            </div>
 
-</head>
+            <div id="date-switcher">
+                <div class="btn-prev">&lt;&lt;</div>
+                <div class="date-display">${format_date(fromdate)}</div>
+                <div class="btn-next">&gt;&gt;</div>
+            </div>
 
-<body>
+            <table border="3px" width="100%">
+                <tr>
+                    <td>
+                      <span style="font-size: 10px"><b>Time Interval</b></span>
+                    </td>
+                    <td>
+                      <span class="time-count">0 Min</span>
+                    </td>
+                    <td>
+                      <span class="time-count">10 Min</span>
+                    </td>
+                    <td>
+                       <span class="time-count">20 Min</span>
+                    </td>
+                    <td>
+                      <span class="time-count">30 Min</span>
+                    </td>
+                    <td>
+                      <span class="time-count">40 Min</span>
+                    </td>
+                    <td>
+                      <span class="time-count">50 Min</span>
+                    </td>
+                </tr>
+                <py:if test="screenshots">
+                    <py:for each="index, row in enumerate(screenshots)">
+                        <tr>
+                            <td style="vertical-align:middle;text-align:center"  width="5%">
+                                    <b>${row.workingHour}:00-${row.workingHour + 1}:00 Hours</b>
+                            </td>
+                            <py:for each="screenshot in row.screenshots">
+                                <py:choose test="">
+                                    <py:when test = 'screenshot=={}'>
+                                        <td width="15%">
+                                        </td>
+                                    </py:when>
+                                    <py:otherwise>
+                                        <td width="15%" style="background-color: #FFF">
+                                            <div class="tracker-image" author="${screenshot['time_slot.author']}">
+                                                <a name="modal" href="#dialog_${screenshot['time_slot.id']}" title="${screenshot.filename}">
+                                                    <span class="mouse-event-count">${screenshot.mouse_event_count}</span>
+                                                    <span class="keyboard-event-count">${screenshot.keyboard_event_count}</span>
+                                                    <img src="${href.users(screenshot['time_slot.author'], screenshot['time_slot.id'], format = 'raw')}"
+                                                         style="width: 80%; height: 100%"/><br />
+                                                </a>
 
-<div id="content" class="tracker">
-    <py>
-        <input value="${href.thereScreenshot()}" id="thereUrlScreenshot" type="hidden" />
-        <input value="${username}" id="userName" type="hidden" />
-    </py>
-    <form id="tracker-filter" method="get" action="">
-        <div i18n:msg="">
-            <label>
-                Select date
-                <input type="text" id="tracker-date" size="10" name="date" value="${format_date(fromdate)}"/>
-            </label>
-            <br/>
-        </div>
-        <div class="buttons">
-
-            <input type="submit" name="update" value="${_('Update')}"/>
-
-        </div>
-    </form>
-
-    <h2>${_("Username")}: <em>${username if username else None}</em></h2>
-
-    <div id="time-report">
-        <div class="total-time">
-            <span class="tt-header">Total Time</span>
-        </div>
-            <h3><span class="tt-hours">${hours}</span> hs <span class="tt-minutes">${minutes}</span> mins</h3>
-    </div>
-
-    <div id="date-switcher">
-        <div class="btn-prev">&lt;&lt;</div>
-        <div class="date-display">${format_date(fromdate)}</div>
-        <div class="btn-next">&gt;&gt;</div>
-    </div>
-
-    <table border="3px" width="100%">
-        <tr>
-                <td>
-                  <span style="font-size: 10px"><b>Time Interval</b></span>
-                </td>
-                <td>
-                  <span class="time-count">0 Min</span>
-                </td>
-                <td>
-                  <span class="time-count">10 Min</span>
-                </td>
-                <td>
-                   <span class="time-count">20 Min</span>
-                </td>
-                <td>
-                  <span class="time-count">30 Min</span>
-                </td>
-                <td>
-                  <span class="time-count">40 Min</span>
-                </td>
-                <td>
-                  <span class="time-count">50 Min</span>
-                </td>
-            </tr>
-        <py:for each="hourse in template_hourse">
-
-            <tr>
-                <td style="vertical-align:middle;text-align:center"  width="5%">
-                        <b>${hourse}:00-${hourse + time_separate}:00 Hours</b>
-                </td>
-                    <py:for each="screenshot in allScreenshots">
-                        <py:if test="screenshot.hourse == hourse">
-                            <py:choose test="">
-                                <py:when test = 'screenshot.screen==None'>
-                                    <td width="15%">
-                                    </td>
-                                </py:when>
-                                <py:otherwise>
-                                    <td width="15%" style="background-color: #FFF">
-                                        <div class="tracker-image" author="${screenshot['time_slot.author']}">
-                                            <a name="modal" href="#dialog_${screenshot['time_slot.id']}" title="${screenshot.filename}">
-                                                <span class="mouse-event-count">${screenshot.mouse_event_count}</span>
-                                                <span class="keyboard-event-count">${screenshot.keyboard_event_count}</span>
-                                                <img src="${href.users(screenshot['time_slot.author'], screenshot['time_slot.id'], format = 'raw')}"
-                                                     style="width: 80%; height: 100%"/><br />
-                                            </a>
-
-                                            <div id="boxes">
-                                                <div style="margin: 0 auto;" id="dialog_${screenshot['time_slot.id']}" class="window">
-                                                    <img src="${href.users(screenshot['time_slot.author'], screenshot['time_slot.id'], format = 'raw')}"/>
-                                                    <span><a href="#" class="close">X</a></span>
-                                                    </div>
+                                                <div id="boxes">
+                                                    <div style="margin: 0 auto;" id="dialog_${screenshot['time_slot.id']}" class="window">
+                                                        <img src="${href.users(screenshot['time_slot.author'], screenshot['time_slot.id'], format = 'raw')}"/>
+                                                        <span><a href="#" class="close">X</a></span>
+                                                        </div>
+                                                </div>
                                             </div>
-
-                                        </div>
-
-                                    </td>
-                                </py:otherwise>
-                            </py:choose>
-                        </py:if>
+                                        </td>
+                                    </py:otherwise>
+                                </py:choose>
+                            </py:for>
+                        </tr>
+                        <tr class="feed">
+                            <td width="5%"></td>
+                            <py:for each="feed in activityFeed[index]">
+                                <py:choose test="">
+                                    <py:when test = "feed.colspan==0">
+                                        <td width="15%">
+                                        </td>
+                                    </py:when>
+                                    <py:otherwise>
+                                        <td id="activity-feed" width="15%" colspan="${feed.colspan}">
+                                            <a class="ticket-link" href="/ticket/${feed.ticket_id}#no1">
+                                                <span class="ticket-id">#${feed.ticket_id}</span>
+                                            </a>
+                                            <span class="comment-content">${feed.content}</span>
+                                        </td>
+                                    </py:otherwise>
+                                </py:choose>
+                            </py:for>
+                        </tr>
                     </py:for>
-            </tr>
-            <tr class="feed">
-                <td width="5%"></td>
-                 <py:for each="screenshot in allScreenshots">
-                    <py:if test="screenshot.hourse == hourse">
-                        <py:choose test="">
-                            <py:when test = 'screenshot.screen==None'>
-                                <td width="15%">
-                                </td>
-                            </py:when>
-                            <py:otherwise>
-                                <td id="activity-feed" width="15%">
-                                    <a class="ticket-link" href="/ticket/${screenshot['time_slot.ticket_id']}#no1">
-                                        <span class="ticket-id">#${screenshot["time_slot.ticket_id"]}</span>
-                                    </a>
-                                    <span class="comment-content">${screenshot.content}</span>
-                                </td>
-                            </py:otherwise>
-                        </py:choose>
-                    </py:if>
-                </py:for>
-            </tr>
-        </py:for>
-
-    </table>
-</div>
-</body>
+                </py:if>
+            </table>
+        </div>
+    </body>
 </html>
