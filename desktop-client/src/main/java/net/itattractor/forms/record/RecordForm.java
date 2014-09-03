@@ -18,6 +18,7 @@ public class RecordForm {
     private JButton okButton;
     private JButton switchTaskButton;
     private JTextPane currentTaskPane;
+    private JButton button1;
     private RecordFormActionListener actionListener;
 
     public RecordForm() {
@@ -102,6 +103,7 @@ public class RecordForm {
                 }
             }
         });
+
     }
 
     public RecordForm(Ticket ticket) {

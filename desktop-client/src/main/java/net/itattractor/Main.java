@@ -10,5 +10,6 @@ public class Main {
         appLauncher.init();
 
         Thread.setDefaultUncaughtExceptionHandler(new Handler());
+
     }
 }

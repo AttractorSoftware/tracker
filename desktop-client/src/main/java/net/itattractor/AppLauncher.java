@@ -1,5 +1,6 @@
 package net.itattractor;
 
+import jxgrabkey.HotkeyListener;
 import net.itattractor.config.Config;
 import net.itattractor.controller.LoginFormController;
 import net.itattractor.controller.RecordFormController;
@@ -14,16 +15,26 @@ import net.itattractor.screenshot.TimerTaskImpl;
 import net.itattractor.states.LoginFormState;
 import net.itattractor.states.RecordFormState;
 import net.itattractor.states.TasksFormState;
-
 import javax.swing.*;
+import jxgrabkey.HotkeyListener;
 
 public class AppLauncher {
     private WindowManager manager;
     private TasksFormController tasksFormController;
     private Config config;
     private TimeProvider timeProvider;
+    private TrayController trayController;
 
     public void init(){
+
+        HotkeyListener hotkeyListener = new HotkeyListener() {
+            @Override
+            public void onHotkey(int i) {
+                manager.show();
+            }
+        };
+        HotKeyRegister hotKeyRegister = new HotKeyRegister();
+        hotKeyRegister.register(hotkeyListener);
 
         manager = new WindowManager();
         timeProvider = createTimeProvider();
@@ -36,6 +47,7 @@ public class AppLauncher {
         TasksFormState tasksFormState = new TasksFormState();
         TasksForm tasksForm = new TasksForm();
         tasksFormState.setForm(tasksForm);
+        tasksFormState.setHotKeyRegister(hotKeyRegister);
         manager.setTasksFormState(tasksFormState);
 
         RecordFormState recordFormState = new RecordFormState();
@@ -47,7 +59,8 @@ public class AppLauncher {
         manager.init();
 
         Tray tray = new Tray();
-        new TrayController(manager, tray);
+        trayController = new TrayController(manager, tray);
+        trayController.setHotKeyRegister(hotKeyRegister);
 
         LoginFormController loginFormController = new LoginFormController(loginForm, manager);
         tasksFormController = new TasksFormController(manager);
@@ -64,6 +77,7 @@ public class AppLauncher {
         workLogSender.setConfig(config);
         recordFormController.setWorkLogSender(workLogSender);
         loginFormController.start();
+
     }
 
     private TimeProvider createTimeProvider() {

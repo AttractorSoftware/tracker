@@ -41,6 +41,7 @@ public class Tray {
             }
         });
 
+
         openItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(actionListener != null){

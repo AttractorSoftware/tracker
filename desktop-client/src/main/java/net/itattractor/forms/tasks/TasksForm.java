@@ -2,7 +2,6 @@ package net.itattractor.forms.tasks;
 
 import net.itattractor.TaskReader;
 import net.itattractor.TaskReaderImpl;
-import net.itattractor.TaskReaderProxyImpl;
 import net.itattractor.Ticket;
 
 import javax.swing.*;
@@ -13,7 +12,7 @@ import java.awt.event.KeyEvent;
 
 public class TasksForm {
     private JPanel contentPanel;
-    private JComboBox<Object> tasksComboBox;
+    private JComboBox tasksComboBox;
 
     private JButton startButton;
     private JButton refreshButton;
