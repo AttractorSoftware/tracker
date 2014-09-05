@@ -16,15 +16,17 @@ public class HotKeyRegister {
 
     public void register(HotkeyListener hotkeyListener) {
         try {
+
             System.load(new File("lib/libJXGrabKey.so").getCanonicalPath());
         } catch (IOException e) {
             e.printStackTrace();
+
         }
         this.hotkeyListener = hotkeyListener;
 
-        try{
-            int key = KeyEvent.VK_ENTER | KeyEvent.VK_QUOTE;
-            int mask = KeyEvent.CTRL_DOWN_MASK;
+        try {
+            int key =  KeyEvent.VK_QUOTE;
+            int mask = KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_DOWN_MASK;
 
             JXGrabKey.getInstance().registerAwtHotkey(MY_HOTKEY_INDEX, mask, key);
         }catch(HotkeyConflictException e){
