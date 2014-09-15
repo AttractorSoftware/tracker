@@ -91,9 +91,9 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>org.clojars.nakkaya</groupId>
+            <groupId>org.clojars.pepijndevos</groupId>
             <artifactId>jnativehook</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.4</version>
         </dependency>
         <dependency>
             <groupId>com.jgoodies</groupId>
